@@ -84,8 +84,10 @@ export default function Home() {
             style={{ paddingTop: '200px' }}
           >
             <h1>Kontakt</h1>
-            <p style={{ marginTop: '15px', fontSize: '1.5rem', letterSpacing: '0.4em' }}>Kommer Snart</p>
-            <p style={{ marginTop: '20px', fontSize: '1.9rem', letterSpacing: '0.4em' }}>@SWEGBGTRADING</p>
+            <p style={{ marginTop: '25px', marginBottom: '33px', fontSize: '20px', letterSpacing: '0.4em' }}>Kommer Snart</p>
+            <p style={{ letterSpacing: '4px', fontSize: '25px', textTransform: 'uppercase' }}>
+              @ S W E G B G T R A D I N G
+            </p>
           </motion.section>
         )}
       </AnimatePresence>

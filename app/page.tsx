@@ -3,6 +3,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
+  // ... resten av koden
   const [view, setView] = useState("home");
 
   return (

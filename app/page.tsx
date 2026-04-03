@@ -43,15 +43,16 @@ export default function Home() {
                 <img
                   src="/images/logo.png"
                   style={{
-                    width: '350px',       /* Justera denna siffra för att ändra storleken */
-                    height: 'auto',
+                    width: '300px',
+                    height: '300px',
                     objectFit: 'contain',
-                    marginBottom: '20px',
-                    transition: 'transform 0.3s ease'
+                    transition: 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)', // En skön "studsig" känsla
+                    cursor: 'pointer'
                   }}
-                  className="product-image"
+                  // Och lägg till en hover-effekt i din CSS eller via className
+                  className="hover"
                 />
-                <p style={{ marginTop: '10px', letterSpacing: '0.2em', fontSize: '0.8rem', fontWeight: '650' }}>
+                <p style={{ marginTop: '10px', letterSpacing: '0.2em', fontSize: '1.4rem', fontWeight: '650' }}>
                   KAFFE MUGG
                 </p>
               </div>
@@ -59,14 +60,17 @@ export default function Home() {
                 <img
                   src="/images/logo3.jpg"
                   style={{
-                    width: '333px',       /* Justera denna siffra för att ändra storleken */
-                    height: 'auto',
+                    width: '300px',
+                    height: '300px',
+                    transform: 'translateY(-20px)',
                     objectFit: 'contain',
-                    marginBottom: '10px',
-                    transition: 'transform 0.5s ease'
+                    transition: 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)', // En skön "studsig" känsla
+                    cursor: 'pointer'
                   }}
+                  // Och lägg till en hover-effekt i din CSS eller via className
+                  className="hover"
                 />
-                <p style={{ marginTop: '10px', letterSpacing: '0.2em', fontSize: '0.8rem' }}>STICKER</p>
+                <p style={{ marginTop: '10px', letterSpacing: '0.2em', fontSize: '1.5rem' }}>TE</p>
               </div>
             </div>
           </motion.div>
@@ -81,7 +85,7 @@ export default function Home() {
           >
             <h1>Kontakt</h1>
             <p>info@swegbg.se</p>
-            <p style={{ marginTop: '20px', fontSize: '0.7rem', letterSpacing: '0.3em' }}>@SWEGBGTRADING</p>
+            <p style={{ marginTop: '20px', fontSize: '1.5rem', letterSpacing: '0.4em' }}>@SWEGBGTRADING</p>
           </motion.section>
         )}
       </AnimatePresence>

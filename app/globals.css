@@ -1,132 +1,45 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500&display=swap');
-
-:root {
-    --gold: #c9a96e;
-    --dark: #1a1a1a;
-    --beige: #f7f5f2;
-}
+﻿@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400&display=swap');
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-    font-family: 'Inter', sans-serif;
-    background-color: #fff;
-    color: var(--dark);
-    line-height: 1.6;
-    padding-top: 80px;
-    /* Ger plats för den fixerade menyn */
+  font-family: 'Inter', sans-serif;
+  background: #fff;
+  color: #000;
 }
 
-/* --- NAVIGATION --- */
-.nav-container {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    padding: 1.5rem 3rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    z-index: 1000;
-    border-bottom: 1px solid #eee;
+/* Manuell stil som matchar din design om Tailwind inte laddas */
+.fixed-nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 3rem;
+  border-bottom: 1px solid #eee;
+  background: white;
+  z-index: 50;
 }
 
-.logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.8rem;
-    font-weight: 600;
-    letter-spacing: 2px;
+.hero {
+  padding: 160px 3rem 80px;
+  text-align: center;
 }
 
-.nav-links {
-    display: flex;
-    gap: 2.5rem;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 5rem;
 }
 
-/* --- HERO --- */
-.hero-section {
-    padding: 80px 3rem 60px;
-    text-align: center;
-    background-color: var(--beige);
-}
-
-.hero-section h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 4rem;
-    margin-bottom: 1rem;
-}
-
-/* --- PRODUKT-GRID --- */
-.products-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2.5rem;
-    padding: 4rem 3rem;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.product-card {
-    position: relative;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-}
-
-.product-img {
-    aspect-ratio: 4/5;
-    background-color: var(--beige);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.product-img-inner {
-    font-size: 5rem;
-    transition: transform 0.5s ease;
-}
-
-.product-card:hover .product-img-inner {
-    transform: scale(1.1);
-}
-
-.product-label {
-    margin-top: 1.2rem;
-}
-
-.product-name {
-    font-weight: 500;
-    font-size: 1.1rem;
-}
-
-.product-price {
-    color: var(--gold);
-    margin-top: 0.3rem;
-    font-weight: 500;
-}
-
-.badge-new {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    background: var(--gold);
-    color: white;
-    padding: 0.3rem 0.8rem;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    z-index: 10;
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 2rem 3rem;
 }

@@ -57,13 +57,13 @@ export default function Home() {
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <img
-                  src="/images/logo2.png"
+                  src="/images/logo3.jpg"
                   style={{
-                    width: '500px',       /* Justera denna siffra för att ändra storleken */
+                    width: '333px',       /* Justera denna siffra för att ändra storleken */
                     height: 'auto',
                     objectFit: 'contain',
-                    marginBottom: '20px',
-                    transition: 'transform 0.3s ease'
+                    marginBottom: '10px',
+                    transition: 'transform 0.5s ease'
                   }}
                 />
                 <p style={{ marginTop: '10px', letterSpacing: '0.2em', fontSize: '0.8rem' }}>STICKER</p>

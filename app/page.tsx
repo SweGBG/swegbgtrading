@@ -34,7 +34,9 @@ export default function Home() {
             {/* DIN HJÄLTE-SEKTION */}
             <section className="hero">
               <h1>SweGBG Trading</h1>
-              <p>Premium Essentials — Göteborg</p>
+              <p style={{ marginTop: '10px', letterSpacing: '0.2em', fontSize: '1.4rem', fontWeight: '550' }}>
+                Göteborg - Worldwide
+              </p>
             </section>
 
             {/* DIN PRODUKT-GRID */}

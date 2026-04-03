@@ -84,8 +84,8 @@ export default function Home() {
             style={{ paddingTop: '200px' }}
           >
             <h1>Kontakt</h1>
-            <p>info@swegbg.se</p>
-            <p style={{ marginTop: '20px', fontSize: '1.5rem', letterSpacing: '0.4em' }}>@SWEGBGTRADING</p>
+            <p style={{ marginTop: '15px', fontSize: '1.5rem', letterSpacing: '0.4em' }}>Kommer Snart</p>
+            <p style={{ marginTop: '20px', fontSize: '1.9rem', letterSpacing: '0.4em' }}>@SWEGBGTRADING</p>
           </motion.section>
         )}
       </AnimatePresence>

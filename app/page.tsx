@@ -1,21 +1,97 @@
+
 "use client";
+import Link from 'next/link';
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
-  // ... resten av koden
   const [view, setView] = useState("home");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <main>
-      {/* DIN SNYGGA NAV - Nu med klickbara knappar */}
-      <nav className="fixed-nav">
-        <div
-          style={{ fontSize: '1.5rem', letterSpacing: '0.2em', cursor: 'pointer' }}
-          onClick={() => setView("home")}
-        >
-          SWEGBG
+      {/* 1. SIDOMENYN */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMenuOpen(false)}
+              style={{
+                position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 100
+              }}
+            />
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              style={{
+                position: 'fixed', top: 0, left: 0, width: '300px', height: '100%',
+                backgroundColor: '#fff', zIndex: 101, padding: '40px 20px',
+                boxShadow: '2px 0 10px rgba(0,0,0,0.1)', color: '#000'
+              }}
+            >
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '1rem',
+                  cursor: 'pointer',
+                  marginBottom: '30px',
+                  padding: '0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px'
+                }}
+              >
+                ✕ <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Stäng</span>
+              </button>
+              <h2 style={{ fontSize: '1.2rem', marginBottom: '20px', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
+                Alla kategorier
+              </h2>
+              <ul style={{ listStyle: 'none', padding: 0 }}>
+                <Link href="/kaffe" onClick={() => setIsMenuOpen(false)} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <li style={{
+                    padding: '15px 0',
+                    borderBottom: '1px solid #f9f9f9',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}>
+                    <span>Kaffe</span>
+                    <span style={{ opacity: 0.3 }}>›</span>
+                  </li>
+                </Link>
+                <li style={{ padding: '15px 0', borderBottom: '1px solid #f9f9f9', cursor: 'pointer' }}>Te</li>
+                <li style={{ padding: '15px 0', borderBottom: '1px solid #f9f9f9', cursor: 'pointer' }}>Accessoarer</li>
+              </ul>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* 2. DIN FIXED NAV */}
+      <nav className="fixed-nav" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <div
+            onClick={() => setIsMenuOpen(true)}
+            style={{ cursor: 'pointer', fontSize: '1.5rem', userSelect: 'none' }}
+          >
+            ☰
+          </div>
+          <div
+            style={{ fontSize: '1.5rem', letterSpacing: '0.2em', cursor: 'pointer' }}
+            onClick={() => setView("home")}
+          >
+            SWEGBG
+          </div>
         </div>
+
         <div style={{ cursor: 'pointer' }}>
           <span onClick={() => setView("home")}>Kollektion</span> •
           <span> Om oss</span> •
@@ -23,6 +99,7 @@ export default function Home() {
         </div>
       </nav>
 
+      {/* 3. RESTEN AV SIDAN (Hero, Grid etc) */}
       <AnimatePresence mode="wait">
         {view === "home" ? (
           <motion.div
@@ -31,7 +108,6 @@ export default function Home() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            {/* DIN HJÄLTE-SEKTION */}
             <section className="hero">
               <h1>SweGBG Trading</h1>
               <p style={{ marginTop: '10px', letterSpacing: '0.2em', fontSize: '1.4rem', fontWeight: '550' }}>
@@ -39,25 +115,20 @@ export default function Home() {
               </p>
             </section>
 
-            {/* DIN PRODUKT-GRID */}
             <div className="grid-container">
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <img
-                  src="/images/logo.png"
-                  style={{
-                    width: '300px',
-                    height: '300px',
-                    objectFit: 'contain',
-                    transition: 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)', // En skön "studsig" känsla
-                    cursor: 'pointer'
-                  }}
-                  // Och lägg till en hover-effekt i din CSS eller via className
-                  className="hover"
-                />
-                <p style={{ marginTop: '10px', letterSpacing: '0.2em', fontSize: '1.4rem', fontWeight: '650' }}>
-                  KAFFE MUGG
-                </p>
-              </div>
+              <Link href="/kaffe" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div style={{ cursor: 'pointer', textAlign: 'center' }}>
+                  <img
+                    src="/images/logo.png"
+                    style={{ width: '300px', height: 'auto' }}
+                  />
+                  <p style={{ marginTop: '10px', fontWeight: 'bold' }}>KAFFE</p>
+                </div>
+              </Link>
+
+              {/* Tom div för spacing eller framtida produkt */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} />
+
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <img
                   src="/images/logo3.jpg"
@@ -66,10 +137,9 @@ export default function Home() {
                     height: '290px',
                     transform: 'translateY(-10px)',
                     objectFit: 'contain',
-                    transition: 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)', // En skön "studsig" känsla
+                    transition: 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                     cursor: 'pointer'
                   }}
-                  // Och lägg till en hover-effekt i din CSS eller via className
                   className="hover"
                 />
                 <p style={{ marginTop: '10px', letterSpacing: '0.2em', fontSize: '1.5rem' }}>TE</p>
@@ -77,7 +147,6 @@ export default function Home() {
             </div>
           </motion.div>
         ) : (
-          /* KONTAKT-VY (Här använder vi samma stil som Hero för att det ska bli snyggt) */
           <motion.section
             key="contact"
             initial={{ opacity: 0, y: 20 }}
@@ -86,8 +155,8 @@ export default function Home() {
             style={{ paddingTop: '200px' }}
           >
             <h1>Kontakt</h1>
-            <p style={{ marginTop: '25px', marginBottom: '33px', fontSize: '20px', letterSpacing: '0.4em' }}>Kommer Snart</p>
-            <p style={{ letterSpacing: '4px', fontSize: '25px', textTransform: 'uppercase' }}>
+            <p style={{ marginTop: '25px', marginBottom: '39px', fontSize: '20px', letterSpacing: '0.4em' }}>Kommer Snart</p>
+            <p style={{ letterSpacing: '6px', fontSize: '25px', textTransform: 'uppercase' }}>
               @ S W E G B G T R A D I N G
             </p>
           </motion.section>

@@ -120,5 +120,6 @@ const tabButtonStyle = (isActive: boolean) => ({
   borderRadius: "5px",
   cursor: "pointer",
   transition: "all 0.2s ease",
-  fontWeight: isActive ? "bold" : "normal"
+  fontWeight: isActive ? "bold" : "normal", // <--- Kommatecken här!
+  fontSize: "13px",
 });

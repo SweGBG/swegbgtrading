@@ -1,15 +1,23 @@
-
 "use client";
 import Link from 'next/link';
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { createClient } from "@/utils/supabase";
+import { useRouter } from "next/navigation"; // 1. Importera router
 
 export default function Home() {
   const [view, setView] = useState("home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
   const supabase = createClient();
+  const router = useRouter(); // 2. Initiera router
+
+  // 3. Skapa utloggningsfunktionen
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    router.refresh(); // Uppdaterar sidan så menyn ändras direkt
+  };
 
   useEffect(() => {
     const getUser = async () => {
@@ -18,7 +26,6 @@ export default function Home() {
     };
     getUser();
 
-    // Lyssna på förändringar (login/logout)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
     });
@@ -110,19 +117,41 @@ export default function Home() {
           </div>
         </div>
 
-        <div style={{ cursor: 'pointer' }}>
-          <span onClick={() => setView("home")}>Kollektion</span> •
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <span> Om oss</span> •
-          <span onClick={() => setView("contact")}> Kontakt</span> •
+          <span onClick={() => setView("contact")} style={{ cursor: 'pointer' }}> Kontakt</span> •
+
           {user ? (
-            <Link href="/konto" style={{ textDecoration: 'none', color: 'inherit' }}> Mitt konto</Link>
+            /* VISAS NÄR MAN ÄR INLOGGAD */
+            <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
+              <Link href="/konto" style={{ textDecoration: 'none', color: 'inherit' }}>
+                Mitt konto
+              </Link>
+              <button
+                onClick={handleLogout}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#000000',
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                  fontSize: 'inherit',
+                  padding: 0
+                }}
+              >
+                Logga ut
+              </button>
+            </div>
           ) : (
-            <Link href="/medlem" style={{ textDecoration: 'none', color: 'inherit' }}> Logga in</Link>
+            /* VISAS NÄR MAN ÄR UTLOGGAD */
+            <Link href="/medlem" style={{ textDecoration: 'none', color: 'inherit' }}>
+              Logga in
+            </Link>
           )}
         </div>
       </nav>
 
-      {/* 3. RESTEN AV SIDAN (Hero, Grid etc) */}
+      {/* 3. RESTEN AV SIDAN */}
       <AnimatePresence mode="wait">
         {view === "home" ? (
           <motion.div
@@ -156,9 +185,6 @@ export default function Home() {
                 </div>
               </Link>
 
-              {/* Tom div för spacing eller framtida produkt */}
-
-
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <img
                   src="/images/logo3.jpg"
@@ -167,7 +193,6 @@ export default function Home() {
                     height: '290px',
                     transform: 'translateY(-10px)',
                     objectFit: 'contain',
-                    transition: 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                     cursor: 'pointer'
                   }}
                   className="hover"

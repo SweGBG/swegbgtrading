@@ -78,7 +78,7 @@ export default function KaffePage() {
               </p>
 
               <p style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '30px' }}>
-                {produkt.vikt} - {produkt.pris} kr
+                {produkt.vikt} - {produkt.price} kr
               </p>
 
               <button

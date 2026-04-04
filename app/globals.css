@@ -8,11 +8,10 @@
 
 body {
   font-family: 'Inter', sans-serif;
-  background: #fff;
+  background: #f5f0e8;
   color: #000;
 }
 
-/* Manuell stil som matchar din design om Tailwind inte laddas */
 .fixed-nav {
   position: fixed;
   top: 0;
@@ -37,10 +36,160 @@ body {
   font-size: 5rem;
 }
 
+.hero img {
+  mix-blend-mode: multiply;
+}
+
 .grid-container {
   display: flex;
   justify-content: center;
   gap: 8rem;
   padding: 4rem 6rem;
   flex-wrap: wrap;
+}
+
+.grid-container img {
+  mix-blend-mode: multiply;
+}
+
+.medlem-page {
+  min-height: 100vh;
+  background: #f5f0e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1rem;
+}
+
+.medlem-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 440px;
+  overflow: hidden;
+}
+
+.medlem-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.medlem-header h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem;
+  color: #111;
+}
+
+.medlem-header p {
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: #999;
+  text-transform: none;
+}
+
+.medlem-tabs {
+  display: flex;
+  border-bottom: 1px solid #eee;
+}
+
+.medlem-tabs button {
+  flex: 1;
+  padding: 1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #aaa;
+  transition: all 0.2s;
+}
+
+.medlem-tabs button.active {
+  color: #111;
+  border-bottom: 2px solid #c9a84c;
+  background: #fffbf0;
+}
+
+.medlem-form {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.medlem-form label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 0.4rem;
+}
+
+.medlem-form input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  background: #fafafa;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.medlem-form input:focus {
+  border-color: #c9a84c;
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.15);
+}
+
+.medlem-submit {
+  width: 100%;
+  padding: 0.85rem;
+  background: #111;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.medlem-submit:hover {
+  background: #c9a84c;
+  color: #111;
+}
+
+.forgot-link {
+  background: none;
+  border: none;
+  color: #c9a84c;
+  font-size: 0.75rem;
+  cursor: pointer;
+  text-align: right;
+  width: 100%;
+}
+
+.error-msg {
+  color: #e53e3e;
+  background: #fff5f5;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.success-msg {
+  color: #276749;
+  background: #f0fff4;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  text-align: center;
 }

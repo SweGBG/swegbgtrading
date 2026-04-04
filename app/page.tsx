@@ -1,12 +1,30 @@
 
 "use client";
 import Link from 'next/link';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { createClient } from "@/utils/supabase";
 
 export default function Home() {
   const [view, setView] = useState("home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
+
+    // Lyssna på förändringar (login/logout)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <main>
@@ -95,7 +113,12 @@ export default function Home() {
         <div style={{ cursor: 'pointer' }}>
           <span onClick={() => setView("home")}>Kollektion</span> •
           <span> Om oss</span> •
-          <span onClick={() => setView("contact")}> Kontakt</span>
+          <span onClick={() => setView("contact")}> Kontakt</span> •
+          {user ? (
+            <Link href="/konto" style={{ textDecoration: 'none', color: 'inherit' }}> Mitt konto</Link>
+          ) : (
+            <Link href="/medlem" style={{ textDecoration: 'none', color: 'inherit' }}> Logga in</Link>
+          )}
         </div>
       </nav>
 

@@ -108,11 +108,18 @@ export default function Home() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <section className="hero">
-              <h1>SweGBG Trading</h1>
-              <p style={{ marginTop: '10px', letterSpacing: '0.2em', fontSize: '1.4rem', fontWeight: '550' }}>
-                Göteborg - Worldwide
-              </p>
+            <section className="hero" style={{ paddingTop: '100px', paddingBottom: '20px' }}>
+              <img
+                src="/images/hlogo.png"
+                alt="SweGBG Trading"
+                style={{
+                  width: '100%',
+                  maxWidth: '600px',
+                  objectFit: 'contain',
+                  display: 'block',
+                  margin: '0 auto'
+                }}
+              />
             </section>
 
             <div className="grid-container">
@@ -120,7 +127,7 @@ export default function Home() {
                 <div style={{ cursor: 'pointer', textAlign: 'center' }}>
                   <img
                     src="/images/logo.png"
-                    style={{ width: '300px', height: 'auto' }}
+                    style={{ width: '300px', height: 'fit-content' }}
                   />
                   <p style={{ marginTop: '10px', fontWeight: 'bold' }}>KAFFE</p>
                 </div>

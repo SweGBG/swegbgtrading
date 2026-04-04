@@ -21,10 +21,25 @@ export default function Home() {
         />
       </section>
 
-      <div className="grid-container" style={{ paddingTop: '20px' }}>
-        <Link href="/kaffe" style={{ textDecoration: 'none', color: 'inherit' }}>
-          <div style={{ marginTop: 'none', cursor: 'pointer', textAlign: 'center' }}>
-            <img src="/images/logo.png" style={{ width: '300px' }} />
+      <div className="grid-container" style={{ paddingTop: '20px', display: 'flex', justifyContent: 'center', gap: '20px' }}>
+
+        {/* LOGGA 1 - KAFFE (Nu matchad med Logo 2) */}
+        <Link href="/kaffe" style={{ textDecoration: 'none', color: 'inherit', outline: 'none' }}>
+          <div style={{
+            cursor: 'pointer',
+            textAlign: 'center',
+            outline: 'none', /* Tar bort den blå kanten vid klick */
+            border: 'none'   /* Dubbelkollar att ingen ram finns */
+          }}>
+            <img
+              src="/images/logo.png"
+              style={{
+                width: '300px',
+                borderRadius: '50%', /* Gör bilden rund */
+                backgroundColor: '#fff', /* Vit bakgrund inuti cirkeln */
+                display: 'block'
+              }}
+            />
             <p style={{ marginTop: '10px', fontWeight: 'bold' }}>KAFFE</p>
           </div>
         </Link>

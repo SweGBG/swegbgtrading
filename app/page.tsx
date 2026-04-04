@@ -108,7 +108,7 @@ export default function Home() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <section className="hero" style={{ paddingTop: '100px', paddingBottom: '20px' }}>
+            <section className="hero" style={{ paddingTop: '33px', paddingBottom: '20px' }}>
               <img
                 src="/images/hlogo.png"
                 alt="SweGBG Trading"
@@ -122,7 +122,7 @@ export default function Home() {
               />
             </section>
 
-            <div className="grid-container">
+            <div className="grid-container" style={{ paddingTop: '20px' }}>
               <Link href="/kaffe" style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div style={{ cursor: 'pointer', textAlign: 'center' }}>
                   <img
@@ -134,7 +134,7 @@ export default function Home() {
               </Link>
 
               {/* Tom div för spacing eller framtida produkt */}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} />
+
 
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <img

@@ -38,8 +38,9 @@ body {
 }
 
 .grid-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  padding: 2rem 3rem;
+  display: flex;
+  justify-content: center;
+  gap: 8rem;
+  padding: 4rem 6rem;
+  flex-wrap: wrap;
 }

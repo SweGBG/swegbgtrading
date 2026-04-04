@@ -26,6 +26,7 @@ export default function Home() {
         {/* LOGGA 1 - KAFFE (Nu matchad med Logo 2) */}
         <Link href="/kaffe" style={{ textDecoration: 'none', color: 'inherit', outline: 'none' }}>
           <div style={{
+            marginTop: '-20px',
             cursor: 'pointer',
             textAlign: 'center',
             outline: 'none', /* Tar bort den blå kanten vid klick */
@@ -34,10 +35,11 @@ export default function Home() {
             <img
               src="/images/logo.png"
               style={{
-                width: '300px',
+                width: '280px',
                 borderRadius: '50%', /* Gör bilden rund */
                 backgroundColor: '#fff', /* Vit bakgrund inuti cirkeln */
                 display: 'block'
+
               }}
             />
             <p style={{ marginTop: '10px', fontWeight: 'bold' }}>KAFFE</p>
@@ -46,9 +48,9 @@ export default function Home() {
 
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Link href="/te" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <div style={{ marginTop: '-23px', cursor: 'pointer', textAlign: 'center' }}>
-              <img src="/images/logo3.jpg" style={{ width: '289px' }} />
-              <p style={{ marginTop: '10px', fontWeight: 'bold' }}>TE</p>
+            <div style={{ marginTop: '-29px', cursor: 'pointer', textAlign: 'center' }}>
+              <img src="/images/logo3.jpg" style={{ width: '275px' }} />
+              <p style={{ marginTop: '-3px', fontWeight: 'bold' }}>TE</p>
             </div>
           </Link>
 

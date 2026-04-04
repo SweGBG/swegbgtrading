@@ -57,7 +57,7 @@ export default function KaffePage() {
             <div style={{ flex: '1', minWidth: '300px', maxWidth: '450px' }}>
               <img
                 src={produkt.bild}
-                alt={produkt.namn}
+                alt={produkt.name}
                 style={{
                   width: '100%',
                   borderRadius: '20px',
@@ -68,7 +68,7 @@ export default function KaffePage() {
             </div>
 
             <div style={{ flex: '1', minWidth: '300px', textAlign: 'left' }}>
-              <h2 style={{ fontSize: '36px', marginBottom: '5px' }}>{produkt.namn}</h2>
+              <h2 style={{ fontSize: '36px', marginBottom: '5px' }}>{produkt.name}</h2>
               <p style={{ fontSize: '14px', letterSpacing: '2px', color: '#666', marginBottom: '25px', textTransform: 'uppercase' }}>
                 {produkt.ursprung}
               </p>

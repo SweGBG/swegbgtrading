@@ -5,58 +5,71 @@ import { motion } from "framer-motion";
 export default function Home() {
   return (
     <main>
-      {/* Ingen Nav eller Sidomeny här – layout.tsx sköter det! */}
+      {/* Flytta ner motion.section så att den omsluter allt innehåll */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 2, y: 0 }}
+        transition={{ duration: 0.0 }} // Lite långsammare fade känns ofta lyxigare på startsidan
+        style={{ paddingTop: '33px' }}
+      >
 
-      <section className="hero" style={{ paddingTop: '25px', paddingBottom: '20px' }}>
-        <img
-          src="/images/hlogo.png"
-          alt="SweGBG Trading"
-          style={{
-            width: '100%',
-            maxWidth: '600px',
-            objectFit: 'contain',
-            display: 'block',
-            margin: '0 auto'
-          }}
-        />
-      </section>
+        {/* Stor logotyp (H-logo) */}
+        <div className="hero" style={{ paddingTop: '5px', paddingBottom: '20px' }}>
+          <img
+            src="/images/hlogo.png"
+            alt="SweGBG Trading"
+            style={{
+              width: '100%',
+              maxWidth: '600px',
+              objectFit: 'contain',
+              display: 'block',
+              margin: '0 auto'
+            }}
+          />
+        </div>
 
-      <div className="grid-container" style={{ paddingTop: '20px', display: 'flex', justifyContent: 'center', gap: '20px' }}>
+        {/* Kategorier (Kaffe & Te) */}
+        <div className="grid-container" style={{ paddingTop: '33px', display: 'flex', justifyContent: 'center', gap: '33px' }}>
 
-        {/* LOGGA 1 - KAFFE (Nu matchad med Logo 2) */}
-        <Link href="/kaffe" style={{ textDecoration: 'none', color: 'inherit', outline: 'none' }}>
-          <div style={{
-            marginTop: '-20px',
-            cursor: 'pointer',
-            textAlign: 'center',
-            outline: 'none', /* Tar bort den blå kanten vid klick */
-            border: 'none'   /* Dubbelkollar att ingen ram finns */
-          }}>
-            <img
-              src="/images/logo.png"
-              style={{
-                width: '280px',
-                borderRadius: '50%', /* Gör bilden rund */
-                backgroundColor: '#fff', /* Vit bakgrund inuti cirkeln */
-                display: 'block'
-
-              }}
-            />
-            <p style={{ marginTop: '10px', fontWeight: 'bold' }}>KAFFE</p>
-          </div>
-        </Link>
-
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Link href="/te" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <div style={{ marginTop: '-29px', cursor: 'pointer', textAlign: 'center' }}>
-              <img src="/images/logo3.jpg" style={{ width: '275px' }} />
-              <p style={{ marginTop: '-3px', fontWeight: 'bold' }}>TE</p>
+          {/* KAFFE */}
+          <Link href="/kaffe" style={{ textDecoration: 'none', color: 'inherit', outline: 'none' }}>
+            <div style={{
+              marginTop: '-20px',
+              cursor: 'pointer',
+              textAlign: 'center',
+              outline: 'none',
+              border: 'none'
+            }}>
+              <img
+                src="/images/logo.png"
+                alt="Kaffe"
+                style={{
+                  width: '280px',
+                  borderRadius: '50%',
+                  backgroundColor: '#fff',
+                  display: 'block'
+                }}
+              />
+              <p style={{ marginTop: '10px', fontWeight: 'bold' }}>KAFFE</p>
             </div>
           </Link>
 
-
+          {/* TE */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Link href="/te" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <div style={{ marginTop: '-29px', cursor: 'pointer', textAlign: 'center' }}>
+                <img
+                  src="/images/logo3.jpg"
+                  alt="Te"
+                  style={{ width: '275px' }}
+                />
+                <p style={{ marginTop: '-3px', fontWeight: 'bold' }}>TE</p>
+              </div>
+            </Link>
+          </div>
         </div>
-      </div>
+
+      </motion.section>
     </main>
   );
 }

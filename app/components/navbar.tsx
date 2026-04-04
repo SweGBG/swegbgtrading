@@ -113,8 +113,8 @@ export default function Navbar() {
 
         {/* HÖGER: Länkar + Auth + Cart */}
         <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-
-          <Link href="/om-oss" style={{ textDecoration: 'none', color: '#000' }}>Om oss</Link>
+          <Link href="/kaffe" style={{ textDecoration: 'none', color: '#000' }}></Link>
+          <Link href="/om" style={{ textDecoration: 'none', color: '#000' }}>Om oss</Link>
           <Link href="/kontakt" style={{ textDecoration: 'none', color: '#000' }}>Kontakt</Link>
 
           {user ? (

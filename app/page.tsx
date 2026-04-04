@@ -118,7 +118,18 @@ export default function Home() {
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <span> Om oss</span> •
+          <Link href="/om" onClick={() => setIsMenuOpen(false)} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <li style={{
+              padding: '15px 0',
+              borderBottom: '1px solid #f9f9f9',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <span>Om Oss</span>
+              <span style={{ opacity: 0.3 }}>›</span>
+            </li>
+          </Link>
           <span onClick={() => setView("contact")} style={{ cursor: 'pointer' }}> Kontakt</span> •
 
           {user ? (

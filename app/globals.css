@@ -26,6 +26,7 @@ body {
   z-index: 50;
 }
 
+/* ── HERO ── */
 .hero {
   padding: 160px 3rem 80px;
   text-align: center;
@@ -40,6 +41,7 @@ body {
   mix-blend-mode: multiply;
 }
 
+/* ── GRID ── */
 .grid-container {
   display: flex;
   justify-content: center;
@@ -52,6 +54,7 @@ body {
   mix-blend-mode: multiply;
 }
 
+/* ── MEDLEM ── */
 .medlem-page {
   min-height: 100vh;
   background: #f5f0e8;
@@ -85,7 +88,6 @@ body {
   font-size: 0.75rem;
   letter-spacing: 0.3em;
   color: #999;
-  text-transform: none;
 }
 
 .medlem-tabs {
@@ -192,4 +194,50 @@ body {
   border-radius: 8px;
   font-size: 0.85rem;
   text-align: center;
+}
+
+/* ════════════════════════════════
+   MOBILANPASSNING (lägg längst ner)
+   ════════════════════════════════ */
+
+/* Navbar-länkar döljs på mobil */
+.desktop-only {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .desktop-only {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+}
+
+/* Hero */
+@media (max-width: 767px) {
+  .hero {
+    padding: 120px 1.5rem 60px;
+  }
+
+  .hero h1 {
+    font-size: 2.8rem;
+  }
+}
+
+/* Grid (kaffe/te-kategorierna på startsidan) */
+@media (max-width: 767px) {
+  .grid-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* Navbar */
+@media (max-width: 767px) {
+  .fixed-nav {
+    padding: 0 1.2rem;
+    height: 64px;
+  }
 }

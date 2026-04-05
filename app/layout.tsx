@@ -1,6 +1,17 @@
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { CartProvider } from "./context/cartcontext"; // Se till att namnet matchar filen på disk
-import Navbar from "./components/navbar"; // Importera din Navbar-komponent
+import { CartProvider } from "./context/cartcontext";
+import Navbar from "./components/navbar";
+
+export const metadata: Metadata = {
+  title: "SweGBG Trading",
+  description: "Kaffe & Te från Göteborg",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

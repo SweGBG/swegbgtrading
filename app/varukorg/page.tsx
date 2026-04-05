@@ -48,7 +48,8 @@ export default function VarukorgPage() {
             </div>
           </div>
 
-          <div style={{ marginTop: "40px", display: "flex", gap: "20px" }}>
+          {/* HÄR ÄR FIXEN: Knapparna ligger nu efter varandra, inte inuti varandra */}
+          <div style={{ marginTop: "40px", display: "flex", gap: "20px", alignItems: "center" }}>
             <button
               onClick={clearCart}
               style={{
@@ -60,18 +61,21 @@ export default function VarukorgPage() {
             >
               Töm varukorg
             </button>
-            <button
-              style={{
-                padding: "10px 40px",
-                backgroundColor: "#000",
-                color: "#fff",
-                border: "none",
-                cursor: "pointer",
-                fontWeight: "bold"
-              }}
-            >
-              TILL KASSAN
-            </button>
+
+            <Link href="/kassa" style={{ textDecoration: 'none' }}>
+              <button
+                style={{
+                  padding: "10px 40px",
+                  backgroundColor: "#000",
+                  color: "#fff",
+                  border: "none",
+                  cursor: "pointer",
+                  fontWeight: "bold"
+                }}
+              >
+                TILL KASSAN
+              </button>
+            </Link>
           </div>
         </>
       )}

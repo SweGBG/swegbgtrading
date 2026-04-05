@@ -9,21 +9,22 @@ export default function Home() {
       <motion.section
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 2, y: 0 }}
-        transition={{ duration: 0.0 }} // Lite långsammare fade känns ofta lyxigare på startsidan
+        transition={{ duration: 1.2, ease: "easeOut" }} // Lite långsammare fade känns ofta lyxigare på startsidan
         style={{ paddingTop: '33px' }}
       >
 
         {/* Stor logotyp (H-logo) */}
         <div className="hero" style={{ paddingTop: '5px', paddingBottom: '20px' }}>
           <img
-            src="/images/hlogo.png"
+            src="/images/hlogo2.png"
             alt="SweGBG Trading"
             style={{
               width: '100%',
               maxWidth: '600px',
               objectFit: 'contain',
               display: 'block',
-              margin: '0 auto'
+              margin: '0 auto',
+              mixBlendMode: 'multiply' // Detta gör att det vita i bilden blir genomskinligt mot din bakgrund
             }}
           />
         </div>
@@ -59,7 +60,7 @@ export default function Home() {
             <Link href="/te" style={{ textDecoration: 'none', color: 'inherit' }}>
               <div style={{ marginTop: '-29px', cursor: 'pointer', textAlign: 'center' }}>
                 <img
-                  src="/images/logo3.jpg"
+                  src="/images/logo3a.png"
                   alt="Te"
                   style={{ width: '275px' }}
                 />

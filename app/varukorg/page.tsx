@@ -4,10 +4,9 @@ import { useCart } from "../context/cartcontext";
 import Link from "next/link";
 
 export default function VarukorgPage() {
-  const { cart, clearCart } = useCart();
+  const { cart, clearCart, addToCart, removeFromCart } = useCart();
 
-  // Räkna ut totalpriset
-  const totalSum = cart.reduce((sum, item) => sum + item.price, 0);
+  const totalSum = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
     <div style={{ padding: "120px 40px", maxWidth: "800px", margin: "0 auto" }}>
@@ -23,20 +22,50 @@ export default function VarukorgPage() {
       ) : (
         <>
           <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-            {cart.map((item, index) => (
-              <div
-                key={index}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  borderBottom: "1px solid #eee",
-                  paddingBottom: "10px"
-                }}
-              >
-                <div>
-                  <span style={{ fontWeight: "bold" }}>{item.name}</span>
+            {cart.map((item) => (
+              <div key={item.id} style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                borderBottom: "1px solid #eee",
+                paddingBottom: "16px",
+                gap: "16px"
+              }}>
+                {/* Namn */}
+                <span style={{ fontWeight: "bold", flex: 1 }}>{item.name}</span>
+
+                {/* +/- knappar */}
+                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                  <button
+                    onClick={() => removeFromCart(item.id)}
+                    style={btnStyle}
+                  >
+                    −
+                  </button>
+                  <span style={{ minWidth: "20px", textAlign: "center" }}>{item.quantity}</span>
+                  <button
+                    onClick={() => addToCart({ ...item, quantity: 1 })}
+                    style={btnStyle}
+                  >
+                    +
+                  </button>
                 </div>
-                <span>{item.price} kr</span>
+
+                {/* Pris */}
+                <span style={{ minWidth: "80px", textAlign: "right" }}>
+                  {item.price * item.quantity} kr
+                </span>
+
+                {/* Ta bort helt */}
+                <button
+                  onClick={() => {
+                    // Ta bort alla av denna produkt
+                    for (let i = 0; i < item.quantity; i++) removeFromCart(item.id);
+                  }}
+                  style={{ background: "none", border: "none", cursor: "pointer", color: "#aaa", fontSize: "1rem" }}
+                >
+                  ✕
+                </button>
               </div>
             ))}
           </div>
@@ -48,31 +77,25 @@ export default function VarukorgPage() {
             </div>
           </div>
 
-          {/* HÄR ÄR FIXEN: Knapparna ligger nu efter varandra, inte inuti varandra */}
           <div style={{ marginTop: "40px", display: "flex", gap: "20px", alignItems: "center" }}>
-            <button
-              onClick={clearCart}
-              style={{
-                padding: "10px 20px",
-                backgroundColor: "transparent",
-                border: "1px solid #ccc",
-                cursor: "pointer"
-              }}
-            >
+            <button onClick={clearCart} style={{
+              padding: "10px 20px",
+              backgroundColor: "transparent",
+              border: "1px solid #ccc",
+              cursor: "pointer"
+            }}>
               Töm varukorg
             </button>
 
-            <Link href="/kassa" style={{ textDecoration: 'none' }}>
-              <button
-                style={{
-                  padding: "10px 40px",
-                  backgroundColor: "#000",
-                  color: "#fff",
-                  border: "none",
-                  cursor: "pointer",
-                  fontWeight: "bold"
-                }}
-              >
+            <Link href="/kassa" style={{ textDecoration: "none" }}>
+              <button style={{
+                padding: "10px 40px",
+                backgroundColor: "#000",
+                color: "#fff",
+                border: "none",
+                cursor: "pointer",
+                fontWeight: "bold"
+              }}>
                 TILL KASSAN
               </button>
             </Link>
@@ -82,3 +105,16 @@ export default function VarukorgPage() {
     </div>
   );
 }
+
+const btnStyle: React.CSSProperties = {
+  width: "32px",
+  height: "32px",
+  border: "1px solid #ddd",
+  background: "#fff",
+  cursor: "pointer",
+  fontSize: "1.1rem",
+  borderRadius: "4px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+};

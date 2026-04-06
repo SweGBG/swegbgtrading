@@ -5,7 +5,7 @@ interface Product {
   id: string;
   name: string;
   price: number;
-  quantity?: number; // 👈 lades till
+  quantity: number; // 👈 lades till
 }
 
 interface CartContextType {
@@ -35,8 +35,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const removeFromCart = (id: string) => {
     setCart((prevCart) =>
       prevCart
-        .map((p) => p.id === id ? { ...p, quantity: p.quantity - 1 } : p)
-        .filter((p) => p.quantity > 0) // tar bort om quantity når 0
+        .map((p) => p.id === id ? { ...p, quantity: (p.quantity ?? 0) - 1 } : p)
+        .filter((p) => (p.quantity ?? 0) > 0)
     );
   };
 

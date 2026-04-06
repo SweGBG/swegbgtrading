@@ -16,6 +16,7 @@ export default function KaffePage() {
       id: "gbg-brew-1",
       name: "GBG BREW (DEMO)", // Ändra från 'namn' till 'name'
       price: 149,               // Ändra från 'pris' till 'price' (och se till att det är en siffra!)
+      quantity: 1,
       ursprung: "GÖTEBORG - EST. 2026",
       beskrivning: 'Vår "Local Roast" är noga utvald...',
       vikt: "500g",

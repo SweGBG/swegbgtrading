@@ -29,6 +29,10 @@ export async function POST(req: Request) {
       amount_total: session.amount_total,
       currency: session.currency,
       customer_email: session.customer_details?.email,
+      shipping_name: session.customer_details?.name,
+      shipping_address: session.customer_details?.address?.line1,
+      shipping_city: session.customer_details?.address?.city,
+      shipping_postal_code: session.customer_details?.address?.postal_code,
       items: session.metadata?.items ?? null,
       status: "paid",
     });

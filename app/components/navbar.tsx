@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
   const { cart } = useCart();
-  const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const itemCount = cart.reduce((sum, item) => sum + (item.quantity ?? 0), 0);
   const [user, setUser] = useState<any>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const supabase = createClient();

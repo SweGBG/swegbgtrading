@@ -72,7 +72,9 @@ export default function KontoDashboard() {
                         </div>
                         <p style={{ fontSize: "0.9rem", margin: 0 }}>Mottagare: {order.shipping_name}</p>
                         <p style={{ fontSize: "0.8rem", color: "#666" }}>Adress: {order.shipping_address}, {order.shipping_city}</p>
-                        <p style={{ fontSize: "0.9rem", fontWeight: "bold", marginTop: "10px" }}>Totalt: {order.amount_total} kr</p>
+                        <p style={{ fontSize: "0.9rem", fontWeight: "bold", marginTop: "10px" }}>
+                          Totalt: {order.amount_total / 100} kr
+                        </p>
                       </div>
                     ))}
                   </div>

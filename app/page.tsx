@@ -8,7 +8,7 @@ export default function Home() {
       {/* Flytta ner motion.section så att den omsluter allt innehåll */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 2, y: 0 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2, ease: "easeOut" }} // Lite långsammare fade känns ofta lyxigare på startsidan
         style={{ paddingTop: '33px' }}
       >
@@ -62,7 +62,7 @@ export default function Home() {
                 <img
                   src="/images/logo3a.png"
                   alt="Te"
-                  style={{ width: '275px' }}
+                  style={{ backgroundColor: '#ffffff', borderRadius: '50%', width: '275px' }}
                 />
                 <p style={{ marginTop: '-3px', fontWeight: 'bold' }}>TE</p>
               </div>

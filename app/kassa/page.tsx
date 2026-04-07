@@ -13,7 +13,6 @@ export default function KassaPage() {
 
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [orderDone, setOrderDone] = useState(false);
 
   const [form, setForm] = useState({
     firstName: "",
@@ -33,6 +32,25 @@ export default function KassaPage() {
       if (user) {
         setUser(user);
         setForm(prev => ({ ...prev, email: user.email ?? "" }));
+
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id)
+          .single();
+
+        if (profile) {
+          const nameParts = (profile.full_name ?? "").split(" ");
+          setForm(prev => ({
+            ...prev,
+            firstName: nameParts[0] ?? "",
+            lastName: nameParts.slice(1).join(" ") ?? "",
+            address: profile.address ?? "",
+            postalCode: profile.zip_code ?? "",
+            city: profile.city ?? "",
+            phone: profile.phone ?? "",
+          }));
+        }
       }
     };
     getUser();
@@ -42,10 +60,10 @@ export default function KassaPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // 👇 BARA EN handleSubmit — med Stripe
   const handleSubmit = async () => {
     const required = ["firstName", "lastName", "email", "address", "postalCode", "city"];
     const missing = required.filter(k => !form[k as keyof typeof form]);
+
     if (missing.length > 0) {
       alert("Fyll i alla obligatoriska fält.");
       return;
@@ -53,20 +71,32 @@ export default function KassaPage() {
 
     setLoading(true);
 
-    const res = await fetch("/api/checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: cart }),
-    });
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: cart,
+          userId: user?.id || null, // Automatiserar ID-kopplingen!
+          customerDetails: form        // Skickar med adressen också
+        }),
+      });
 
-    const { url } = await res.json();
-    window.location.href = url;
+      const { url } = await res.json();
+      if (url) {
+        window.location.href = url;
+      }
+    } catch (err) {
+      console.error("Betalningsfel:", err);
+      alert("Något gick fel med betalningen.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div style={styles.page}>
       <div style={styles.layout}>
-
         <div style={styles.card}>
           <h1 style={styles.title}>KASSA</h1>
 
@@ -115,7 +145,6 @@ export default function KassaPage() {
 
         <div style={styles.summary}>
           <h2 style={styles.sectionTitle}>Din order</h2>
-
           {cart.length === 0 ? (
             <p style={{ color: "#999", fontSize: "0.9rem" }}>Varukorgen är tom.</p>
           ) : (
@@ -136,12 +165,10 @@ export default function KassaPage() {
           <p style={{ fontSize: "0.75rem", color: "#999", marginTop: "0.5rem" }}>
             Inkl. moms. Frakt beräknas vid leverans.
           </p>
-
           <Link href="/varukorg" style={{ display: "block", marginTop: "1.5rem", color: "#888", fontSize: "0.85rem" }}>
             ← Ändra varukorg
           </Link>
         </div>
-
       </div>
     </div>
   );
@@ -182,5 +209,4 @@ const styles: Record<string, React.CSSProperties> = {
   loginBanner: { background: "#fffbf0", border: "1px solid #f0e4b8", borderRadius: "8px", padding: "0.75rem 1rem", fontSize: "0.85rem", marginBottom: "1.5rem", color: "#555" },
   orderItem: { display: "flex", gap: "0.75rem", alignItems: "center", padding: "0.6rem 0", fontSize: "0.9rem", borderBottom: "1px solid #f5f5f5" },
   divider: { borderTop: "1px solid #eee", margin: "1rem 0" },
-  backBtn: { display: "inline-block", padding: "0.75rem 2rem", background: "#111", color: "#fff", borderRadius: "8px", textDecoration: "none", fontSize: "0.8rem", letterSpacing: "0.1em" },
 };

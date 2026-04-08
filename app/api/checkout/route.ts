@@ -35,8 +35,8 @@ export async function POST(req: Request) {
         {
           shipping_rate_data: {
             type: "fixed_amount",
-            fixed_amount: { amount: 4900, currency: "sek" },
-            display_name: "📦 Standardfrakt",
+            fixed_amount: { amount: 7900, currency: "sek" },
+            display_name: "📦 DHL Servicepoint (2-4 arbetsdagar)",
             delivery_estimate: {
               minimum: { unit: "business_day", value: 2 },
               maximum: { unit: "business_day", value: 4 },
@@ -46,8 +46,8 @@ export async function POST(req: Request) {
         {
           shipping_rate_data: {
             type: "fixed_amount",
-            fixed_amount: { amount: 9900, currency: "sek" },
-            display_name: "⚡ Expressfrakt",
+            fixed_amount: { amount: 12900, currency: "sek" },
+            display_name: "⚡ DHL Hemleverans (1-2 arbetsdagar)",
             delivery_estimate: {
               minimum: { unit: "business_day", value: 1 },
               maximum: { unit: "business_day", value: 2 },

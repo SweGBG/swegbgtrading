@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   authors: [{ name: "SweGBG Trading" }],
   creator: "SweGBG Trading",
   metadataBase: new URL("https://swegbg.com"),
+  verification: {
+    google: "MgXljLSXRRrS1bdtWPFctCNPOIf8hQJ8RIskr4VTmWw",
+  },
   openGraph: {
     type: "website",
     locale: "sv_SE",

@@ -12,12 +12,10 @@ export default function Home() {
   return (
     <main style={{ minHeight: "100vh", overflow: "hidden", background: "#0a0a0a" }}>
 
-      {/* BAKGRUND */}
       <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse at 50% 0%, #1a1408 0%, #0a0a0a 60%)" }} />
       <div style={{ position: "fixed", top: 0, left: "50%", transform: "translateX(-50%)", width: "800px", height: "300px", background: "radial-gradient(ellipse, rgba(180,140,60,0.12) 0%, transparent 70%)", zIndex: 0, pointerEvents: "none" }} />
       <div style={{ position: "fixed", bottom: 0, left: "30%", width: "600px", height: "300px", background: "radial-gradient(ellipse, rgba(40,80,160,0.08) 0%, transparent 70%)", zIndex: 0, pointerEvents: "none" }} />
 
-      {/* GEOMETRISKT MÖNSTER */}
       <svg style={{ position: "fixed", inset: 0, width: "100%", height: "100%", zIndex: 0, pointerEvents: "none" }} xmlns="http://www.w3.org/2000/svg">
         <defs>
           <pattern id="hex" x="0" y="0" width="80" height="92" patternUnits="userSpaceOnUse">
@@ -39,7 +37,6 @@ export default function Home() {
         transition={{ duration: 1 }}
         style={{ position: "relative", zIndex: 1 }}
       >
-        {/* FLYTANDE PARTIKLAR */}
         {[...Array(12)].map((_, i) => (
           <motion.div
             key={i}
@@ -63,15 +60,59 @@ export default function Home() {
           initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.1 }}
-          style={{ display: "flex", justifyContent: "center", paddingTop: "20px" }}
+          style={{ display: "flex", justifyContent: "center", paddingTop: "20px", position: "relative" }}
         >
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            style={{
+              position: "absolute", width: "360px", height: "360px",
+              top: "50%", left: "50%", transform: "translate(-50%, -50%)",
+              borderRadius: "50%",
+              border: "1px solid rgba(180,140,60,0.15)",
+              borderTop: "1px solid rgba(180,140,60,0.5)",
+              borderRight: "1px solid rgba(180,140,60,0.3)",
+            }}
+          />
+          <motion.div
+            animate={{ rotate: -360 }}
+            transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
+            style={{
+              position: "absolute", width: "300px", height: "300px",
+              top: "50%", left: "50%", transform: "translate(-50%, -50%)",
+              borderRadius: "50%",
+              border: "1px dashed rgba(180,140,60,0.1)",
+              borderBottom: "1px solid rgba(180,140,60,0.3)",
+            }}
+          />
+          {[0, 90, 180, 270].map((deg) => (
+            <motion.div
+              key={deg}
+              animate={{ opacity: [0.3, 0.8, 0.3] }}
+              transition={{ duration: 2.5, repeat: Infinity, delay: deg / 360 * 2.5 }}
+              style={{
+                position: "absolute", width: "6px", height: "6px",
+                borderRadius: "50%", background: "rgba(180,140,60,0.6)",
+                top: "50%", left: "50%",
+                transform: `translate(-50%, -50%) rotate(${deg}deg) translateY(-175px)`,
+              }}
+            />
+          ))}
+          <div style={{
+            position: "absolute", width: "320px", height: "320px",
+            top: "50%", left: "50%", transform: "translate(-50%, -50%)",
+            borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(180,140,60,0.06) 0%, transparent 70%)",
+          }} />
           <Image
             src="/images/hlogo2.png"
             alt="SweGBG Trading"
-            width={520}
-            height={260}
-            priority
-            style={{ width: "100%", maxWidth: "480px", objectFit: "contain", filter: "drop-shadow(0 0 40px rgba(180,140,60,0.3))" }}
+            width={693} height={260} priority
+            style={{
+              width: "100%", maxWidth: "480px", objectFit: "contain",
+              filter: "drop-shadow(0 0 40px rgba(180,140,60,0.4)) drop-shadow(0 0 80px rgba(180,140,60,0.15))",
+              position: "relative", zIndex: 1,
+            }}
           />
         </motion.div>
 
@@ -80,7 +121,7 @@ export default function Home() {
           initial={{ scaleX: 0, opacity: 0 }}
           animate={{ scaleX: 1, opacity: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
-          style={{ maxWidth: "400px", margin: "16px auto 56px", height: "1px", background: "linear-gradient(90deg, transparent, rgba(180,140,60,0.4), transparent)" }}
+          style={{ maxWidth: "400px", margin: "16px auto 24px", height: "1px", background: "linear-gradient(90deg, transparent, rgba(180,140,60,0.4), transparent)" }}
         />
 
         {/* KATEGORIER */}
@@ -94,6 +135,7 @@ export default function Home() {
             >
               <Link href={kat.href} style={{ textDecoration: "none", color: "inherit", outline: "none" }}>
                 <div style={{ cursor: "pointer", textAlign: "center", position: "relative", padding: "30px" }}>
+
                   <motion.div
                     animate={{ scale: [1, 1.12, 1], opacity: [0.15, 0.3, 0.15] }}
                     transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: i * 2 }}
@@ -104,11 +146,7 @@ export default function Home() {
                     transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: i * 2 + 0.7 }}
                     style={{ position: "absolute", inset: "4px", borderRadius: "50%", border: "1px solid rgba(180,140,60,0.25)", zIndex: 0 }}
                   />
-                  <motion.div
-                    animate={{ opacity: [0.1, 0.4, 0.1] }}
-                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: i * 2 + 1.2 }}
-                    style={{ position: "absolute", inset: "16px", borderRadius: "50%", border: "1px solid rgba(255,220,100,0.2)", zIndex: 0 }}
-                  />
+
                   <motion.div
                     whileHover={{ scale: 1.08 }}
                     whileTap={{ scale: 0.96 }}
@@ -116,13 +154,12 @@ export default function Home() {
                     style={{ position: "relative", zIndex: 1 }}
                   >
                     <Image
-                      src={kat.src}
-                      alt={kat.label}
-                      width={260}
-                      height={260}
+                      src={kat.src} alt={kat.label}
+                      width={260} height={260}
                       style={{ borderRadius: "50%", backgroundColor: "#fff", display: "block", boxShadow: "0 0 40px rgba(180,140,60,0.2), 0 8px 32px rgba(0,0,0,0.5)" }}
                     />
                   </motion.div>
+
                   <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -131,6 +168,14 @@ export default function Home() {
                   >
                     {kat.label}
                   </motion.p>
+
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ delay: 1.2 + i * 0.2 }}
+                    style={{ width: "40px", height: "1px", background: "linear-gradient(90deg, transparent, rgba(180,140,60,0.5), transparent)", margin: "8px auto 0", position: "relative", zIndex: 1 }}
+                  />
+
                 </div>
               </Link>
             </motion.div>

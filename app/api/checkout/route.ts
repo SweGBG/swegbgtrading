@@ -33,6 +33,11 @@ export async function POST(req: Request) {
       mode: "payment",
       metadata: {
         userId: userId || "guest",
+        items: JSON.stringify(items.map((item: any) => ({
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price
+        }))),
       },
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/kassa/tack`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/kassa`,

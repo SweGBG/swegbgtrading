@@ -39,23 +39,46 @@ export async function POST(req: Request) {
       status: "paid",
     });
 
-    // Skicka bekräftelsemail
+    // Bygg produktlista
+    const items = JSON.parse(session.metadata?.items || "[]");
+    const itemsList = items.map((item: any) =>
+      `<tr>
+        <td style="padding:8px;border-bottom:1px solid #eee;">${item.name}</td>
+        <td style="padding:8px;border-bottom:1px solid #eee;">${item.quantity} st</td>
+        <td style="padding:8px;border-bottom:1px solid #eee;">${item.price * item.quantity} kr</td>
+      </tr>`
+    ).join("");
+
     await resend.emails.send({
       from: "order@swegbg.com",
       to: session.customer_details?.email!,
       subject: "Tack för din beställning! ☕",
       html: `
-        <h2>Tack för din beställning!</h2>
-        <p>Hej ${session.customer_details?.name},</p>
-        <p>Vi har tagit emot din beställning och den är nu bekräftad.</p>
-        <p><strong>Totalt:</strong> ${(session.amount_total! / 100)} kr</p>
-        <p><strong>Leveransadress:</strong><br/>
-          ${session.customer_details?.address?.line1}<br/>
-          ${session.customer_details?.address?.postal_code} ${session.customer_details?.address?.city}
-        </p>
-        <p>Vi återkommer med spårningsinformation när paketet är skickat.</p>
-        <br/>
-        <p>Med vänliga hälsningar,<br/>SweGBG Trading</p>
+        <div style="font-family:sans-serif;max-width:600px;margin:0 auto;">
+          <h2>Tack för din beställning!</h2>
+          <p>Hej ${session.customer_details?.name},</p>
+          <p>Vi har tagit emot din beställning och den är nu bekräftad.</p>
+          
+          <table style="width:100%;border-collapse:collapse;margin:20px 0;">
+            <tr style="background:#f5f5f5;">
+              <th style="padding:8px;text-align:left;">Produkt</th>
+              <th style="padding:8px;text-align:left;">Antal</th>
+              <th style="padding:8px;text-align:left;">Pris</th>
+            </tr>
+            ${itemsList}
+          </table>
+
+          <p><strong>Totalt: ${session.amount_total! / 100} kr</strong></p>
+          
+          <p><strong>Leveransadress:</strong><br/>
+            ${session.customer_details?.address?.line1}<br/>
+            ${session.customer_details?.address?.postal_code} ${session.customer_details?.address?.city}
+          </p>
+          
+          <p>Vi återkommer med spårningsinformation när paketet är skickat.</p>
+          <br/>
+          <p>Med vänliga hälsningar,<br/>SweGBG Trading</p>
+        </div>
       `,
     });
   }

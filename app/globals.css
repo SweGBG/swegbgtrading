@@ -8,8 +8,8 @@
 
 body {
   font-family: 'Inter', sans-serif;
-  background: #f5f0e8;
-  color: #000;
+  background: #0a0a0a;
+  color: #fff;
 }
 
 .fixed-nav {
@@ -21,8 +21,9 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0 3rem;
-  border-bottom: 1px solid #eee;
-  background: white;
+  border-bottom: 1px solid rgba(180, 140, 60, 0.15);
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(12px);
   z-index: 50;
 }
 
@@ -35,10 +36,11 @@ body {
 .hero h1 {
   font-family: 'Cormorant Garamond', serif;
   font-size: 5rem;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .hero img {
-  mix-blend-mode: multiply;
+  mix-blend-mode: normal;
 }
 
 /* ── GRID ── */
@@ -51,13 +53,13 @@ body {
 }
 
 .grid-container img {
-  mix-blend-mode: multiply;
+  mix-blend-mode: normal;
 }
 
 /* ── MEDLEM ── */
 .medlem-page {
   min-height: 100vh;
-  background: #f5f0e8;
+  background: #0a0a0a;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -65,9 +67,9 @@ body {
 }
 
 .medlem-card {
-  background: white;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(180, 140, 60, 0.2);
   border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
   width: 100%;
   max-width: 440px;
   overflow: hidden;
@@ -81,18 +83,18 @@ body {
 .medlem-header h1 {
   font-family: 'Cormorant Garamond', serif;
   font-size: 2.5rem;
-  color: #111;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .medlem-header p {
   font-size: 0.75rem;
   letter-spacing: 0.3em;
-  color: #999;
+  color: rgba(180, 140, 60, 0.5);
 }
 
 .medlem-tabs {
   display: flex;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .medlem-tabs button {
@@ -105,14 +107,14 @@ body {
   font-weight: 600;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #aaa;
+  color: rgba(255, 255, 255, 0.25);
   transition: all 0.2s;
 }
 
 .medlem-tabs button.active {
-  color: #111;
-  border-bottom: 2px solid #c9a84c;
-  background: #fffbf0;
+  color: rgba(180, 140, 60, 0.9);
+  border-bottom: 1px solid rgba(180, 140, 60, 0.5);
+  background: rgba(180, 140, 60, 0.05);
 }
 
 .medlem-form {
@@ -128,50 +130,54 @@ body {
   font-weight: 600;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #888;
+  color: rgba(180, 140, 60, 0.5);
   margin-bottom: 0.4rem;
 }
 
 .medlem-form input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid #e5e5e5;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
-  background: #fafafa;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.8);
   font-size: 0.9rem;
   outline: none;
   transition: all 0.2s;
 }
 
 .medlem-form input:focus {
-  border-color: #c9a84c;
-  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.15);
+  border-color: rgba(180, 140, 60, 0.4);
+  box-shadow: 0 0 0 3px rgba(180, 140, 60, 0.08);
+}
+
+.medlem-form input::placeholder {
+  color: rgba(255, 255, 255, 0.2);
 }
 
 .medlem-submit {
   width: 100%;
   padding: 0.85rem;
-  background: #111;
-  color: white;
+  background: linear-gradient(135deg, rgba(180, 140, 60, 0.85), rgba(232, 192, 106, 0.85));
+  color: #000;
   border: none;
   border-radius: 8px;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: opacity 0.2s;
 }
 
 .medlem-submit:hover {
-  background: #c9a84c;
-  color: #111;
+  opacity: 0.85;
 }
 
 .forgot-link {
   background: none;
   border: none;
-  color: #c9a84c;
+  color: rgba(180, 140, 60, 0.6);
   font-size: 0.75rem;
   cursor: pointer;
   text-align: right;
@@ -179,8 +185,9 @@ body {
 }
 
 .error-msg {
-  color: #e53e3e;
-  background: #fff5f5;
+  color: rgba(255, 80, 80, 0.8);
+  background: rgba(255, 80, 80, 0.08);
+  border: 1px solid rgba(255, 80, 80, 0.2);
   padding: 0.5rem 1rem;
   border-radius: 8px;
   font-size: 0.85rem;
@@ -188,8 +195,9 @@ body {
 }
 
 .success-msg {
-  color: #276749;
-  background: #f0fff4;
+  color: rgba(180, 140, 60, 0.9);
+  background: rgba(180, 140, 60, 0.08);
+  border: 1px solid rgba(180, 140, 60, 0.2);
   padding: 0.5rem 1rem;
   border-radius: 8px;
   font-size: 0.85rem;
@@ -197,10 +205,9 @@ body {
 }
 
 /* ════════════════════════════════
-   MOBILANPASSNING (lägg längst ner)
+   MOBILANPASSNING
    ════════════════════════════════ */
 
-/* Navbar-länkar döljs på mobil */
 .desktop-only {
   display: none;
 }
@@ -213,7 +220,6 @@ body {
   }
 }
 
-/* Hero */
 @media (max-width: 767px) {
   .hero {
     padding: 120px 1.5rem 60px;
@@ -224,7 +230,6 @@ body {
   }
 }
 
-/* Grid (kaffe/te-kategorierna på startsidan) */
 @media (max-width: 767px) {
   .grid-container {
     flex-direction: column;
@@ -234,7 +239,6 @@ body {
   }
 }
 
-/* Navbar */
 @media (max-width: 767px) {
   .fixed-nav {
     padding: 0 1.2rem;

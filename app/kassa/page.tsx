@@ -5,6 +5,7 @@ import { createClient } from "@/utils/supabase";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 export default function KassaPage() {
   const { cart, clearCart } = useCart();
@@ -15,13 +16,8 @@ export default function KassaPage() {
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    address: "",
-    postalCode: "",
-    city: "",
+    firstName: "", lastName: "", email: "",
+    phone: "", address: "", postalCode: "", city: "",
   });
 
   const total = cart.reduce((sum, item) => sum + item.price * (item.quantity ?? 1), 0);
@@ -32,13 +28,7 @@ export default function KassaPage() {
       if (user) {
         setUser(user);
         setForm(prev => ({ ...prev, email: user.email ?? "" }));
-
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", user.id)
-          .single();
-
+        const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single();
         if (profile) {
           const nameParts = (profile.full_name ?? "").split(" ");
           setForm(prev => ({
@@ -63,29 +53,16 @@ export default function KassaPage() {
   const handleSubmit = async () => {
     const required = ["firstName", "lastName", "email", "address", "postalCode", "city"];
     const missing = required.filter(k => !form[k as keyof typeof form]);
-
-    if (missing.length > 0) {
-      alert("Fyll i alla obligatoriska fält.");
-      return;
-    }
-
+    if (missing.length > 0) { alert("Fyll i alla obligatoriska fält."); return; }
     setLoading(true);
-
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: cart,
-          userId: user?.id || null, // Automatiserar ID-kopplingen!
-          customerDetails: form        // Skickar med adressen också
-        }),
+        body: JSON.stringify({ items: cart, userId: user?.id || null, customerDetails: form }),
       });
-
       const { url } = await res.json();
-      if (url) {
-        window.location.href = url;
-      }
+      if (url) window.location.href = url;
     } catch (err) {
       console.error("Betalningsfel:", err);
       alert("Något gick fel med betalningen.");
@@ -95,82 +72,181 @@ export default function KassaPage() {
   };
 
   return (
-    <div style={styles.page}>
-      <div style={styles.layout}>
-        <div style={styles.card}>
-          <h1 style={styles.title}>KASSA</h1>
+    <main style={{ minHeight: "100vh", background: "#0a0a0a", overflow: "hidden" }}>
 
-          {!user && (
-            <div style={styles.loginBanner}>
-              <span>Har du ett konto? </span>
-              <Link href="/medlem" style={{ color: "#c9a84c", fontWeight: 600 }}>Logga in</Link>
-              <span> för snabbare utcheckning.</span>
-            </div>
-          )}
+      {/* BAKGRUND */}
+      <div style={{
+        position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none",
+        background: "radial-gradient(ellipse at 70% 20%, rgba(180,140,60,0.06) 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, rgba(40,80,160,0.04) 0%, transparent 50%)",
+      }} />
+      <div style={{
+        position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none",
+        backgroundImage: `linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                          linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)`,
+        backgroundSize: "80px 80px",
+      }} />
 
-          <section style={styles.section}>
-            <h2 style={styles.sectionTitle}>Kontaktuppgifter</h2>
-            <div style={styles.row}>
-              <Field label="Förnamn *" name="firstName" value={form.firstName} onChange={handleChange} />
-              <Field label="Efternamn *" name="lastName" value={form.lastName} onChange={handleChange} />
-            </div>
-            <Field label="E-post *" name="email" value={form.email} onChange={handleChange} type="email" />
-            <Field label="Telefon" name="phone" value={form.phone} onChange={handleChange} type="tel" />
-          </section>
-
-          <section style={styles.section}>
-            <h2 style={styles.sectionTitle}>Leveransadress</h2>
-            <Field label="Gatuadress *" name="address" value={form.address} onChange={handleChange} />
-            <div style={styles.row}>
-              <Field label="Postnummer *" name="postalCode" value={form.postalCode} onChange={handleChange} />
-              <Field label="Stad *" name="city" value={form.city} onChange={handleChange} />
-            </div>
-          </section>
-
-          <section style={styles.section}>
-            <h2 style={styles.sectionTitle}>Betalning</h2>
-            <div style={styles.stripePlaceholder}>
-              🔒 Säker kortbetalning via Stripe
-            </div>
-          </section>
-
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            style={{ ...styles.submitBtn, opacity: loading ? 0.7 : 1 }}
-          >
-            {loading ? "Skickar till betalning..." : `Lägg beställning — ${total} kr`}
-          </button>
-        </div>
-
-        <div style={styles.summary}>
-          <h2 style={styles.sectionTitle}>Din order</h2>
-          {cart.length === 0 ? (
-            <p style={{ color: "#999", fontSize: "0.9rem" }}>Varukorgen är tom.</p>
-          ) : (
-            cart.map((item, i) => (
-              <div key={i} style={styles.orderItem}>
-                <span>{item.name}</span>
-                <span style={{ color: "#888", fontSize: "0.85rem" }}>×{item.quantity}</span>
-                <span style={{ marginLeft: "auto" }}>{item.price * (item.quantity ?? 1)} kr</span>
-              </div>
-            ))
-          )}
-
-          <div style={styles.divider} />
-          <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 600 }}>
-            <span>Totalt</span>
-            <span>{total} kr</span>
-          </div>
-          <p style={{ fontSize: "0.75rem", color: "#999", marginTop: "0.5rem" }}>
-            Inkl. moms. Frakt beräknas vid leverans.
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        style={{ position: "relative", zIndex: 1, maxWidth: "1000px", margin: "0 auto", padding: "120px 24px 80px" }}
+      >
+        {/* HEADER */}
+        <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} style={{ marginBottom: "48px" }}>
+          <p style={{ fontSize: "10px", letterSpacing: "6px", color: "rgba(180,140,60,0.6)", textTransform: "uppercase", marginBottom: "10px" }}>
+            SWEGBG TRADING
           </p>
-          <Link href="/varukorg" style={{ display: "block", marginTop: "1.5rem", color: "#888", fontSize: "0.85rem" }}>
-            ← Ändra varukorg
-          </Link>
+          <h1 style={{ fontSize: "clamp(36px, 7vw, 64px)", fontWeight: "900", letterSpacing: "0.08em", textTransform: "uppercase", color: "rgba(255,255,255,0.9)", lineHeight: 1 }}>
+            Kassa
+          </h1>
+          <div style={{ marginTop: "20px", height: "1px", background: "linear-gradient(90deg, rgba(180,140,60,0.4), transparent)" }} />
+        </motion.div>
+
+        <div style={{ display: "flex", gap: "32px", flexWrap: "wrap", alignItems: "flex-start" }}>
+
+          {/* FORMULÄR */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            style={{
+              flex: "1 1 500px",
+              background: "rgba(255,255,255,0.03)",
+              border: "1px solid rgba(255,255,255,0.06)",
+              borderRadius: "16px",
+              padding: "2rem",
+            }}
+          >
+            {!user && (
+              <div style={{
+                background: "rgba(180,140,60,0.08)",
+                border: "1px solid rgba(180,140,60,0.2)",
+                borderRadius: "8px",
+                padding: "12px 16px",
+                fontSize: "13px",
+                marginBottom: "24px",
+                color: "rgba(255,255,255,0.5)",
+              }}>
+                Har du ett konto?{" "}
+                <Link href="/medlem" style={{ color: "rgba(180,140,60,0.8)", fontWeight: 600, textDecoration: "none" }}>
+                  Logga in
+                </Link>
+                {" "}för snabbare utcheckning.
+              </div>
+            )}
+
+            {/* KONTAKT */}
+            <section style={{ marginBottom: "2rem", paddingBottom: "2rem", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+              <p style={sectionLabel}>Kontaktuppgifter</p>
+              <div style={{ display: "flex", gap: "1rem" }}>
+                <Field label="Förnamn *" name="firstName" value={form.firstName} onChange={handleChange} />
+                <Field label="Efternamn *" name="lastName" value={form.lastName} onChange={handleChange} />
+              </div>
+              <Field label="E-post *" name="email" value={form.email} onChange={handleChange} type="email" />
+              <Field label="Telefon" name="phone" value={form.phone} onChange={handleChange} type="tel" />
+            </section>
+
+            {/* ADRESS */}
+            <section style={{ marginBottom: "2rem", paddingBottom: "2rem", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+              <p style={sectionLabel}>Leveransadress</p>
+              <Field label="Gatuadress *" name="address" value={form.address} onChange={handleChange} />
+              <div style={{ display: "flex", gap: "1rem" }}>
+                <Field label="Postnummer *" name="postalCode" value={form.postalCode} onChange={handleChange} />
+                <Field label="Stad *" name="city" value={form.city} onChange={handleChange} />
+              </div>
+            </section>
+
+            {/* BETALNING */}
+            <section style={{ marginBottom: "2rem" }}>
+              <p style={sectionLabel}>Betalning</p>
+              <div style={{
+                background: "rgba(255,255,255,0.02)",
+                border: "1px dashed rgba(180,140,60,0.2)",
+                borderRadius: "8px",
+                padding: "1.2rem",
+                textAlign: "center",
+                color: "rgba(255,255,255,0.3)",
+                fontSize: "13px",
+                letterSpacing: "1px",
+              }}>
+                🔒 Säker kortbetalning via Stripe
+              </div>
+            </section>
+
+            <button
+              onClick={handleSubmit}
+              disabled={loading}
+              style={{
+                width: "100%",
+                padding: "16px",
+                background: loading ? "rgba(255,255,255,0.05)" : "linear-gradient(135deg, rgba(180,140,60,0.85), rgba(232,192,106,0.85))",
+                color: loading ? "rgba(255,255,255,0.2)" : "#000",
+                border: "none",
+                borderRadius: "8px",
+                fontSize: "12px",
+                fontWeight: "700",
+                letterSpacing: "3px",
+                textTransform: "uppercase",
+                cursor: loading ? "not-allowed" : "pointer",
+                transition: "all 0.3s",
+              }}
+            >
+              {loading ? "Skickar till betalning..." : `Lägg beställning — ${total} kr`}
+            </button>
+          </motion.div>
+
+          {/* ORDERSAMMANFATTNING */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            style={{
+              flex: "1 1 260px",
+              background: "rgba(180,140,60,0.04)",
+              border: "1px solid rgba(180,140,60,0.15)",
+              borderRadius: "16px",
+              padding: "2rem",
+              position: "sticky",
+              top: "90px",
+            }}
+          >
+            <p style={sectionLabel}>Din order</p>
+            {cart.length === 0 ? (
+              <p style={{ color: "rgba(255,255,255,0.25)", fontSize: "13px" }}>Varukorgen är tom.</p>
+            ) : (
+              cart.map((item, i) => (
+                <div key={i} style={{
+                  display: "flex", gap: "0.75rem", alignItems: "center",
+                  padding: "10px 0",
+                  borderBottom: "1px solid rgba(255,255,255,0.05)",
+                  fontSize: "13px",
+                  color: "rgba(255,255,255,0.6)",
+                }}>
+                  <span style={{ flex: 1 }}>{item.name}</span>
+                  <span style={{ opacity: 0.4 }}>×{item.quantity}</span>
+                  <span style={{ color: "rgba(180,140,60,0.8)", fontWeight: "700" }}>
+                    {item.price * (item.quantity ?? 1)} kr
+                  </span>
+                </div>
+              ))
+            )}
+
+            <div style={{ borderTop: "1px solid rgba(180,140,60,0.2)", margin: "16px 0" }} />
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+              <span style={{ fontSize: "11px", letterSpacing: "3px", color: "rgba(255,255,255,0.3)", textTransform: "uppercase" }}>Totalt</span>
+              <span style={{ fontSize: "24px", fontWeight: "900", color: "rgba(180,140,60,0.9)" }}>{total} <span style={{ fontSize: "13px", opacity: 0.5 }}>kr</span></span>
+            </div>
+            <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.2)", marginTop: "8px", letterSpacing: "1px" }}>
+              Inkl. moms. Frakt beräknas vid leverans.
+            </p>
+            <Link href="/varukorg" style={{ display: "block", marginTop: "24px", color: "rgba(255,255,255,0.2)", fontSize: "12px", letterSpacing: "2px", textDecoration: "none" }}>
+              ← Ändra varukorg
+            </Link>
+          </motion.div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </main>
   );
 }
 
@@ -180,33 +256,35 @@ function Field({ label, name, value, onChange, type = "text" }: {
 }) {
   return (
     <div style={{ marginBottom: "1rem" }}>
-      <label style={styles.label}>{label}</label>
+      <label style={{ display: "block", fontSize: "10px", letterSpacing: "3px", color: "rgba(180,140,60,0.5)", textTransform: "uppercase", marginBottom: "8px" }}>
+        {label}
+      </label>
       <input
         type={type}
         name={name}
         value={value}
         onChange={onChange}
-        style={styles.input}
         autoComplete={name}
+        style={{
+          width: "100%",
+          padding: "12px 16px",
+          background: "rgba(255,255,255,0.04)",
+          border: "1px solid rgba(255,255,255,0.08)",
+          borderRadius: "8px",
+          color: "rgba(255,255,255,0.8)",
+          fontSize: "14px",
+          outline: "none",
+          boxSizing: "border-box",
+          fontFamily: "inherit",
+        }}
       />
     </div>
   );
 }
 
-const styles: Record<string, React.CSSProperties> = {
-  page: { minHeight: "100vh", background: "#f5f0e8", padding: "100px 20px 60px" },
-  layout: { maxWidth: "1000px", margin: "0 auto", display: "flex", gap: "2rem", alignItems: "flex-start", flexWrap: "wrap" },
-  card: { background: "#fff", borderRadius: "16px", padding: "2rem", flex: "1 1 500px", boxShadow: "0 4px 30px rgba(0,0,0,0.07)" },
-  summary: { background: "#fff", borderRadius: "16px", padding: "2rem", flex: "1 1 260px", boxShadow: "0 4px 30px rgba(0,0,0,0.07)", position: "sticky", top: "90px" },
-  title: { fontFamily: "'Cormorant Garamond', serif", fontSize: "2rem", marginBottom: "1.5rem", letterSpacing: "2px" },
-  sectionTitle: { fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", color: "#aaa", marginBottom: "1rem" },
-  section: { marginBottom: "2rem", paddingBottom: "2rem", borderBottom: "1px solid #f0f0f0" },
-  row: { display: "flex", gap: "1rem" },
-  label: { display: "block", fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "#888", marginBottom: "0.4rem" },
-  input: { width: "100%", padding: "0.75rem 1rem", border: "1px solid #e5e5e5", borderRadius: "8px", background: "#fafafa", fontSize: "0.9rem", outline: "none", fontFamily: "inherit" },
-  stripePlaceholder: { background: "#fafafa", border: "1px dashed #ddd", borderRadius: "8px", padding: "1.2rem", textAlign: "center", color: "#999", fontSize: "0.85rem" },
-  submitBtn: { width: "100%", padding: "1rem", background: "#111", color: "#fff", border: "none", borderRadius: "8px", fontSize: "0.8rem", fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", cursor: "pointer" },
-  loginBanner: { background: "#fffbf0", border: "1px solid #f0e4b8", borderRadius: "8px", padding: "0.75rem 1rem", fontSize: "0.85rem", marginBottom: "1.5rem", color: "#555" },
-  orderItem: { display: "flex", gap: "0.75rem", alignItems: "center", padding: "0.6rem 0", fontSize: "0.9rem", borderBottom: "1px solid #f5f5f5" },
-  divider: { borderTop: "1px solid #eee", margin: "1rem 0" },
+const sectionLabel: React.CSSProperties = {
+  fontSize: "10px", letterSpacing: "4px",
+  color: "rgba(180,140,60,0.5)",
+  textTransform: "uppercase",
+  marginBottom: "16px",
 };

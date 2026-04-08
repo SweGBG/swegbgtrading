@@ -4,61 +4,149 @@ import Image from 'next/image';
 import { motion } from "framer-motion";
 
 export default function Home() {
+  const kategorier = [
+    { href: "/kaffe", src: "/images/logo.png", label: "KAFFE" },
+    { href: "/te", src: "/images/logo3a.png", label: "TE" },
+  ];
+
   return (
-    <main>
+    <main style={{ minHeight: "100vh", overflow: "hidden", background: "#0a0a0a" }}>
+
+      {/* BAKGRUND */}
+      <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse at 50% 0%, #1a1408 0%, #0a0a0a 60%)" }} />
+      <div style={{ position: "fixed", top: 0, left: "50%", transform: "translateX(-50%)", width: "800px", height: "300px", background: "radial-gradient(ellipse, rgba(180,140,60,0.12) 0%, transparent 70%)", zIndex: 0, pointerEvents: "none" }} />
+      <div style={{ position: "fixed", bottom: 0, left: "30%", width: "600px", height: "300px", background: "radial-gradient(ellipse, rgba(40,80,160,0.08) 0%, transparent 70%)", zIndex: 0, pointerEvents: "none" }} />
+
+      {/* GEOMETRISKT MÖNSTER */}
+      <svg style={{ position: "fixed", inset: 0, width: "100%", height: "100%", zIndex: 0, pointerEvents: "none" }} xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <pattern id="hex" x="0" y="0" width="80" height="92" patternUnits="userSpaceOnUse">
+            <polygon points="40,4 76,24 76,68 40,88 4,68 4,24" fill="none" stroke="rgba(180,140,60,0.1)" strokeWidth="0.5" />
+            <polygon points="40,18 62,30 62,62 40,74 18,62 18,30" fill="none" stroke="rgba(180,140,60,0.04)" strokeWidth="0.5" />
+            <circle cx="40" cy="46" r="1.5" fill="rgba(180,140,60,0.12)" />
+          </pattern>
+          <pattern id="diag" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+            <line x1="0" y1="40" x2="40" y2="0" stroke="rgba(255,255,255,0.015)" strokeWidth="0.5" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#hex)" />
+        <rect width="100%" height="100%" fill="url(#diag)" />
+      </svg>
+
       <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.2, ease: "easeOut" }}
-        style={{ paddingTop: '33px' }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+        style={{ position: "relative", zIndex: 1 }}
       >
-        <div className="hero" style={{ paddingTop: '5px', paddingBottom: '20px' }}>
+        {/* FLYTANDE PARTIKLAR */}
+        {[...Array(12)].map((_, i) => (
+          <motion.div
+            key={i}
+            animate={{ y: [0, -80, 0], opacity: [0, 0.4, 0] }}
+            transition={{ duration: 4 + (i % 4), repeat: Infinity, delay: i * 0.7, ease: "easeInOut" }}
+            style={{
+              position: "fixed",
+              left: `${8 + i * 8}%`,
+              bottom: `${10 + (i % 3) * 15}%`,
+              width: i % 3 === 0 ? "3px" : "2px",
+              height: i % 3 === 0 ? "3px" : "2px",
+              borderRadius: "50%",
+              background: i % 2 === 0 ? "rgba(180,140,60,0.6)" : "rgba(255,255,255,0.3)",
+              pointerEvents: "none",
+            }}
+          />
+        ))}
+
+        {/* LOGO */}
+        <motion.div
+          initial={{ opacity: 0, y: -16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.1 }}
+          style={{ display: "flex", justifyContent: "center", paddingTop: "20px" }}
+        >
           <Image
             src="/images/hlogo2.png"
             alt="SweGBG Trading"
-            width={600}
-            height={300}
+            width={520}
+            height={260}
             priority
-            style={{
-              width: '100%',
-              maxWidth: '600px',
-              objectFit: 'contain',
-              margin: '0 auto',
-              display: 'block',
-              mixBlendMode: 'multiply'
-            }}
+            style={{ width: "100%", maxWidth: "480px", objectFit: "contain", filter: "drop-shadow(0 0 40px rgba(180,140,60,0.3))" }}
           />
+        </motion.div>
+
+        {/* LINJE */}
+        <motion.div
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={{ scaleX: 1, opacity: 1 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          style={{ maxWidth: "400px", margin: "16px auto 56px", height: "1px", background: "linear-gradient(90deg, transparent, rgba(180,140,60,0.4), transparent)" }}
+        />
+
+        {/* KATEGORIER */}
+        <div style={{ display: "flex", justifyContent: "center", gap: "80px", flexWrap: "wrap", padding: "0 20px" }}>
+          {kategorier.map((kat, i) => (
+            <motion.div
+              key={kat.href}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 + i * 0.2 }}
+            >
+              <Link href={kat.href} style={{ textDecoration: "none", color: "inherit", outline: "none" }}>
+                <div style={{ cursor: "pointer", textAlign: "center", position: "relative", padding: "30px" }}>
+                  <motion.div
+                    animate={{ scale: [1, 1.12, 1], opacity: [0.15, 0.3, 0.15] }}
+                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: i * 2 }}
+                    style={{ position: "absolute", inset: "-8px", borderRadius: "50%", border: "1px solid rgba(180,140,60,0.4)", zIndex: 0 }}
+                  />
+                  <motion.div
+                    animate={{ scale: [1, 1.07, 1], opacity: [0.2, 0.5, 0.2] }}
+                    transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: i * 2 + 0.7 }}
+                    style={{ position: "absolute", inset: "4px", borderRadius: "50%", border: "1px solid rgba(180,140,60,0.25)", zIndex: 0 }}
+                  />
+                  <motion.div
+                    animate={{ opacity: [0.1, 0.4, 0.1] }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: i * 2 + 1.2 }}
+                    style={{ position: "absolute", inset: "16px", borderRadius: "50%", border: "1px solid rgba(255,220,100,0.2)", zIndex: 0 }}
+                  />
+                  <motion.div
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.96 }}
+                    transition={{ type: "spring", stiffness: 280, damping: 18 }}
+                    style={{ position: "relative", zIndex: 1 }}
+                  >
+                    <Image
+                      src={kat.src}
+                      alt={kat.label}
+                      width={260}
+                      height={260}
+                      style={{ borderRadius: "50%", backgroundColor: "#fff", display: "block", boxShadow: "0 0 40px rgba(180,140,60,0.2), 0 8px 32px rgba(0,0,0,0.5)" }}
+                    />
+                  </motion.div>
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1 + i * 0.2 }}
+                    style={{ marginTop: "20px", fontWeight: "700", fontSize: "12px", letterSpacing: "6px", color: "rgba(255,255,255,0.4)", position: "relative", zIndex: 1 }}
+                  >
+                    {kat.label}
+                  </motion.p>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
         </div>
 
-        <div className="grid-container" style={{ paddingTop: '33px', display: 'flex', justifyContent: 'center', gap: '33px' }}>
+        {/* FOOTER */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.4 }}
+          style={{ textAlign: "center", marginTop: "60px", paddingBottom: "60px", fontSize: "10px", letterSpacing: "8px", color: "rgba(255,255,255,0.12)", textTransform: "uppercase" }}
+        >
+          GÖTEBORG — EST. 2026
+        </motion.p>
 
-          <Link href="/kaffe" style={{ textDecoration: 'none', color: 'inherit', outline: 'none' }}>
-            <div style={{ marginTop: '-20px', cursor: 'pointer', textAlign: 'center' }}>
-              <Image
-                src="/images/logo.png"
-                alt="Kaffe"
-                width={280}
-                height={280}
-                style={{ borderRadius: '50%', backgroundColor: '#fff' }}
-              />
-              <p style={{ marginTop: '10px', fontWeight: 'bold' }}>KAFFE</p>
-            </div>
-          </Link>
-
-          <Link href="/te" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <div style={{ marginTop: '-29px', cursor: 'pointer', textAlign: 'center' }}>
-              <Image
-                src="/images/logo3a.png"
-                alt="Te"
-                width={275}
-                height={275}
-                style={{ backgroundColor: '#ffffff', borderRadius: '50%' }}
-              />
-              <p style={{ marginTop: '-3px', fontWeight: 'bold' }}>TE</p>
-            </div>
-          </Link>
-
-        </div>
       </motion.section>
     </main>
   );

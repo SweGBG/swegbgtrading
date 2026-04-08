@@ -144,7 +144,7 @@ export default function KontoDashboard() {
                         </div>
                         <p style={{ fontSize: "0.9rem", marginTop: "10px" }}>{order.shipping_name}</p>
                         <p style={{ fontSize: "0.8rem", color: "#666" }}>{order.shipping_address}, {order.shipping_city}</p>
-                        <div style={{ marginTop: "10px", fontWeight: "bold" }}>{order.amount_total / 100} kr</div>
+                        <div style={{ marginTop: "10px", fontWeight: "bold" }}>{order.amount_total} kr</div>
                       </div>
                     ))}
                   </div>

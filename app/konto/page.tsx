@@ -104,8 +104,8 @@ export default function KontoDashboard() {
           <p style={{ color: "#666" }}>Inloggad som: <strong>{user?.email}</strong></p>
         </header>
 
-        <div style={{ display: "flex", gap: "40px" }}>
-          <aside style={{ width: "220px", display: "flex", flexDirection: "column", gap: "8px" }}>
+        <div style={{ display: "flex", gap: "40px", flexWrap: "wrap" }}>
+          <aside style={{ width: "100%", maxWidth: "220px", display: "flex", flexDirection: "column", gap: "8px" }}>
             <button onClick={() => setActiveTab("oversikt")} style={tabButtonStyle(activeTab === "oversikt")}>Översikt</button>
             <button onClick={() => setActiveTab("orders")} style={tabButtonStyle(activeTab === "orders")}>Mina Beställningar ({orders.length})</button>
             <button onClick={() => setActiveTab("messages")} style={tabButtonStyle(activeTab === "messages")}>Meddelanden</button>

@@ -13,20 +13,53 @@ export async function POST(req: Request) {
   try {
     const { items, userId, customerDetails } = await req.json();
 
-    // 1. Beräkna totalbeloppet (Stripe vill ha det i öre/cent)
     const totalAmount = items.reduce((acc: number, item: any) => acc + (item.price * item.quantity), 0);
 
-    // 2. Skapa Stripe Checkout-session FÖRST (så vi får ett session.id)
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       shipping_address_collection: {
         allowed_countries: ["SE", "NO", "DK", "FI"],
       },
+      shipping_options: [
+        {
+          shipping_rate_data: {
+            type: "fixed_amount",
+            fixed_amount: { amount: 0, currency: "sek" },
+            display_name: "🎁 Gratis frakt",
+            delivery_estimate: {
+              minimum: { unit: "business_day", value: 3 },
+              maximum: { unit: "business_day", value: 5 },
+            },
+          },
+        },
+        {
+          shipping_rate_data: {
+            type: "fixed_amount",
+            fixed_amount: { amount: 4900, currency: "sek" },
+            display_name: "📦 Standardfrakt",
+            delivery_estimate: {
+              minimum: { unit: "business_day", value: 2 },
+              maximum: { unit: "business_day", value: 4 },
+            },
+          },
+        },
+        {
+          shipping_rate_data: {
+            type: "fixed_amount",
+            fixed_amount: { amount: 9900, currency: "sek" },
+            display_name: "⚡ Expressfrakt",
+            delivery_estimate: {
+              minimum: { unit: "business_day", value: 1 },
+              maximum: { unit: "business_day", value: 2 },
+            },
+          },
+        },
+      ],
       line_items: items.map((item: any) => ({
         price_data: {
           currency: "sek",
           product_data: { name: item.name },
-          unit_amount: item.price * 100, // Omvandla till öre
+          unit_amount: item.price * 100,
         },
         quantity: item.quantity,
       })),
@@ -43,33 +76,24 @@ export async function POST(req: Request) {
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/kassa`,
     });
 
-    // 3. Skapa ordern i Supabase NU när vi har session.id och totalAmount
-    // I din app/api/checkout/route.ts
-    const { data: order, error: dbError } = await supabase
+    const { error: dbError } = await supabase
       .from("orders")
-      .insert([
-        {
-          stripe_session_id: session.id,
-          amount_total: totalAmount,
-          currency: "sek",
-          customer_email: customerDetails.email,
-          status: "paid",
-          // VIKTIGT: Spara dina items som en JSON-lista
-          items: items, // Detta matchar 'items' kolumnen i din bild
-          shipping_name: `${customerDetails.firstName} ${customerDetails.lastName}`,
-          shipping_address: customerDetails.address,
-          shipping_city: customerDetails.city,
-          user_id: userId || null,
-          shipping_postcode: customerDetails.postalCode
-        },
-      ]);
+      .insert([{
+        stripe_session_id: session.id,
+        amount_total: totalAmount,
+        currency: "sek",
+        customer_email: customerDetails.email,
+        status: "paid",
+        items: items,
+        shipping_name: `${customerDetails.firstName} ${customerDetails.lastName}`,
+        shipping_address: customerDetails.address,
+        shipping_city: customerDetails.city,
+        user_id: userId || null,
+        shipping_postcode: customerDetails.postalCode
+      }]);
 
-    if (dbError) {
-      console.error("Supabase Error:", dbError.message);
-      // Om databasen sviker vill vi veta varför, men sessionen är redan skapad
-    }
+    if (dbError) console.error("Supabase Error:", dbError.message);
 
-    // 4. Skicka tillbaka Stripe-URL:en till frontenden
     return NextResponse.json({ url: session.url });
 
   } catch (error: any) {

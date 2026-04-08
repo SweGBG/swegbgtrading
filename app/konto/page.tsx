@@ -96,8 +96,8 @@ export default function KontoDashboard() {
   const noChanges = JSON.stringify(profile) === JSON.stringify(initialProfile);
 
   return (
-    <main style={{ paddingTop: "100px", minHeight: "100vh", backgroundColor: "#f9f7f2" }}>
-      <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "0 20px" }}>
+    <main style={{ paddingTop: "80px", minHeight: "100vh", backgroundColor: "#f9f7f2" }}>
+      <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "0 16px" }}>
 
         <header style={{ marginBottom: "40px", borderBottom: "1px solid #ddd", paddingBottom: "20px" }}>
           <h1 style={{ fontSize: "2rem", fontFamily: "serif", marginBottom: "5px" }}>Mitt konto</h1>
@@ -113,7 +113,7 @@ export default function KontoDashboard() {
             <button onClick={handleLogout} style={{ ...tabButtonStyle(false), marginTop: "20px", color: "#cc0000", border: "1px solid #ffcccc" }}>Logga ut</button>
           </aside>
 
-          <section style={{ flex: 1, backgroundColor: "#fff", padding: "40px", borderRadius: "12px", boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}>
+          <section style={{ flex: 1, minWidth: "280px", backgroundColor: "#fff", padding: "40px", borderRadius: "12px", boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}>
 
             {activeTab === "oversikt" && (
               <div>

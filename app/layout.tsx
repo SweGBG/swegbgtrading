@@ -5,67 +5,67 @@ import Navbar from "./components/navbar";
 
 export const metadata: Metadata = {
   title: {
-    default: "SweGBG Trading — Kaffe, Te & Muggar från Göteborg",
+    default: "SweGBG Trading – Premium Kaffe, Te & Muggar Online från Göteborg",
     template: "%s | SweGBG Trading",
   },
-  description: "Göteborg i varje kopp. Handplockat kaffe, premium te och designade muggar — levererat till din dörr med äkta GBG-känsla.",
+  description:
+    "Upptäck premium kaffe, exklusivt te och designade muggar från Göteborg. SweGBG Trading levererar handplockade smaker med äkta GBG-känsla – direkt till din dörr.",
   keywords: [
-    "kaffe", "te", "muggar", "kaffekoppar",
-    "Göteborg", "GBG", "SweGBG", "SweGBG Trading",
-    "specialty coffee", "svensk kaffe", "lokalt kaffe",
-    "kaffe online", "te online", "köp kaffe",
-    "handplockat kaffe", "premium te", "göteborg kaffe",
-    "rostning", "local roast", "kaffepresent"
+    "kaffe online sverige",
+    "premium kaffe göteborg",
+    "köpa kaffe online",
+    "specialty coffee sverige",
+    "te online sverige",
+    "premium te göteborg",
+    "muggar design",
+    "kaffekoppar design",
+    "SweGBG",
+    "SweGBG Trading",
+    "Göteborg kaffe",
+    "lokalt kaffe sverige",
+    "kaffe present",
+    "exklusivt kaffe",
   ],
   authors: [{ name: "SweGBG Trading", url: "https://swegbg.com" }],
   creator: "SweGBG Trading",
   publisher: "SweGBG Trading",
-  category: "Shopping",
+  category: "E-commerce",
   metadataBase: new URL("https://swegbg.com"),
-
   verification: {
     google: "MgXljLSXRRrS1bdtWPFctCNPOIf8hQJ8RIskr4VTmWw",
   },
-
   alternates: {
     canonical: "https://swegbg.com",
     languages: {
       "sv-SE": "https://swegbg.com",
     },
   },
-
   openGraph: {
     type: "website",
     locale: "sv_SE",
     url: "https://swegbg.com",
     siteName: "SweGBG Trading",
-    title: "SweGBG Trading — Göteborg i varje kopp ☕",
-    description: "Handplockat kaffe, premium te och designade muggar med äkta GBG-känsla. Levererat till din dörr.",
+    title: "Premium Kaffe & Te från Göteborg ☕ | SweGBG Trading",
+    description:
+      "Göteborg i varje kopp. Handplockat kaffe, exklusivt te och stilrena muggar – beställ online idag.",
     images: [
       {
         url: "/images/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "SweGBG Trading — Kaffe & Te från Göteborg",
-        type: "image/jpeg",
+        alt: "SweGBG Trading – Premium kaffe & te",
       },
     ],
   },
-
   twitter: {
     card: "summary_large_image",
     site: "@swegbgtrading",
     creator: "@swegbgtrading",
-    title: "SweGBG Trading — Göteborg i varje kopp ☕",
-    description: "Handplockat kaffe, premium te och designade muggar med äkta GBG-känsla.",
-    images: [
-      {
-        url: "/images/og-image.jpg",
-        alt: "SweGBG Trading",
-      }
-    ],
+    title: "Premium Kaffe & Te ☕ – SweGBG Trading",
+    description:
+      "Upptäck Göteborgs premium kaffe, te och muggar. Beställ online med snabb leverans.",
+    images: ["/images/og-image.jpg"],
   },
-
   robots: {
     index: true,
     follow: true,
@@ -77,27 +77,23 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-
   icons: {
     icon: [
       { url: "/favicon.ico" },
       { url: "/images/logo.png", type: "image/png" },
     ],
-    apple: [
-      { url: "/images/logo.png" },
-    ],
+    apple: [{ url: "/images/logo.png" }],
     shortcut: "/favicon.ico",
   },
-
   manifest: "/manifest.json",
-
   other: {
-    "og:locale:alternate": "en_US",
     "theme-color": "#0a0a0a",
     "msapplication-TileColor": "#0a0a0a",
     "msapplication-TileImage": "/images/logo.png",
   },
 };
+
+
 
 export const viewport: Viewport = {
   width: "device-width",

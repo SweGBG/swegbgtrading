@@ -7,7 +7,7 @@ export default function Home() {
   const kategorier = [
     { href: "/kaffe", src: "/images/logo11a.png", label: "KAFFE" },
     { href: "/te", src: "/images/logo993.png", label: "TE" },
-    { href: "/kaffekoppar", src: "/images/logo333a.png", label: "MUGGAR" },
+    { href: "/kaffemuggar", src: "/images/logo333a.png", label: "MUGGAR" },
   ];
 
   return (

@@ -96,7 +96,7 @@ export default function KaffekopparPage() {
               SWEGBG TRADING — EST. 2026
             </p>
             <h1 style={{ fontSize: "72px", fontWeight: "900", textTransform: "uppercase", letterSpacing: "0.05em", lineHeight: 1, color: "rgba(255,255,255,0.9)" }}>
-              Koppar
+              MUGGAR
             </h1>
           </motion.div>
 

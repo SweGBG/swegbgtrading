@@ -3,12 +3,7 @@
 import { motion } from "framer-motion";
 import { useCart } from "../context/cartcontext";
 import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { createClient } from "@/utils/supabase";
 
 type Produkt = {
   id: number;
@@ -23,6 +18,7 @@ type Produkt = {
 
 export default function KaffePage() {
   const { addToCart } = useCart();
+  const supabase = createClient(); // ← inne i komponenten nu
   const [produkter, setProdukter] = useState<Produkt[]>([]);
   const [loading, setLoading] = useState(true);
 

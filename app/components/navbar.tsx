@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
   const { cart } = useCart();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const itemCount = cart.reduce((sum, item) => sum + (item.quantity ?? 0), 0);
   const [user, setUser] = useState<any>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -46,6 +47,7 @@ export default function Navbar() {
   const menuLinks = [
     { href: "/kaffe", label: "Kaffe" },
     { href: "/te", label: "Te" },
+    { href: "/kaffemuggar", label: "Muggar" },
     { href: "/om", label: "Om oss" },
     { href: "/kontakt", label: "Kontakt" },
   ];
@@ -259,7 +261,7 @@ export default function Navbar() {
         </div>
 
         {/* HÖGER */}
-        <div style={{ display: "flex", gap: "24px", alignItems: "center" }}>
+        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
           <span className="desktop-only">
             <Link href="/om" style={{ textDecoration: "none", color: "rgba(255,255,255,0.5)", fontSize: "13px", letterSpacing: "1px" }}>Om oss</Link>
           </span>
@@ -267,15 +269,77 @@ export default function Navbar() {
             <Link href="/kontakt" style={{ textDecoration: "none", color: "rgba(255,255,255,0.5)", fontSize: "13px", letterSpacing: "1px" }}>Kontakt</Link>
           </span>
           <span className="desktop-only">
-            {user ? (
-              <>
-                <Link href="/konto" style={{ textDecoration: "none", color: "rgba(255,255,255,0.5)", fontSize: "13px", letterSpacing: "1px", marginRight: "20px" }}>Mitt konto</Link>
-                <button onClick={handleLogout} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.5)", fontSize: "13px", letterSpacing: "1px" }}>Logga ut</button>
-              </>
-            ) : (
+            {!user && (
               <Link href="/medlem" style={{ textDecoration: "none", color: "rgba(255,255,255,0.5)", fontSize: "13px", letterSpacing: "1px" }}>Logga in</Link>
             )}
           </span>
+          {/* KONTO-IKON MED DROPDOWN */}
+          {user && (
+            <div style={{ position: "relative" }}>
+              <div
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                style={{
+                  width: "36px", height: "36px",
+                  border: "1px solid rgba(180,140,60,0.3)",
+                  borderRadius: "50%",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  color: "rgba(255,255,255,0.7)",
+                  fontSize: "16px",
+                  cursor: "pointer",
+                }}
+              >
+                👤
+              </div>
+
+              <AnimatePresence>
+                {dropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                    style={{
+                      position: "absolute", top: "48px", right: 0,
+                      background: "#0f0d08",
+                      border: "1px solid rgba(180,140,60,0.2)",
+                      borderRadius: "10px",
+                      overflow: "hidden",
+                      minWidth: "160px",
+                      zIndex: 200,
+                    }}
+                  >
+                    <Link href="/konto" onClick={() => setDropdownOpen(false)} style={{ textDecoration: "none" }}>
+                      <div style={{
+                        padding: "12px 16px",
+                        color: "rgba(255,255,255,0.65)",
+                        fontSize: "13px", letterSpacing: "1px",
+                        borderBottom: "1px solid rgba(255,255,255,0.05)",
+                        cursor: "pointer",
+                      }}
+                        onMouseEnter={e => (e.currentTarget.style.background = "rgba(180,140,60,0.08)")}
+                        onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+                      >
+                        Mitt konto
+                      </div>
+                    </Link>
+                    <div
+                      onClick={() => { handleLogout(); setDropdownOpen(false); }}
+                      style={{
+                        padding: "12px 16px",
+                        color: "rgba(255,80,80,0.6)",
+                        fontSize: "13px", letterSpacing: "1px",
+                        cursor: "pointer",
+                      }}
+                      onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,80,80,0.06)")}
+                      onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+                    >
+                      Logga ut
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
 
           {/* VARUKORG */}
           <Link href="/varukorg" style={{ textDecoration: "none", position: "relative" }}>

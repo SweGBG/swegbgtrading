@@ -7,13 +7,14 @@ export default function Home() {
   const kategorier = [
     { href: "/kaffe", src: "/images/logo.png", label: "KAFFE" },
     { href: "/te", src: "/images/logo3a.png", label: "TE" },
+    { href: "/kaffekoppar", src: "/images/logo3muggar.png", label: "MUGGAR" },
   ];
 
   return (
     <main style={{ minHeight: "100vh", overflow: "hidden", background: "#0a0a0a" }}>
 
       <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse at 50% 0%, #1a1408 0%, #0a0a0a 60%)" }} />
-      <div style={{ position: "fixed", top: 0, left: "50%", transform: "translateX(-50%)", width: "800px", height: "300px", background: "radial-gradient(ellipse, rgba(180,140,60,0.12) 0%, transparent 70%)", zIndex: 0, pointerEvents: "none" }} />
+      <div style={{ position: "fixed", top: 0, left: "50%", transform: "translateX(-50%)", width: "600px", height: "300px", background: "radial-gradient(ellipse, rgba(180,140,60,0.12) 0%, transparent 70%)", zIndex: 0, pointerEvents: "none" }} />
       <div style={{ position: "fixed", bottom: 0, left: "30%", width: "600px", height: "300px", background: "radial-gradient(ellipse, rgba(40,80,160,0.08) 0%, transparent 70%)", zIndex: 0, pointerEvents: "none" }} />
 
       <svg style={{ position: "fixed", inset: 0, width: "100%", height: "100%", zIndex: 0, pointerEvents: "none" }} xmlns="http://www.w3.org/2000/svg">
@@ -156,7 +157,14 @@ export default function Home() {
                     <Image
                       src={kat.src} alt={kat.label}
                       width={260} height={260}
-                      style={{ borderRadius: "50%", backgroundColor: "#fff", display: "block", boxShadow: "0 0 40px rgba(180,140,60,0.2), 0 8px 32px rgba(0,0,0,0.5)" }}
+                      style={{
+                        borderRadius: "50%",
+                        backgroundColor: "#fff",
+                        display: "block",
+                        boxShadow: "0 0 40px rgba(180,140,60,0.2), 0 8px 32px rgba(0,0,0,0.5)",
+                        objectFit: "cover",
+                        objectPosition: "center 30%",
+                      }}
                     />
                   </motion.div>
 

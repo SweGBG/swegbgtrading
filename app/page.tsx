@@ -110,7 +110,7 @@ export default function Home() {
             alt="SweGBG Trading"
             width={693} height={260} priority
             style={{
-              width: "100%", maxWidth: "480px", objectFit: "contain",
+              height: "auto", width: "100%", maxWidth: "480px", objectFit: "contain",
               filter: "drop-shadow(0 0 40px rgba(180,140,60,0.4)) drop-shadow(0 0 80px rgba(180,140,60,0.15))",
               position: "relative", zIndex: 1,
             }}

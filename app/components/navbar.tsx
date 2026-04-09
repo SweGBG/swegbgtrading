@@ -34,6 +34,17 @@ export default function Navbar() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest('[data-dropdown]')) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -150,7 +161,7 @@ export default function Navbar() {
           </span>
 
           {/* KONTO-IKON — syns alltid */}
-          <div style={{ position: "relative" }}>
+          <div data-dropdown style={{ position: "relative" }}>
             <div onClick={() => setDropdownOpen(!dropdownOpen)} style={{ width: "36px", height: "36px", border: "1px solid rgba(180,140,60,0.3)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", color: "rgba(255,255,255,0.7)", fontSize: "16px", cursor: "pointer" }}>
               👤
             </div>

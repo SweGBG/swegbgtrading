@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 
 export default function Home() {
   const kategorier = [
-    { href: "/kaffe", src: "/images/logo.png", label: "KAFFE" },
-    { href: "/te", src: "/images/logo3a.png", label: "TE" },
-    { href: "/kaffekoppar", src: "/images/logo3muggar.png", label: "MUGGAR" },
+    { href: "/kaffe", src: "/images/logo11a.png", label: "KAFFE" },
+    { href: "/te", src: "/images/logo993.png", label: "TE" },
+    { href: "/kaffekoppar", src: "/images/logo333a.png", label: "MUGGAR" },
   ];
 
   return (

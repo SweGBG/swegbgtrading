@@ -46,8 +46,7 @@ export const metadata: Metadata = {
     url: "https://swegbg.com",
     siteName: "SweGBG Trading",
     title: "Premium Kaffe & Te från Göteborg ☕ | SweGBG Trading",
-    description:
-      "Göteborg i varje kopp. Handplockat kaffe, exklusivt te och stilrena muggar – beställ online idag.",
+    description: "Upptäck premium kaffe, exklusivt te och designade muggar från Göteborg. Handplockade smaker med äkta GBG-känsla – beställ online idag med snabb leverans.",
     images: [
       {
         url: "/images/og-image.jpg",

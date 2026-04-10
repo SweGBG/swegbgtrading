@@ -16,6 +16,7 @@ type Produkt = {
   image_url: string;
 };
 
+
 export default function KaffePage() {
   const { addToCart } = useCart();
   const supabase = createClient(); // ← inne i komponenten nu

@@ -5,7 +5,7 @@ import Navbar from "./components/navbar";
 
 export const metadata: Metadata = {
   title: {
-    default: "SweGBG Trading – Premium Kaffe, Te & Muggar Online från Göteborg",
+    default: "SweGBG Trading – Premium Kaffe, Te & Muggar från Göteborg",
     template: "%s | SweGBG Trading",
   },
   description:
@@ -18,13 +18,9 @@ export const metadata: Metadata = {
     "te online sverige",
     "premium te göteborg",
     "muggar design",
-    "kaffekoppar design",
-    "SweGBG",
     "SweGBG Trading",
     "Göteborg kaffe",
     "lokalt kaffe sverige",
-    "kaffe present",
-    "exklusivt kaffe",
   ],
   authors: [{ name: "SweGBG Trading", url: "https://swegbg.com" }],
   creator: "SweGBG Trading",
@@ -36,9 +32,7 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://swegbg.com",
-    languages: {
-      "sv-SE": "https://swegbg.com",
-    },
+    languages: { "sv-SE": "https://swegbg.com" },
   },
   openGraph: {
     type: "website",
@@ -46,53 +40,28 @@ export const metadata: Metadata = {
     url: "https://swegbg.com",
     siteName: "SweGBG Trading",
     title: "Premium Kaffe & Te från Göteborg ☕ | SweGBG Trading",
-    description: "Upptäck premium kaffe, exklusivt te och designade muggar från Göteborg. Handplockade smaker med äkta GBG-känsla – beställ online idag med snabb leverans.",
-    images: [
-      {
-        url: "/images/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "SweGBG Trading – Premium kaffe & te",
-      },
-    ],
+    description:
+      "Handplockade smaker med äkta GBG-känsla – beställ online idag med snabb leverans.",
+    images: [{ url: "/images/og-image.jpg", width: 1200, height: 630, alt: "SweGBG Trading" }],
   },
   twitter: {
     card: "summary_large_image",
     site: "@swegbgtrading",
-    creator: "@swegbgtrading",
     title: "Premium Kaffe & Te ☕ – SweGBG Trading",
-    description:
-      "Upptäck Göteborgs premium kaffe, te och muggar. Beställ online med snabb leverans.",
+    description: "Göteborgs premium kaffe, te och muggar. Beställ online med snabb leverans.",
     images: ["/images/og-image.jpg"],
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
   },
   icons: {
-    icon: [
-      { url: "/favicon.ico" },
-      { url: "/images/logo.png", type: "image/png" },
-    ],
+    icon: [{ url: "/favicon.ico" }, { url: "/images/logo.png", type: "image/png" }],
     apple: [{ url: "/images/logo.png" }],
-    shortcut: "/favicon.ico",
   },
   manifest: "/manifest.json",
-  other: {
-    "theme-color": "#0a0a0a",
-    "msapplication-TileColor": "#0a0a0a",
-    "msapplication-TileImage": "/images/logo.png",
-  },
 };
-
-
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -104,7 +73,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="sv">
       <head>
-        {/* JSON-LD Structured Data — Google förstår vad siten säljer */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -115,6 +83,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "url": "https://swegbg.com",
               "logo": "https://swegbg.com/images/hlogo2.png",
               "description": "Premium kaffe, te och muggar från Göteborg.",
+              "priceRange": "$$",
               "address": {
                 "@type": "PostalAddress",
                 "addressLocality": "Göteborg",
@@ -129,27 +98,42 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 "name": "SweGBG Produkter",
                 "itemListElement": [
                   {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "Product",
-                      "name": "GBG Brew Kaffe",
-                      "description": "Handplockat specialkaffe från Göteborg"
+                    "@type": "Product",
+                    "name": "GBG Brew Kaffe",
+                    "description": "Handplockat specialkaffe från Göteborg",
+                    "brand": { "@type": "Brand", "name": "SweGBG Trading" },
+                    "offers": {
+                      "@type": "Offer",
+                      "priceCurrency": "SEK",
+                      "price": "149",
+                      "availability": "https://schema.org/InStock",
+                      "url": "https://swegbg.com/kaffe"
                     }
                   },
                   {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "Product",
-                      "name": "Premium Te",
-                      "description": "Handplockat premium te"
+                    "@type": "Product",
+                    "name": "Premium Te",
+                    "description": "Handplockat premium te från världens bästa odlingar",
+                    "brand": { "@type": "Brand", "name": "SweGBG Trading" },
+                    "offers": {
+                      "@type": "Offer",
+                      "priceCurrency": "SEK",
+                      "price": "129",
+                      "availability": "https://schema.org/InStock",
+                      "url": "https://swegbg.com/te"
                     }
                   },
                   {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "Product",
-                      "name": "SweGBG Muggar",
-                      "description": "Designade muggar med GBG-känsla"
+                    "@type": "Product",
+                    "name": "SweGBG Muggar",
+                    "description": "Designade muggar med äkta GBG-känsla",
+                    "brand": { "@type": "Brand", "name": "SweGBG Trading" },
+                    "offers": {
+                      "@type": "Offer",
+                      "priceCurrency": "SEK",
+                      "price": "199",
+                      "availability": "https://schema.org/InStock",
+                      "url": "https://swegbg.com/kaffemuggar"
                     }
                   }
                 ]

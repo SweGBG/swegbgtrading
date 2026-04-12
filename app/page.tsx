@@ -10,8 +10,10 @@ export default function Home() {
     { href: "/kaffemuggar", src: "/images/logo333a.png", label: "MUGGAR" },
   ];
 
+
   return (
     <main style={{ minHeight: "100vh", overflow: "hidden", background: "#0a0a0a" }}>
+
 
       <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", background: "radial-gradient(ellipse at 50% 0%, #1a1408 0%, #0a0a0a 60%)" }} />
       <div style={{ position: "fixed", top: 0, left: "50%", transform: "translateX(-50%)", width: "600px", height: "300px", background: "radial-gradient(ellipse, rgba(180,140,60,0.12) 0%, transparent 70%)", zIndex: 0, pointerEvents: "none" }} />

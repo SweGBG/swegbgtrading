@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { CartProvider } from "./context/cartcontext";
 import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import Navbar from "./components/navbar";
 
 
@@ -150,6 +151,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </CartProvider>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

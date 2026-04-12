@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { useRef } from "react";
 import { useCart } from "../context/cartcontext";
 
 type Produkt = {
@@ -14,197 +15,288 @@ type Produkt = {
   image_url: string;
 };
 
+function ProduktKort({ produkt, addToCart }: {
+  produkt: Produkt;
+  addToCart: (item: any) => void;
+}) {
+  const ref = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 100%", "center 60%"],
+  });
+
+  const smooth = useSpring(scrollYProgress, { stiffness: 54, damping: 15 });
+
+  // Bild — subtil zoom och lift
+  const imgScale = useTransform(smooth, [0, 1], [1.04, 1]);
+  const imgY = useTransform(smooth, [0, 1], [30, 0]);
+
+  // Text — glider in från höger
+  const textX = useTransform(smooth, [0, 1], [60, 0]);
+  const textO = useTransform(smooth, [0, 0.3, 1], [0, 0, 1]);
+
+  // Detaljer — popppar in lite senare
+  const detailO = useTransform(smooth, [0, 0.5, 1], [0, 0, 1]);
+  const detailY = useTransform(smooth, [0, 1], [20, 0]);
+
+  return (
+    <div ref={ref} style={{ marginBottom: "140px" }}>
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "55% 1fr",
+        gap: "60px",
+        alignItems: "center",
+      }}>
+
+        {/* ── BILD ── */}
+        <div style={{
+          position: "relative",
+          height: "560px",
+          borderRadius: "20px",
+          overflow: "hidden",
+          boxShadow: "0 40px 100px rgba(0,0,0,0.65)",
+        }}>
+          <motion.img
+            src="/images/produkt1.png"
+            alt={produkt.Name}
+            style={{
+              position: "absolute",
+              top: "0%",
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center 30%",
+              scale: imgScale,
+              y: imgY,
+            }}
+          />
+
+          {/* Gradient */}
+          <div style={{
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(to top, rgba(10,10,10,0.5) 0%, transparent 45%)",
+            zIndex: 1,
+            pointerEvents: "none",
+          }} />
+
+          {/* Badge */}
+          <motion.div style={{
+            position: "absolute",
+            top: "20px", left: "20px",
+            zIndex: 2,
+            opacity: detailO,
+            y: detailY,
+            background: "rgba(180,140,60,0.9)",
+            backdropFilter: "blur(6px)",
+            color: "#000",
+            fontSize: "9px",
+            letterSpacing: "3px",
+            padding: "6px 14px",
+            borderRadius: "20px",
+            textTransform: "uppercase",
+            fontWeight: "800",
+          }}>
+            {produkt.badge}
+          </motion.div>
+
+          {/* Pris nere i hörnet */}
+          <motion.div style={{
+            position: "absolute",
+            bottom: "20px", right: "20px",
+            zIndex: 2,
+            opacity: detailO,
+            background: "rgba(10,10,10,0.7)",
+            backdropFilter: "blur(16px)",
+            border: "1px solid rgba(180,140,60,0.25)",
+            borderRadius: "12px",
+            padding: "10px 18px",
+            display: "flex",
+            alignItems: "baseline",
+            gap: "4px",
+          }}>
+            <span style={{ fontSize: "24px", fontWeight: "900", color: "rgba(180,140,60,0.95)", letterSpacing: "-0.02em" }}>
+              {produkt.price}
+            </span>
+            <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.35)" }}>kr</span>
+          </motion.div>
+        </div>
+
+        {/* ── TEXT ── */}
+        <motion.div style={{ x: textX, opacity: textO }}>
+          <span style={{ fontSize: "30px", display: "block", marginBottom: "14px" }}>
+            {produkt.emoji}
+          </span>
+
+          <h2 style={{
+            fontSize: "48px",
+            fontWeight: "900",
+            lineHeight: 1.0,
+            textTransform: "uppercase",
+            letterSpacing: "0.04em",
+            color: "rgba(255,255,255,0.92)",
+            marginBottom: "0",
+          }}>
+            {produkt.Name}
+          </h2>
+
+          <div style={{
+            width: "40px", height: "2px",
+            background: "linear-gradient(90deg, rgba(180,140,60,0.85), transparent)",
+            margin: "18px 0 24px",
+            borderRadius: "2px",
+          }} />
+
+          <p style={{
+            fontSize: "15px",
+            lineHeight: "1.85",
+            color: "rgba(255,255,255,0.35)",
+            maxWidth: "340px",
+            marginBottom: "44px",
+          }}>
+            {produkt.description}
+          </p>
+
+          <motion.button
+            whileHover={{
+              scale: 1.03,
+              boxShadow: "0 8px 40px rgba(180,140,60,0.4)",
+            }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            onClick={() => addToCart({
+              id: String(produkt.id),
+              name: produkt.Name,
+              price: produkt.price,
+              quantity: 1,
+            })}
+            style={{
+              background: "linear-gradient(135deg, rgba(180,140,60,0.92) 0%, rgba(220,180,90,0.92) 100%)",
+              color: "#0a0a0a",
+              padding: "17px 48px",
+              fontSize: "11px",
+              fontWeight: "800",
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer",
+              textTransform: "uppercase",
+              letterSpacing: "4px",
+              display: "block",
+              marginBottom: "14px",
+            }}
+          >
+            Köp Nu
+          </motion.button>
+
+          <p style={{
+            fontSize: "10px",
+            color: "rgba(255,255,255,0.15)",
+            letterSpacing: "2px",
+            textTransform: "uppercase",
+          }}>
+            Fri frakt över 500 kr
+          </p>
+        </motion.div>
+      </div>
+    </div>
+  );
+}
+
 export default function KaffeClient({ produkter }: { produkter: Produkt[] }) {
   const { addToCart } = useCart();
 
   return (
-    <main style={{ background: "#0a0a0a", minHeight: "100vh", overflow: "hidden" }}>
+    <main style={{ background: "#0a0a0a", minHeight: "100vh" }}>
 
-      {/* BAKGRUND */}
+      {/* Ambient */}
       <div style={{
         position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none",
-        background: "radial-gradient(ellipse at 30% 20%, rgba(180,140,60,0.07) 0%, transparent 50%), radial-gradient(ellipse at 80% 80%, rgba(40,80,160,0.04) 0%, transparent 50%)",
+        background: `
+          radial-gradient(ellipse at 15% 10%, rgba(180,140,60,0.055) 0%, transparent 55%),
+          radial-gradient(ellipse at 90% 90%, rgba(30,50,130,0.04) 0%, transparent 55%)
+        `,
       }} />
+
+      {/* Grid */}
       <div style={{
         position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none",
-        backgroundImage: `linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-                          linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px)`,
+        backgroundImage: `
+          linear-gradient(rgba(255,255,255,0.011) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.011) 1px, transparent 1px)
+        `,
         backgroundSize: "80px 80px",
       }} />
 
       <motion.section
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 0.9 }}
         style={{
           position: "relative", zIndex: 1,
-          minHeight: "100vh",
           maxWidth: "1200px",
           margin: "0 auto",
-          paddingLeft: "20px",
-          paddingRight: "20px",
+          padding: "0 28px",
         }}
       >
-        {/* HERO RUBRIK */}
-        <div style={{
-          paddingTop: "110px",
-          paddingBottom: "40px",
-          display: "flex",
-          alignItems: "flex-end",
-          justifyContent: "space-between",
-          borderBottom: "1px solid rgba(180,140,60,0.15)",
-          marginBottom: "60px",
-        }}>
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <p style={{ fontSize: "11px", letterSpacing: "6px", color: "rgba(180,140,60,0.5)", textTransform: "uppercase", marginBottom: "8px" }}>
-              SWEGBG TRADING — EST. 2026
+        {/* HERO */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          style={{
+            paddingTop: "120px",
+            paddingBottom: "45px",
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+            borderBottom: "1px solid rgba(180,140,60,0.1)",
+            marginBottom: "15px",
+          }}
+        >
+          <div>
+            <p style={{
+              fontSize: "10px", letterSpacing: "7px",
+              color: "rgba(180,140,60,0.4)",
+              textTransform: "uppercase", marginBottom: "10px",
+            }}>
+              SweGBG Trading — Est. 2026
             </p>
-            <h1 style={{ fontSize: "72px", fontWeight: "900", textTransform: "uppercase", letterSpacing: "0.05em", lineHeight: 1, color: "rgba(255,255,255,0.9)" }}>
+            <h1 style={{
+              fontSize: "82px", fontWeight: "900",
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+              lineHeight: 0.95,
+              color: "rgba(255,255,255,0.92)",
+            }}>
               Kaffe
             </h1>
-          </motion.div>
+          </div>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            style={{ fontSize: "13px", letterSpacing: "4px", color: "rgba(255,255,255,0.2)", textTransform: "uppercase", textAlign: "right" }}
-          >
-            ROSTARENS<br />VAL
-          </motion.p>
-        </div>
+          <p style={{
+            fontSize: "10px", letterSpacing: "4px",
+            color: "rgba(255,255,255,0.12)",
+            textTransform: "uppercase",
+            textAlign: "right", lineHeight: 1.9,
+          }}>
+            Rostarens<br />Val
+          </p>
+        </motion.div>
 
         {/* PRODUKTER */}
-        {produkter.map((produkt, index) => (
-          <motion.div
-            key={produkt.id}
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 + index * 0.15 }}
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "80px",
-              alignItems: "center",
-              marginBottom: "120px",
-            }}
-          >
-            {/* BILD */}
-            <div style={{ position: "relative" }}>
-              <div style={{
-                position: "absolute",
-                inset: "-16px",
-                background: "rgba(180,140,60,0.04)",
-                borderRadius: "28px",
-                zIndex: 0,
-              }} />
-              <img
-                src="/images/produkt1.png"
-                alt={produkt.Name}
-                style={{
-                  width: "100%",
-                  borderRadius: "20px",
-                  display: "block",
-                  position: "relative",
-                  zIndex: 1,
-                  boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
-                }}
-              />
-              <div style={{
-                position: "absolute",
-                top: "20px", left: "20px",
-                zIndex: 2,
-                background: "rgba(180,140,60,0.9)",
-                color: "#000",
-                fontSize: "10px",
-                letterSpacing: "3px",
-                padding: "6px 14px",
-                borderRadius: "20px",
-                textTransform: "uppercase",
-                fontWeight: "700",
-              }}>
-                {produkt.badge}
-              </div>
-            </div>
-
-            {/* INFO */}
-            <div>
-              <p style={{ fontSize: "32px", marginBottom: "12px" }}>{produkt.emoji}</p>
-              <h2 style={{
-                fontSize: "48px",
-                fontWeight: "800",
-                marginBottom: "8px",
-                lineHeight: 1.1,
-                textTransform: "uppercase",
-                letterSpacing: "0.02em",
-                color: "rgba(255,255,255,0.9)",
-              }}>
-                {produkt.Name}
-              </h2>
-
-              <div style={{
-                width: "40px", height: "1px",
-                background: "linear-gradient(90deg, rgba(180,140,60,0.6), transparent)",
-                marginBottom: "24px",
-              }} />
-
-              <p style={{
-                fontSize: "17px",
-                lineHeight: "1.8",
-                color: "rgba(255,255,255,0.45)",
-                marginBottom: "36px",
-                maxWidth: "400px",
-              }}>
-                {produkt.description}
-              </p>
-
-              <p style={{
-                fontSize: "36px",
-                fontWeight: "900",
-                marginBottom: "36px",
-                letterSpacing: "-0.02em",
-                color: "rgba(180,140,60,0.9)",
-              }}>
-                {produkt.price} <span style={{ fontSize: "18px", fontWeight: "400", opacity: 0.5 }}>kr</span>
-              </p>
-
-              <button
-                onClick={() => addToCart({
-                  id: String(produkt.id),
-                  name: produkt.Name,
-                  price: produkt.price,
-                  quantity: 1,
-                })}
-                style={{
-                  background: "linear-gradient(135deg, rgba(180,140,60,0.85), rgba(232,192,106,0.85))",
-                  color: "#000",
-                  padding: "18px 48px",
-                  fontSize: "13px",
-                  fontWeight: "700",
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor: "pointer",
-                  textTransform: "uppercase",
-                  letterSpacing: "3px",
-                  transition: "opacity 0.2s",
-                }}
-                onMouseEnter={e => (e.currentTarget.style.opacity = "0.8")}
-                onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
-              >
-                Köp Nu
-              </button>
-            </div>
-          </motion.div>
+        {produkter.map((p) => (
+          <ProduktKort key={p.id} produkt={p} addToCart={addToCart} />
         ))}
 
         {/* FOOTER */}
-        <div style={{ textAlign: "center", paddingBottom: "80px" }}>
-          <p style={{ letterSpacing: "8px", fontSize: "11px", textTransform: "uppercase", color: "rgba(255,255,255,0.08)" }}>
-            SWEGBG TRADING
+        <div style={{ textAlign: "center", paddingBottom: "100px" }}>
+          <p style={{
+            letterSpacing: "10px", fontSize: "10px",
+            textTransform: "uppercase",
+            color: "rgba(255,255,255,0.05)",
+          }}>
+            SweGBG Trading
           </p>
         </div>
 

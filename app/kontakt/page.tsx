@@ -1,8 +1,34 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useState } from "react";
+
+type Status = "idle" | "loading" | "success" | "error";
 
 export default function KontaktPage() {
+  const [form, setForm] = useState({ namn: "", email: "", meddelande: "" });
+  const [status, setStatus] = useState<Status>("idle");
+
+  const uppdatera = (falt: string, varde: string) =>
+    setForm((prev) => ({ ...prev, [falt]: varde }));
+
+  const skicka = async () => {
+    if (!form.namn || !form.email || !form.meddelande) return;
+    setStatus("loading");
+    try {
+      const res = await fetch("/api/kontakt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error();
+      setStatus("success");
+      setForm({ namn: "", email: "", meddelande: "" });
+    } catch {
+      setStatus("error");
+    }
+  };
+
   return (
     <main style={{ minHeight: "100vh", background: "#0a0a0a", overflow: "hidden" }}>
 
@@ -23,32 +49,131 @@ export default function KontaktPage() {
       <motion.section
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-        style={{ position: "relative", zIndex: 1, minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0 20px" }}
+        transition={{ duration: 0.8 }}
+        style={{ position: "relative", zIndex: 1, minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "80px 20px" }}
       >
-        <motion.p initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} style={{ fontSize: "10px", letterSpacing: "6px", color: "rgba(180,140,60,0.6)", textTransform: "uppercase", marginBottom: "24px" }}>
-          SWEGBG TRADING
+        <motion.p
+          initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+          style={{ fontSize: "10px", letterSpacing: "6px", color: "rgba(180,140,60,0.6)", textTransform: "uppercase", marginBottom: "16px" }}
+        >
+          SweGBG Trading
         </motion.p>
 
-        <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }} style={{ fontSize: "clamp(48px, 10vw, 96px)", fontWeight: "900", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.9)", lineHeight: 1 }}>
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.8 }}
+          style={{ fontSize: "clamp(48px, 10vw, 88px)", fontWeight: "900", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.9)", lineHeight: 1, marginBottom: "0" }}
+        >
           Kontakt
         </motion.h1>
 
-        <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.7, duration: 0.8 }} style={{ width: "120px", height: "1px", background: "linear-gradient(90deg, transparent, rgba(180,140,60,0.6), transparent)", margin: "32px 0" }} />
+        <motion.div
+          initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.7, duration: 0.8 }}
+          style={{ width: "120px", height: "1px", background: "linear-gradient(90deg, transparent, rgba(180,140,60,0.6), transparent)", margin: "28px 0" }}
+        />
 
-        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }} style={{ fontSize: "13px", letterSpacing: "6px", color: "rgba(255,255,255,0.25)", textTransform: "uppercase", marginBottom: "60px" }}>
-          Kommer snart
+        <motion.p
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}
+          style={{ fontSize: "13px", color: "rgba(255,255,255,0.25)", textAlign: "center", maxWidth: "420px", lineHeight: 1.8, marginBottom: "48px" }}
+        >
+          Behöver du en egen webshop? Du har produkterna men ingen e-butik? Hör av dig så bygger vi den åt dig.
         </motion.p>
 
-        <div style={{ position: "relative", width: "120px", height: "120px", marginBottom: "60px" }}>
-          {[0, 1, 2].map((i) => (
-            <motion.div key={i} animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0, 0.3] }} transition={{ duration: 3, repeat: Infinity, delay: i * 1 }} style={{ position: "absolute", inset: `${i * -20}px`, borderRadius: "50%", border: "1px solid rgba(180,140,60,0.3)" }} />
-          ))}
-          <div style={{ position: "absolute", inset: "40px", borderRadius: "50%", background: "rgba(180,140,60,0.15)", border: "1px solid rgba(180,140,60,0.4)" }} />
-        </div>
+        {/* FORMULÄR */}
+        {status === "success" ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            style={{
+              background: "rgba(180,140,60,0.06)", border: "1px solid rgba(180,140,60,0.25)",
+              borderRadius: "16px", padding: "48px 40px", textAlign: "center", maxWidth: "500px", width: "100%",
+            }}
+          >
+            <motion.div animate={{ scale: [1, 1.15, 1] }} transition={{ duration: 2, repeat: Infinity }}>
+              <div style={{ width: "60px", height: "60px", borderRadius: "50%", background: "rgba(180,140,60,0.15)", border: "1px solid rgba(180,140,60,0.4)", margin: "0 auto 24px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "24px" }}>✓</div>
+            </motion.div>
+            <p style={{ color: "rgba(180,140,60,0.8)", fontSize: "11px", letterSpacing: "4px", textTransform: "uppercase", marginBottom: "8px" }}>Meddelande skickat</p>
+            <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "14px" }}>Tack! Jag återkommer inom 24 timmar.</p>
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.0 }}
+            style={{
+              background: "rgba(255,255,255,0.03)", border: "1px solid rgba(180,140,60,0.15)",
+              borderRadius: "16px", padding: "40px", width: "100%", maxWidth: "520px",
+              position: "relative", overflow: "hidden",
+            }}
+          >
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "1px", background: "linear-gradient(90deg, transparent, rgba(180,140,60,0.6), transparent)" }} />
 
-        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1 }} style={{ fontSize: "11px", letterSpacing: "8px", color: "rgba(255,255,255,0.12)", textTransform: "uppercase" }}>
-          @ S W E G B G T R A D I N G
+            {/* Namn */}
+            <div style={{ marginBottom: "20px" }}>
+              <label style={{ display: "block", color: "rgba(180,140,60,0.6)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "8px" }}>Namn</label>
+              <input
+                type="text" placeholder="Ditt namn"
+                value={form.namn}
+                onChange={e => uppdatera("namn", e.target.value)}
+                style={{ width: "100%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", padding: "13px 16px", color: "#fff", fontSize: "14px", outline: "none", transition: "border-color 0.2s", boxSizing: "border-box" }}
+                onFocus={e => e.currentTarget.style.borderColor = "rgba(180,140,60,0.5)"}
+                onBlur={e => e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"}
+              />
+            </div>
+
+            {/* Email */}
+            <div style={{ marginBottom: "20px" }}>
+              <label style={{ display: "block", color: "rgba(180,140,60,0.6)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "8px" }}>Email</label>
+              <input
+                type="email" placeholder="din@email.se"
+                value={form.email}
+                onChange={e => uppdatera("email", e.target.value)}
+                style={{ width: "100%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", padding: "13px 16px", color: "#fff", fontSize: "14px", outline: "none", transition: "border-color 0.2s", boxSizing: "border-box" }}
+                onFocus={e => e.currentTarget.style.borderColor = "rgba(180,140,60,0.5)"}
+                onBlur={e => e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"}
+              />
+            </div>
+
+            {/* Meddelande */}
+            <div style={{ marginBottom: "28px" }}>
+              <label style={{ display: "block", color: "rgba(180,140,60,0.6)", fontSize: "10px", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "8px" }}>Meddelande</label>
+              <textarea
+                placeholder="Berätta om ditt projekt..."
+                value={form.meddelande}
+                onChange={e => uppdatera("meddelande", e.target.value)}
+                rows={5}
+                style={{ width: "100%", background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", padding: "13px 16px", color: "#fff", fontSize: "14px", outline: "none", resize: "none", transition: "border-color 0.2s", boxSizing: "border-box", fontFamily: "inherit" }}
+                onFocus={e => e.currentTarget.style.borderColor = "rgba(180,140,60,0.5)"}
+                onBlur={e => e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"}
+              />
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.02, boxShadow: "0 0 30px rgba(180,140,60,0.3)" }}
+              whileTap={{ scale: 0.98 }}
+              onClick={skicka}
+              disabled={status === "loading"}
+              style={{
+                width: "100%", padding: "15px",
+                background: status === "loading" ? "rgba(180,140,60,0.4)" : "rgba(180,140,60,0.9)",
+                border: "none", borderRadius: "8px", color: "#0a0a0a",
+                fontSize: "11px", fontWeight: 800, letterSpacing: "0.15em",
+                textTransform: "uppercase", cursor: status === "loading" ? "not-allowed" : "pointer",
+              }}
+            >
+              {status === "loading" ? "Skickar..." : "Skicka meddelande →"}
+            </motion.button>
+
+            {status === "error" && (
+              <p style={{ color: "rgba(220,80,60,0.8)", fontSize: "12px", textAlign: "center", marginTop: "12px" }}>
+                Något gick fel. Försök igen eller maila direkt.
+              </p>
+            )}
+          </motion.div>
+        )}
+
+        <motion.p
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.4 }}
+          style={{ fontSize: "11px", letterSpacing: "8px", color: "rgba(255,255,255,0.08)", textTransform: "uppercase", marginTop: "48px" }}
+        >
+          GÖTEBORG — EST. 2026
         </motion.p>
       </motion.section>
     </main>

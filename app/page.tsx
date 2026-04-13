@@ -1,8 +1,8 @@
 "use client";
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion, useAnimation } from "framer-motion";
-import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { useState } from "react";
 
 const kategorier = [
   { href: "/kaffe", src: "/images/logo11a.png", label: "KAFFE" },
@@ -38,7 +38,6 @@ function Mynt({ kat, path, index }: { kat: typeof kategorier[0]; path: typeof PA
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
         >
-          {/* Pulsring */}
           {landed && (
             <>
               <motion.div
@@ -54,7 +53,6 @@ function Mynt({ kat, path, index }: { kat: typeof kategorier[0]; path: typeof PA
             </>
           )}
 
-          {/* Impact-flash vid landning */}
           {landed && (
             <motion.div
               initial={{ scale: 0.6, opacity: 0.7 }}
@@ -68,21 +66,12 @@ function Mynt({ kat, path, index }: { kat: typeof kategorier[0]; path: typeof PA
             />
           )}
 
-          {/* Mynt-bild */}
           <motion.div
-            animate={hovered ? {
-              y: [-4, 4, -4],
-              rotate: [-2, 2, -2],
-            } : { y: 0, rotate: 0 }}
-            transition={hovered ? {
-              duration: 1.8, repeat: Infinity, ease: "easeInOut"
-            } : { duration: 0.4 }}
+            animate={hovered ? { y: [-4, 4, -4], rotate: [-2, 2, -2] } : { y: 0, rotate: 0 }}
+            transition={hovered ? { duration: 1.8, repeat: Infinity, ease: "easeInOut" } : { duration: 0.4 }}
             style={{ position: "relative", zIndex: 1 }}
           >
-            <motion.div
-              whileTap={{ scale: 0.93, rotate: 8 }}
-              transition={{ type: "spring", stiffness: 350, damping: 18 }}
-            >
+            <motion.div whileTap={{ scale: 0.93, rotate: 8 }} transition={{ type: "spring", stiffness: 350, damping: 18 }}>
               <Image
                 src={kat.src}
                 alt={kat.label}
@@ -103,20 +92,14 @@ function Mynt({ kat, path, index }: { kat: typeof kategorier[0]; path: typeof PA
             </motion.div>
           </motion.div>
 
-          {/* Label */}
           <motion.p
             initial={{ opacity: 0, y: 8 }}
             animate={landed ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.3 }}
             style={{
-              marginTop: "20px",
-              fontWeight: "700",
-              fontSize: "12px",
-              letterSpacing: "6px",
+              marginTop: "20px", fontWeight: "700", fontSize: "12px", letterSpacing: "6px",
               color: hovered ? "rgba(180,140,60,0.8)" : "rgba(255,255,255,0.4)",
-              position: "relative",
-              zIndex: 1,
-              transition: "color 0.3s ease",
+              position: "relative", zIndex: 1, transition: "color 0.3s ease",
             }}
           >
             {kat.label}
@@ -129,8 +112,7 @@ function Mynt({ kat, path, index }: { kat: typeof kategorier[0]; path: typeof PA
             style={{
               width: "40px", height: "1px",
               background: "linear-gradient(90deg, transparent, rgba(180,140,60,0.5), transparent)",
-              margin: "8px auto 0",
-              position: "relative", zIndex: 1,
+              margin: "8px auto 0", position: "relative", zIndex: 1,
             }}
           />
         </div>
@@ -148,7 +130,7 @@ export default function Home() {
       <div style={{ position: "fixed", top: 0, left: "50%", transform: "translateX(-50%)", width: "600px", height: "300px", background: "radial-gradient(ellipse, rgba(180,140,60,0.12) 0%, transparent 70%)", zIndex: 0, pointerEvents: "none" }} />
       <div style={{ position: "fixed", bottom: 0, left: "30%", width: "600px", height: "300px", background: "radial-gradient(ellipse, rgba(40,80,160,0.08) 0%, transparent 70%)", zIndex: 0, pointerEvents: "none" }} />
 
-      {/* Hex-grid SVG */}
+      {/* Hex-grid */}
       <svg style={{ position: "fixed", inset: 0, width: "100%", height: "100%", zIndex: 0, pointerEvents: "none" }} xmlns="http://www.w3.org/2000/svg">
         <defs>
           <pattern id="hex" x="0" y="0" width="80" height="92" patternUnits="userSpaceOnUse">
@@ -164,7 +146,7 @@ export default function Home() {
         <rect width="100%" height="100%" fill="url(#diag)" />
       </svg>
 
-      {/* Floating particles */}
+      {/* Particles */}
       {[...Array(12)].map((_, i) => (
         <motion.div
           key={i}
@@ -184,11 +166,43 @@ export default function Home() {
         />
       ))}
 
+      {/* Demo banner */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2.5, duration: 0.8 }}
+        style={{
+          position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
+          background: "rgba(180,140,60,0.08)",
+          borderBottom: "1px solid rgba(180,140,60,0.2)",
+          padding: "10px 20px",
+          display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
+        }}
+      >
+        <motion.div
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          style={{ width: "6px", height: "6px", borderRadius: "50%", background: "rgba(180,140,60,0.8)", flexShrink: 0 }}
+        />
+        <p style={{
+          color: "rgba(180,140,60,0.7)", fontSize: "11px",
+          letterSpacing: "0.15em", textTransform: "uppercase", margin: 0,
+          textAlign: "center",
+        }}>
+          This store is currently a demo — locally printed limited edition mugs coming soon. Stay tuned.
+        </p>
+        <motion.div
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+          style={{ width: "6px", height: "6px", borderRadius: "50%", background: "rgba(180,140,60,0.8)", flexShrink: 0 }}
+        />
+      </motion.div>
+
       <motion.section
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
-        style={{ position: "relative", zIndex: 1 }}
+        style={{ position: "relative", zIndex: 1, paddingTop: "40px" }}
       >
         {/* LOGO */}
         <motion.div
@@ -253,12 +267,35 @@ export default function Home() {
           style={{ maxWidth: "400px", margin: "16px auto 24px", height: "1px", background: "linear-gradient(90deg, transparent, rgba(180,140,60,0.4), transparent)" }}
         />
 
-        {/* MYNTEN — flyger in */}
+        {/* MYNTEN */}
         <div style={{ display: "flex", justifyContent: "center", gap: "80px", flexWrap: "wrap", padding: "0 20px" }}>
           {kategorier.map((kat, i) => (
             <Mynt key={kat.href} kat={kat} path={PATHS[i]} index={i} />
           ))}
         </div>
+
+        {/* Coming soon text */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.8, duration: 0.8 }}
+          style={{ textAlign: "center", marginTop: "48px", padding: "0 20px" }}
+        >
+          <p style={{
+            fontSize: "12px", letterSpacing: "4px", textTransform: "uppercase",
+            color: "rgba(180,140,60,0.4)", margin: "0 0 8px",
+          }}>
+            Coming soon
+          </p>
+          <p style={{
+            fontSize: "13px", color: "rgba(255,255,255,0.2)",
+            letterSpacing: "1px", margin: 0, maxWidth: "420px",
+            marginLeft: "auto", marginRight: "auto", lineHeight: 1.7,
+          }}>
+            Locally printed limited edition mugs — numbered #1 to #9.<br />
+            Göteborg made. Never restocked.
+          </p>
+        </motion.div>
 
         {/* FOOTER */}
         <motion.p
@@ -266,7 +303,7 @@ export default function Home() {
           animate={{ opacity: 1 }}
           transition={{ delay: 2.2 }}
           style={{
-            textAlign: "center", marginTop: "60px", paddingBottom: "60px",
+            textAlign: "center", marginTop: "48px", paddingBottom: "60px",
             fontSize: "10px", letterSpacing: "8px",
             color: "rgba(255,255,255,0.12)", textTransform: "uppercase",
           }}

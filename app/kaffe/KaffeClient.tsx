@@ -35,6 +35,41 @@ const PARTICLES = Array.from({ length: 10 }, (_, i) => ({
   delay: i * 0.6,
 }));
 
+function DemoBanner() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.5, duration: 0.8 }}
+      style={{
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
+        background: "rgba(180,140,60,0.08)",
+        borderBottom: "1px solid rgba(180,140,60,0.2)",
+        padding: "10px 20px",
+        display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
+      }}
+    >
+      <motion.div
+        animate={{ opacity: [0.5, 1, 0.5] }}
+        transition={{ duration: 2, repeat: Infinity }}
+        style={{ width: "6px", height: "6px", borderRadius: "50%", background: "rgba(180,140,60,0.8)", flexShrink: 0 }}
+      />
+      <p style={{
+        color: "rgba(180,140,60,0.7)", fontSize: "11px",
+        letterSpacing: "0.15em", textTransform: "uppercase", margin: 0,
+        textAlign: "center",
+      }}>
+        This store is currently a demo — locally printed limited edition mugs coming soon. Stay tuned.
+      </p>
+      <motion.div
+        animate={{ opacity: [0.5, 1, 0.5] }}
+        transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+        style={{ width: "6px", height: "6px", borderRadius: "50%", background: "rgba(180,140,60,0.8)", flexShrink: 0 }}
+      />
+    </motion.div>
+  );
+}
+
 function HeroEntrance({ isMobile }: { isMobile: boolean }) {
   return (
     <div style={{
@@ -50,8 +85,7 @@ function HeroEntrance({ isMobile }: { isMobile: boolean }) {
         initial={{ y: "100%", scale: 1.15, opacity: 0 }}
         animate={{ y: 0, scale: 1, opacity: 1 }}
         transition={{
-          duration: 1.1,
-          delay: 0.3,
+          duration: 1.1, delay: 0.3,
           ease: [0.16, 1, 0.3, 1],
           opacity: { duration: 0.5, delay: 0.3 },
         }}
@@ -65,6 +99,35 @@ function HeroEntrance({ isMobile }: { isMobile: boolean }) {
         position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
         background: "linear-gradient(160deg, rgba(0,0,0,0.05) 0%, transparent 40%, rgba(0,0,0,0.6) 100%)",
       }} />
+      {/* Demo overlay på hero-bilden */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5 }}
+        style={{
+          position: "absolute", inset: 0, zIndex: 3,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          pointerEvents: "none",
+        }}
+      >
+        <div style={{
+          background: "rgba(0,0,0,0.55)",
+          backdropFilter: "blur(4px)",
+          border: "1px solid rgba(180,140,60,0.2)",
+          borderRadius: "12px",
+          padding: "14px 28px",
+          textAlign: "center",
+        }}>
+          <p style={{
+            color: "rgba(180,140,60,0.8)", fontSize: "10px",
+            letterSpacing: "4px", textTransform: "uppercase", margin: "0 0 4px",
+          }}>Demo product</p>
+          <p style={{
+            color: "rgba(255,255,255,0.3)", fontSize: "11px",
+            letterSpacing: "2px", margin: 0,
+          }}>Real products coming soon</p>
+        </div>
+      </motion.div>
       <motion.div
         initial={{ opacity: 0, y: -20, scale: 0.7 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -94,10 +157,7 @@ function ProduktKort({ produkt, addToCart, index, isFirst }: {
   const isMobile = useIsMobile();
   const [added, setAdded] = useState(false);
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start 100%", "center 55%"],
-  });
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 100%", "center 55%"] });
   const smooth = useSpring(scrollYProgress, { stiffness: 54, damping: 15 });
 
   const imgScale = useTransform(smooth, [0, 1], [1.06, 1]);
@@ -117,10 +177,7 @@ function ProduktKort({ produkt, addToCart, index, isFirst }: {
   };
 
   return (
-    <motion.div
-      ref={ref}
-      style={{ marginBottom: isMobile ? "80px" : "160px", opacity: cardO, y: cardY }}
-    >
+    <motion.div ref={ref} style={{ marginBottom: isMobile ? "80px" : "160px", opacity: cardO, y: cardY }}>
       <div style={{
         display: "grid",
         gridTemplateColumns: isMobile ? "1fr" : "56% 1fr",
@@ -128,7 +185,6 @@ function ProduktKort({ produkt, addToCart, index, isFirst }: {
         alignItems: "center",
       }}>
 
-        {/* ── BILD ── */}
         {isFirst ? (
           <HeroEntrance isMobile={isMobile} />
         ) : (
@@ -139,8 +195,6 @@ function ProduktKort({ produkt, addToCart, index, isFirst }: {
             overflow: "hidden",
             boxShadow: "0 30px 80px rgba(0,0,0,0.7)",
           }}>
-
-
             <motion.img
               src="/images/produkt1.png"
               alt={produkt.Name}
@@ -155,58 +209,56 @@ function ProduktKort({ produkt, addToCart, index, isFirst }: {
               position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none",
               background: "linear-gradient(160deg, rgba(0,0,0,0.05) 0%, transparent 40%, rgba(0,0,0,0.6) 100%)",
             }} />
+            {/* Demo overlay */}
+            <motion.div
+              style={{
+                position: "absolute", inset: 0, zIndex: 3,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                pointerEvents: "none", opacity: detailO,
+              }}
+            >
+              <div style={{
+                background: "rgba(0,0,0,0.55)", backdropFilter: "blur(4px)",
+                border: "1px solid rgba(180,140,60,0.2)", borderRadius: "12px",
+                padding: "12px 24px", textAlign: "center",
+              }}>
+                <p style={{ color: "rgba(180,140,60,0.8)", fontSize: "10px", letterSpacing: "4px", textTransform: "uppercase", margin: "0 0 4px" }}>Demo product</p>
+                <p style={{ color: "rgba(255,255,255,0.3)", fontSize: "11px", letterSpacing: "2px", margin: 0 }}>Real products coming soon</p>
+              </div>
+            </motion.div>
             <motion.div style={{
               position: "absolute", top: "18px", left: "18px", zIndex: 2,
               opacity: detailO, y: detailY,
-              background: "rgba(180,140,60,0.92)",
-              backdropFilter: "blur(8px)", color: "#000",
-              fontSize: "9px", letterSpacing: "3px",
-              padding: "6px 14px", borderRadius: "20px",
-              textTransform: "uppercase", fontWeight: "800",
+              background: "rgba(180,140,60,0.92)", backdropFilter: "blur(8px)", color: "#000",
+              fontSize: "9px", letterSpacing: "3px", padding: "6px 14px",
+              borderRadius: "20px", textTransform: "uppercase", fontWeight: "800",
             }}>
               {produkt.badge}
             </motion.div>
             <motion.div style={{
               position: "absolute", bottom: "18px", right: "18px", zIndex: 2,
               opacity: detailO,
-              background: "rgba(8,8,8,0.75)",
-              backdropFilter: "blur(20px)",
-              border: "1px solid rgba(180,140,60,0.3)",
-              borderRadius: "14px", padding: isMobile ? "8px 14px" : "10px 20px",
+              background: "rgba(8,8,8,0.75)", backdropFilter: "blur(20px)",
+              border: "1px solid rgba(180,140,60,0.3)", borderRadius: "14px",
+              padding: isMobile ? "8px 14px" : "10px 20px",
               display: "flex", alignItems: "baseline", gap: "4px",
             }}>
-              <span style={{ fontSize: isMobile ? "20px" : "26px", fontWeight: "900", color: "rgba(180,140,60,0.95)" }}>
-                {produkt.price}
-              </span>
+              <span style={{ fontSize: isMobile ? "20px" : "26px", fontWeight: "900", color: "rgba(180,140,60,0.95)" }}>{produkt.price}</span>
               <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)" }}>kr</span>
             </motion.div>
           </div>
         )}
 
-        {/* ── TEXT ── */}
-        <motion.div style={{
-          x: textX,
-          opacity: isMobile ? 1 : textO,
-          padding: isMobile ? "0 2px" : "0",
-        }}>
+        <motion.div style={{ x: textX, opacity: isMobile ? 1 : textO, padding: isMobile ? "0 2px" : "0" }}>
           <motion.img
-            src="/images/kaffeikon2.png"
-            alt="kaffe"
+            src="/images/kaffeikon2.png" alt="kaffe"
             animate={{ y: [0, -6, 0] }}
             transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: index * 0.8 }}
-            style={{
-              width: isMobile ? "36px" : "44px",
-              height: isMobile ? "36px" : "44px",
-              objectFit: "contain",
-              display: "block",
-              marginBottom: "12px",
-              borderRadius: "50%",
-            }}
+            style={{ width: isMobile ? "36px" : "44px", height: isMobile ? "36px" : "44px", objectFit: "contain", display: "block", marginBottom: "12px", borderRadius: "50%" }}
           />
 
           <h2 style={{
-            fontSize: isMobile ? "38px" : "52px",
-            fontWeight: "900", lineHeight: 0.98,
+            fontSize: isMobile ? "38px" : "52px", fontWeight: "900", lineHeight: 0.98,
             textTransform: "uppercase", letterSpacing: "0.04em",
             color: "rgba(255,255,255,0.93)", marginBottom: "0",
           }}>
@@ -220,31 +272,44 @@ function ProduktKort({ produkt, addToCart, index, isFirst }: {
           }} />
 
           <p style={{
-            fontSize: isMobile ? "14px" : "15px",
-            lineHeight: "1.9", color: "rgba(255,255,255,0.32)",
+            fontSize: isMobile ? "14px" : "15px", lineHeight: "1.9",
+            color: "rgba(255,255,255,0.32)",
             maxWidth: isMobile ? "100%" : "340px",
-            marginBottom: isMobile ? "32px" : "48px",
+            marginBottom: isMobile ? "16px" : "24px",
           }}>
             {produkt.description}
           </p>
 
-          {/* Pris-chip på mobil under bild */}
+          {/* Demo notice under beskrivning */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+            style={{
+              background: "rgba(180,140,60,0.06)",
+              border: "1px solid rgba(180,140,60,0.15)",
+              borderRadius: "8px", padding: "12px 16px",
+              marginBottom: isMobile ? "24px" : "36px",
+            }}
+          >
+            <p style={{ color: "rgba(180,140,60,0.6)", fontSize: "10px", letterSpacing: "3px", textTransform: "uppercase", margin: "0 0 4px" }}>
+              Demo product
+            </p>
+            <p style={{ color: "rgba(255,255,255,0.25)", fontSize: "12px", margin: 0, lineHeight: 1.6 }}>
+              Locally printed limited edition mugs — numbered #1 to #9 — coming soon. Göteborg made. Never restocked.
+            </p>
+          </motion.div>
+
           {isMobile && isFirst && (
             <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.3 }}
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.3 }}
               style={{
                 display: "inline-flex", alignItems: "baseline", gap: "4px",
-                background: "rgba(8,8,8,0.75)",
-                border: "1px solid rgba(180,140,60,0.3)",
-                borderRadius: "14px", padding: "8px 16px",
-                marginBottom: "24px",
+                background: "rgba(8,8,8,0.75)", border: "1px solid rgba(180,140,60,0.3)",
+                borderRadius: "14px", padding: "8px 16px", marginBottom: "24px",
               }}
             >
-              <span style={{ fontSize: "22px", fontWeight: "900", color: "rgba(180,140,60,0.95)" }}>
-                {produkt.price}
-              </span>
+              <span style={{ fontSize: "22px", fontWeight: "900", color: "rgba(180,140,60,0.95)" }}>{produkt.price}</span>
               <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)" }}>kr</span>
             </motion.div>
           )}
@@ -271,27 +336,19 @@ function ProduktKort({ produkt, addToCart, index, isFirst }: {
           >
             <AnimatePresence mode="wait">
               {added ? (
-                <motion.span key="added"
-                  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
-                  Tillagd ✓
+                <motion.span key="added" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
+                  Added to cart ✓
                 </motion.span>
               ) : (
-                <motion.span key="buy"
-                  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
-                  Köp Nu
+                <motion.span key="buy" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
+                  Add to cart
                 </motion.span>
               )}
             </AnimatePresence>
           </motion.button>
 
-          <p style={{
-            fontSize: "10px", color: "rgba(255,255,255,0.12)",
-            letterSpacing: "2px", textTransform: "uppercase",
-            textAlign: isMobile ? "center" : "left",
-          }}>
-            Fri frakt över 500 kr
+          <p style={{ fontSize: "10px", color: "rgba(255,255,255,0.12)", letterSpacing: "2px", textTransform: "uppercase", textAlign: isMobile ? "center" : "left" }}>
+            Free shipping over 500 kr
           </p>
         </motion.div>
       </div>
@@ -305,6 +362,8 @@ export default function KaffeClient({ produkter }: { produkter: Produkt[] }) {
 
   return (
     <main style={{ background: "#0a0a0a", minHeight: "100vh", overflowX: "hidden" }}>
+
+      <DemoBanner />
 
       <div style={{
         position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none",
@@ -347,16 +406,14 @@ export default function KaffeClient({ produkter }: { produkter: Produkt[] }) {
           padding: isMobile ? "0 16px" : "0 28px",
         }}
       >
-        {/* HERO RUBRIK — flyger in från vänster */}
         <motion.div
           initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
           style={{
-            paddingTop: isMobile ? "88px" : "118px",
+            paddingTop: isMobile ? "108px" : "138px",
             paddingBottom: isMobile ? "22px" : "44px",
-            display: "flex", alignItems: "flex-end",
-            justifyContent: "space-between",
+            display: "flex", alignItems: "flex-end", justifyContent: "space-between",
             borderBottom: "1px solid rgba(180,140,60,0.1)",
             marginBottom: "24px",
           }}
@@ -365,68 +422,35 @@ export default function KaffeClient({ produkter }: { produkter: Produkt[] }) {
             <motion.div
               animate={{ opacity: [0.3, 0.8, 0.3] }}
               transition={{ duration: 2.5, repeat: Infinity }}
-              style={{
-                width: "6px", height: "6px", borderRadius: "50%",
-                background: "rgba(180,140,60,0.8)", marginBottom: "12px",
-              }}
+              style={{ width: "6px", height: "6px", borderRadius: "50%", background: "rgba(180,140,60,0.8)", marginBottom: "12px" }}
             />
-            <p style={{
-              fontSize: "10px",
-              letterSpacing: isMobile ? "4px" : "7px",
-              color: "rgba(180,140,60,0.4)",
-              textTransform: "uppercase", marginBottom: "8px",
-            }}>
+            <p style={{ fontSize: "10px", letterSpacing: isMobile ? "4px" : "7px", color: "rgba(180,140,60,0.4)", textTransform: "uppercase", marginBottom: "8px" }}>
               SweGBG Trading — Est. 2026
             </p>
-            <h1 style={{
-              fontSize: isMobile ? "54px" : "84px",
-              fontWeight: "900", textTransform: "uppercase",
-              letterSpacing: "0.06em", lineHeight: 0.93,
-              color: "rgba(255,255,255,0.93)",
-            }}>
+            <h1 style={{ fontSize: isMobile ? "54px" : "84px", fontWeight: "900", textTransform: "uppercase", letterSpacing: "0.06em", lineHeight: 0.93, color: "rgba(255,255,255,0.93)" }}>
               Kaffe
             </h1>
           </div>
-
           {!isMobile && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              style={{
-                fontSize: "10px", letterSpacing: "4px",
-                color: "rgba(255,255,255,0.1)",
-                textTransform: "uppercase",
-                textAlign: "right", lineHeight: 2,
-              }}
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
+              style={{ fontSize: "10px", letterSpacing: "4px", color: "rgba(255,255,255,0.1)", textTransform: "uppercase", textAlign: "right", lineHeight: 2 }}
             >
               Rostarens<br />Val
             </motion.p>
           )}
         </motion.div>
 
-        {/* PRODUKTER */}
         {produkter.map((p, i) => (
-          <ProduktKort
-            key={p.id} produkt={p}
-            addToCart={addToCart}
-            index={i} isFirst={i === 0}
-          />
+          <ProduktKort key={p.id} produkt={p} addToCart={addToCart} index={i} isFirst={i === 0} />
         ))}
 
         <div style={{ textAlign: "center", paddingBottom: "90px" }}>
           <motion.div
             animate={{ scaleX: [0.3, 1, 0.3], opacity: [0.3, 0.6, 0.3] }}
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            style={{
-              width: "60px", height: "1px", margin: "0 auto 16px",
-              background: "linear-gradient(90deg, transparent, rgba(180,140,60,0.5), transparent)",
-            }}
+            style={{ width: "60px", height: "1px", margin: "0 auto 16px", background: "linear-gradient(90deg, transparent, rgba(180,140,60,0.5), transparent)" }}
           />
-          <p style={{
-            letterSpacing: "10px", fontSize: "10px",
-            textTransform: "uppercase", color: "rgba(255,255,255,0.05)",
-          }}>
+          <p style={{ letterSpacing: "10px", fontSize: "10px", textTransform: "uppercase", color: "rgba(255,255,255,0.05)" }}>
             SweGBG Trading
           </p>
         </div>

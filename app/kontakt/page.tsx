@@ -73,7 +73,7 @@ export default function KontaktPage() {
 
         <motion.p
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}
-          style={{ fontSize: "13px", color: "rgba(255,255,255,0.25)", textAlign: "center", maxWidth: "420px", lineHeight: 1.8, marginBottom: "48px" }}
+          style={{ fontSize: "13px", color: "rgba(221, 211, 211, 0.25)", textAlign: "center", maxWidth: "420px", lineHeight: 1.8, marginBottom: "48px" }}
         >
           Behöver du en egen webshop? Du har produkterna men ingen e-butik? Hör av dig så bygger vi den åt dig.
         </motion.p>

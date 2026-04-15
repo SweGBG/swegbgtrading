@@ -35,30 +35,6 @@ const PARTICLES = Array.from({ length: 10 }, (_, i) => ({
   delay: i * 0.6,
 }));
 
-function DemoBanner() {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 2.5, duration: 0.8 }}
-      style={{
-        position: "fixed", top: "64px", left: 0, right: 0, zIndex: 40,
-        background: "rgba(180,140,60,0.08)",
-        borderBottom: "1px solid rgba(180,140,60,0.2)",
-        padding: "10px 20px",
-        display: "flex", alignItems: "center", justifyContent: "center", gap: "12px",
-      }}
-    >
-      <motion.div animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 2, repeat: Infinity }}
-        style={{ width: "6px", height: "6px", borderRadius: "50%", background: "rgba(180,140,60,0.8)", flexShrink: 0 }} />
-      <p style={{ color: "rgba(180,140,60,0.7)", fontSize: "11px", letterSpacing: "0.15em", textTransform: "uppercase", margin: 0, textAlign: "center" }}>
-        This store is currently a demo — locally printed limited edition mugs coming soon. Stay tuned.
-      </p>
-      <motion.div animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-        style={{ width: "6px", height: "6px", borderRadius: "50%", background: "rgba(180,140,60,0.8)", flexShrink: 0 }} />
-    </motion.div>
-  );
-}
 
 function HeroEntrance({ isMobile }: { isMobile: boolean }) {
   return (
@@ -353,7 +329,7 @@ export default function KaffeClient({ produkter }: { produkter: Produkt[] }) {
   return (
     <main style={{ background: "#0a0a0a", minHeight: "100vh", overflowX: "hidden" }}>
 
-      <DemoBanner />
+
 
       <div style={{
         position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none",

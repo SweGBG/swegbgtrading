@@ -3,7 +3,7 @@ import "./globals.css";
 import { CartProvider } from "./context/cartcontext";
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import Navbar from "./components/Navbar";
+import navbar from "./components/navbar";
 
 
 export const metadata: Metadata = {
@@ -147,7 +147,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <CartProvider>
-          <Navbar />
+          <navbar />
           {children}
         </CartProvider>
         <Analytics />

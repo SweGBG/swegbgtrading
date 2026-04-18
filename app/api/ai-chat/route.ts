@@ -4,33 +4,42 @@ export async function POST(req: Request) {
   const { message, context } = await req.json();
 
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": process.env.ANTHROPIC_API_KEY!,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1024,
-        system: `Du är SweGBG Trading's AI-assistent i admin-panelen. Du hjälper ägaren Lenn med:
-- Produktidéer och prissättning
-- Copywriting för produktbeskrivningar
-- Marknadsföringsstrategier för Göteborg
-- Analysera ordrar och försäljning
-- SEO-tips
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [{
+              text: `Du är SweGBG Trading's AI-assistent i admin-panelen. Du hjälper ägaren Lenn med:
+- Produktidéer och prissättning för kaffe, te och muggar
+- Copywriting för produktbeskrivningar på svenska
+- Marknadsföringsstrategier för Göteborg och lokala företag
+- Analysera ordrar och försäljningstrender
+- SEO-tips för swegbg.com
+- Fiverr-gig och freelance-strategi
 
-Svara alltid på svenska. Var kort och konkret.
+Svara alltid på svenska. Var kort, konkret och kreativ. Använd GBG-känsla.
 
-Aktuell data från butiken:
-${context || "Ingen data tillgänglig just nu."}`,
-        messages: [{ role: "user", content: message }],
-      }),
-    });
+Aktuell butiksdata:
+${context || "Ingen data tillgänglig just nu."}`
+            }]
+          },
+          contents: [{
+            role: "user",
+            parts: [{ text: message }]
+          }],
+          generationConfig: {
+            maxOutputTokens: 1024,
+            temperature: 0.7,
+          }
+        }),
+      }
+    );
 
     const data = await res.json();
-    const reply = data?.content?.[0]?.text || "Kunde inte svara just nu.";
+    const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Kunde inte svara just nu.";
     return NextResponse.json({ reply });
   } catch {
     return NextResponse.json({ reply: "Något gick fel med AI:n." }, { status: 500 });

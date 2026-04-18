@@ -4,13 +4,14 @@ import { createClient } from "@/utils/supabase";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import WebScraper from "./WebScraper";
+import PriceTrackingPanel from "../components/PriceTrackingPanel";
 
 
 const ADMIN_EMAIL = "lenn.soder@protonmail.com";
 
 type Order = { id: string; user_id: string; status: string; amount_total: number; shipping_address: string; shipping_city: string; shipping_zip: string; created_at: string; };
 type Product = { id: number; Name: string; price: number; emoji: string; badge: string; category: string; description: string; };
-type Tab = "oversikt" | "orders" | "products" | "messages";
+type Tab = "oversikt" | "orders" | "products" | "messages" | "tools";
 
 const STATUS_OPTIONS = ["Betald", "Paketeras", "Skickad", "Levererad", "Bakfull", "Inväntar Swish"];
 const STATUS_COLORS: Record<string, string> = { Betald: "rgba(180,140,60,0.8)", Paketeras: "rgba(100,160,255,0.8)", Skickad: "rgba(100,220,150,0.8)", Levererad: "rgba(100,220,150,0.8)", Bakfull: "rgba(255,100,100,0.8)", "Inväntar Swish": "rgba(255,180,60,0.8)", PAID: "rgba(180,140,60,0.8)" };
@@ -97,6 +98,7 @@ export default function AdminPage() {
     { id: "orders" as Tab, label: `Ordrar (${orders.length})` },
     { id: "products" as Tab, label: `Produkter (${products.length})` },
     { id: "messages" as Tab, label: `Meddelanden${unreadMessages > 0 ? ` (${unreadMessages})` : ""}` },
+    { id: "tools" as Tab, label: "Web Crawler" },
   ];
 
   if (loading) return (
@@ -273,12 +275,23 @@ export default function AdminPage() {
                 </motion.div>
               )}
 
+              {activeTab === "tools" && (
+                <motion.div key="tools" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+                  <p style={{ fontSize: "10px", letterSpacing: "4px", color: "rgba(180,140,60,0.5)", textTransform: "uppercase", marginBottom: "16px" }}>Research & Intelligence</p>
+                  <h2 style={{ fontSize: "24px", fontWeight: "700", color: "rgba(255,255,255,0.85)", marginBottom: "12px" }}>Web Crawler</h2>
+                  <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", marginBottom: "28px", letterSpacing: "0.5px" }}>
+                    Klicka på 🔥 ikonen nere till höger för att öppna verktyget.
+                  </p>
+                  <WebScraper />
+                </motion.div>
+              )}
+
             </AnimatePresence>
           </motion.section>
         </div>
       </motion.div>
 
-      <WebScraper />
+      <PriceTrackingPanel />
 
     </main>
   );

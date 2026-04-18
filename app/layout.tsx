@@ -3,7 +3,7 @@ import "./globals.css";
 import { CartProvider } from "./context/cartcontext";
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
-import Navbar from "./components/navbar";
+import Navbar from "./components/Navbar";
 
 
 export const metadata: Metadata = {

@@ -1,9 +1,9 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import WebScraper from "./WebScraper";
 
 const ADMIN_EMAIL = "lenn.soder@protonmail.com";
 
@@ -495,6 +495,8 @@ export default function AdminPage() {
           </motion.section>
         </div>
       </motion.div>
+
+      <WebScraper />
     </main>
   );
 }

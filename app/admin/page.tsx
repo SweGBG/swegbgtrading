@@ -4,7 +4,7 @@ import { createClient } from "@/utils/supabase";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import WebScraper from "./WebScraper";
-import AiAssistant from "./AiAssistant";
+
 
 const ADMIN_EMAIL = "lenn.soder@protonmail.com";
 
@@ -279,7 +279,7 @@ export default function AdminPage() {
       </motion.div>
 
       <WebScraper />
-      <AiAssistant context={`Produkter: ${products.length} st, Ordrar: ${orders.length} st, Total omsättning: ${totalRevenue} kr, Veckans försäljning: ${weekRevenue} kr`} />
+
     </main>
   );
 }

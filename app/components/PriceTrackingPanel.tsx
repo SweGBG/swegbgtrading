@@ -508,7 +508,7 @@ export default function PriceTrackingPanel() {
                         border: '1px solid #333',
                         borderRadius: '6px',
                       }}
-                      formatter={(v: number) => `${v} kr`}
+                      formatter={(v) => `${v} kr`}
                     />
                     <Line
                       type="monotone"

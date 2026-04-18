@@ -118,21 +118,21 @@ export default function AdminPage() {
       <AnimatePresence>
         {toast && (
           <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
-            style={{ position: "fixed", top: "24px", left: "50%", transform: "translateX(-50%)", zIndex: 999, padding: "12px 24px", borderRadius: "8px", background: toast.type === "success" ? "rgba(180,140,60,0.15)" : "rgba(255,80,80,0.15)", border: `1px solid ${toast.type === "success" ? "rgba(180,140,60,0.4)" : "rgba(255,80,80,0.4)"}`, color: toast.type === "success" ? "rgba(180,140,60,0.9)" : "rgba(255,100,100,0.9)", fontSize: "13px", letterSpacing: "1px" }}>
+            style={{ position: "fixed", top: "24px", left: "50%", transform: "translateX(-50%)", zIndex: 999, padding: "12px 24px", borderRadius: "8px", background: toast.type === "success" ? "rgba(180,140,60,0.15)" : "rgba(255,80,80,0.15)", border: `1px solid ${toast.type === "success" ? "rgba(180,140,60,0.4)" : "rgba(255,80,80,0.4)"}`, color: toast.type === "success" ? "rgba(180,140,60,0.9)" : "rgba(255,100,100,0.9)", fontSize: "13px", letterSpacing: "1px", maxWidth: "90vw" }}>
             {toast.text}
           </motion.div>
         )}
       </AnimatePresence>
 
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }} style={{ position: "relative", zIndex: 1, maxWidth: "1200px", margin: "0 auto", padding: "120px 24px 80px" }}>
-        <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} style={{ marginBottom: "48px" }}>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }} style={{ position: "relative", zIndex: 1, maxWidth: "1400px", margin: "0 auto", padding: "80px 16px 80px", width: "100%" }}>
+        <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} style={{ marginBottom: "32px" }}>
           <p style={{ fontSize: "10px", letterSpacing: "6px", color: "rgba(180,140,60,0.6)", textTransform: "uppercase", marginBottom: "10px" }}>SWEGBG TRADING</p>
-          <h1 style={{ fontSize: "clamp(32px, 6vw, 56px)", fontWeight: "900", letterSpacing: "0.05em", textTransform: "uppercase", color: "rgba(255,255,255,0.9)", marginBottom: "8px" }}>Admin</h1>
-          <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.25)", letterSpacing: "1px" }}>{user?.email}</p>
+          <h1 style={{ fontSize: "clamp(28px, 6vw, 56px)", fontWeight: "900", letterSpacing: "0.05em", textTransform: "uppercase", color: "rgba(255,255,255,0.9)", marginBottom: "8px" }}>Admin</h1>
+          <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.25)", letterSpacing: "1px", wordBreak: "break-all" }}>{user?.email}</p>
           <div style={{ marginTop: "20px", height: "1px", background: "linear-gradient(90deg, rgba(180,140,60,0.4), transparent)" }} />
         </motion.div>
 
-        <div style={{ display: "flex", gap: "32px", flexWrap: "wrap", alignItems: "flex-start" }}>
+        <div style={{ display: "flex", gap: "24px", flexWrap: "wrap", alignItems: "flex-start" }}>
           <motion.aside initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }} style={{ width: "100%", maxWidth: "220px", display: "flex", flexDirection: "column", gap: "4px" }}>
             {tabs.map((tab, i) => (
               <motion.button key={tab.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 + i * 0.07 }}
@@ -147,29 +147,29 @@ export default function AdminPage() {
             </motion.button>
           </motion.aside>
 
-          <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} style={{ flex: 1, minWidth: "280px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "16px", padding: "40px" }}>
+          <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} style={{ flex: 1, minWidth: "0", width: "100%", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "16px", padding: "clamp(20px, 5vw, 40px)" }}>
             <AnimatePresence mode="wait">
 
               {activeTab === "oversikt" && (
                 <motion.div key="oversikt" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
                   <p style={{ fontSize: "10px", letterSpacing: "4px", color: "rgba(180,140,60,0.5)", textTransform: "uppercase", marginBottom: "16px" }}>Dashboard</p>
-                  <h2 style={{ fontSize: "24px", fontWeight: "700", color: "rgba(255,255,255,0.85)", marginBottom: "32px" }}>Översikt</h2>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "16px", marginBottom: "40px" }}>
+                  <h2 style={{ fontSize: "clamp(20px, 4vw, 24px)", fontWeight: "700", color: "rgba(255,255,255,0.85)", marginBottom: "32px" }}>Översikt</h2>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "12px", marginBottom: "40px" }}>
                     {[{ label: "Total omsättning", value: `${totalRevenue} kr` }, { label: "Veckans försäljning", value: `${weekRevenue} kr` }, { label: "Veckans ordrar", value: `${weekOrders.length} st` }, { label: "Dagens ordrar", value: `${todayOrders.length} st` }, { label: "Totalt ordrar", value: `${orders.length} st` }, { label: "Produkter", value: `${products.length} st` }].map((card) => (
-                      <div key={card.label} style={{ padding: "20px", background: "rgba(180,140,60,0.05)", border: "1px solid rgba(180,140,60,0.15)", borderRadius: "10px" }}>
-                        <p style={{ fontSize: "9px", letterSpacing: "3px", color: "rgba(180,140,60,0.5)", textTransform: "uppercase", marginBottom: "10px" }}>{card.label}</p>
-                        <p style={{ fontSize: "22px", fontWeight: "700", color: "rgba(255,255,255,0.85)" }}>{card.value}</p>
+                      <div key={card.label} style={{ padding: "16px", background: "rgba(180,140,60,0.05)", border: "1px solid rgba(180,140,60,0.15)", borderRadius: "10px" }}>
+                        <p style={{ fontSize: "9px", letterSpacing: "2px", color: "rgba(180,140,60,0.5)", textTransform: "uppercase", marginBottom: "8px" }}>{card.label}</p>
+                        <p style={{ fontSize: "clamp(18px, 3vw, 22px)", fontWeight: "700", color: "rgba(255,255,255,0.85)" }}>{card.value}</p>
                       </div>
                     ))}
                   </div>
                   <p style={{ fontSize: "10px", letterSpacing: "4px", color: "rgba(180,140,60,0.5)", textTransform: "uppercase", marginBottom: "16px" }}>Senaste ordrar</p>
                   <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                     {orders.slice(0, 5).map((order) => (
-                      <div key={order.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "8px" }}>
-                        <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.5)" }}>#{order.id.slice(0, 8)}</span>
-                        <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)" }}>{order.shipping_city}</span>
+                      <div key={order.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px", padding: "14px 16px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "8px" }}>
+                        <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.5)" }}>#{order.id.slice(0, 8)}</span>
+                        <span style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)" }}>{order.shipping_city}</span>
                         <span style={{ background: STATUS_BG[order.status] || "rgba(180,140,60,0.12)", color: STATUS_COLORS[order.status] || "rgba(180,140,60,0.8)", padding: "3px 10px", borderRadius: "20px", fontSize: "10px", letterSpacing: "1px", textTransform: "uppercase" }}>{order.status || "Betald"}</span>
-                        <span style={{ fontSize: "15px", fontWeight: "700", color: "rgba(255,255,255,0.8)" }}>{order.amount_total} kr</span>
+                        <span style={{ fontSize: "14px", fontWeight: "700", color: "rgba(255,255,255,0.8)" }}>{order.amount_total} kr</span>
                       </div>
                     ))}
                   </div>
@@ -179,24 +179,24 @@ export default function AdminPage() {
               {activeTab === "orders" && (
                 <motion.div key="orders" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
                   <p style={{ fontSize: "10px", letterSpacing: "4px", color: "rgba(180,140,60,0.5)", textTransform: "uppercase", marginBottom: "16px" }}>Hantera</p>
-                  <h2 style={{ fontSize: "24px", fontWeight: "700", color: "rgba(255,255,255,0.85)", marginBottom: "28px" }}>Alla Ordrar</h2>
+                  <h2 style={{ fontSize: "clamp(20px, 4vw, 24px)", fontWeight: "700", color: "rgba(255,255,255,0.85)", marginBottom: "28px" }}>Alla Ordrar</h2>
                   <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
                     {orders.map((order, i) => (
                       <motion.div key={order.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} style={{ padding: "20px", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "10px" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px" }}>
                           <div>
                             <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.5)", marginBottom: "6px", letterSpacing: "1px" }}>Order #{order.id.slice(0, 8)}</p>
-                            <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)" }}>{order.shipping_address}, {order.shipping_zip} {order.shipping_city}</p>
+                            <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.3)", wordBreak: "break-word" }}>{order.shipping_address}, {order.shipping_zip} {order.shipping_city}</p>
                             <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.2)", marginTop: "4px" }}>{new Date(order.created_at).toLocaleString("sv-SE")}</p>
                           </div>
-                          <p style={{ fontSize: "22px", fontWeight: "700", color: "rgba(255,255,255,0.85)" }}>{order.amount_total} kr</p>
+                          <p style={{ fontSize: "clamp(18px, 3vw, 22px)", fontWeight: "700", color: "rgba(255,255,255,0.85)" }}>{order.amount_total} kr</p>
                         </div>
                         <div style={{ marginTop: "16px", display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
                           <span style={{ fontSize: "10px", letterSpacing: "3px", color: "rgba(255,255,255,0.25)", textTransform: "uppercase" }}>Status:</span>
                           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
                             {STATUS_OPTIONS.map((status) => (
                               <button key={status} onClick={() => updateOrderStatus(order.id, status)} disabled={updatingOrder === order.id}
-                                style={{ padding: "5px 12px", borderRadius: "20px", border: `1px solid ${(order.status || "Betald") === status ? STATUS_COLORS[status] || "rgba(180,140,60,0.6)" : "rgba(255,255,255,0.08)"}`, background: (order.status || "Betald") === status ? STATUS_BG[status] || "rgba(180,140,60,0.12)" : "transparent", color: (order.status || "Betald") === status ? STATUS_COLORS[status] || "rgba(180,140,60,0.9)" : "rgba(255,255,255,0.3)", fontSize: "11px", letterSpacing: "1px", cursor: "pointer", transition: "all 0.2s" }}>
+                                style={{ padding: "5px 12px", borderRadius: "20px", border: `1px solid ${(order.status || "Betald") === status ? STATUS_COLORS[status] || "rgba(180,140,60,0.6)" : "rgba(255,255,255,0.08)"}`, background: (order.status || "Betald") === status ? STATUS_BG[status] || "rgba(180,140,60,0.12)" : "transparent", color: (order.status || "Betald") === status ? STATUS_COLORS[status] || "rgba(180,140,60,0.9)" : "rgba(255,255,255,0.3)", fontSize: "11px", letterSpacing: "1px", cursor: "pointer", transition: "all 0.2s", whiteSpace: "nowrap" }}>
                                 {status}
                               </button>
                             ))}
@@ -210,13 +210,13 @@ export default function AdminPage() {
 
               {activeTab === "products" && (
                 <motion.div key="products" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "28px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px", marginBottom: "28px" }}>
                     <div>
                       <p style={{ fontSize: "10px", letterSpacing: "4px", color: "rgba(180,140,60,0.5)", textTransform: "uppercase", marginBottom: "6px" }}>Hantera</p>
-                      <h2 style={{ fontSize: "24px", fontWeight: "700", color: "rgba(255,255,255,0.85)" }}>Produkter</h2>
+                      <h2 style={{ fontSize: "clamp(20px, 4vw, 24px)", fontWeight: "700", color: "rgba(255,255,255,0.85)" }}>Produkter</h2>
                     </div>
                     {!editingProduct && (
-                      <button onClick={() => setEditingProduct({ ...EMPTY_PRODUCT })} style={{ padding: "10px 20px", background: "rgba(180,140,60,0.9)", border: "none", borderRadius: "8px", color: "#000", fontSize: "11px", fontWeight: "800", letterSpacing: "2px", textTransform: "uppercase", cursor: "pointer" }}>+ Ny produkt</button>
+                      <button onClick={() => setEditingProduct({ ...EMPTY_PRODUCT })} style={{ padding: "10px 20px", background: "rgba(180,140,60,0.9)", border: "none", borderRadius: "8px", color: "#000", fontSize: "11px", fontWeight: "800", letterSpacing: "2px", textTransform: "uppercase", cursor: "pointer", whiteSpace: "nowrap" }}>+ Ny produkt</button>
                     )}
                   </div>
                   {editingProduct ? (
@@ -225,13 +225,13 @@ export default function AdminPage() {
                       <p style={{ fontSize: "14px", fontWeight: "600", color: "rgba(180,140,60,0.8)", marginBottom: "20px" }}>{editingProduct.id === -1 ? "✦ Ny produkt" : `Redigerar: ${editingProduct.Name}`}</p>
                       <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                         <div><label style={labelStyle}>Produktnamn</label><input type="text" value={editingProduct.Name} placeholder="GBG Brew" onChange={(e) => setEditingProduct({ ...editingProduct, Name: e.target.value })} style={inputStyle} /></div>
-                        <div style={{ display: "flex", gap: "12px" }}>
-                          <div style={{ flex: 1 }}><label style={labelStyle}>Pris (kr)</label><input type="number" value={editingProduct.price} onChange={(e) => setEditingProduct({ ...editingProduct, price: Number(e.target.value) })} style={inputStyle} /></div>
-                          <div style={{ flex: 1 }}><label style={labelStyle}>Emoji</label><input type="text" value={editingProduct.emoji} placeholder="☕" onChange={(e) => setEditingProduct({ ...editingProduct, emoji: e.target.value })} style={inputStyle} /></div>
+                        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                          <div style={{ flex: "1 1 120px" }}><label style={labelStyle}>Pris (kr)</label><input type="number" value={editingProduct.price} onChange={(e) => setEditingProduct({ ...editingProduct, price: Number(e.target.value) })} style={inputStyle} /></div>
+                          <div style={{ flex: "1 1 120px" }}><label style={labelStyle}>Emoji</label><input type="text" value={editingProduct.emoji} placeholder="☕" onChange={(e) => setEditingProduct({ ...editingProduct, emoji: e.target.value })} style={inputStyle} /></div>
                         </div>
-                        <div style={{ display: "flex", gap: "12px" }}>
-                          <div style={{ flex: 1 }}><label style={labelStyle}>Badge</label><input type="text" value={editingProduct.badge} placeholder="new" onChange={(e) => setEditingProduct({ ...editingProduct, badge: e.target.value })} style={inputStyle} /></div>
-                          <div style={{ flex: 1 }}><label style={labelStyle}>Kategori</label><input type="text" value={editingProduct.category} placeholder="Kaffe" onChange={(e) => setEditingProduct({ ...editingProduct, category: e.target.value })} style={inputStyle} /></div>
+                        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                          <div style={{ flex: "1 1 120px" }}><label style={labelStyle}>Badge</label><input type="text" value={editingProduct.badge} placeholder="new" onChange={(e) => setEditingProduct({ ...editingProduct, badge: e.target.value })} style={inputStyle} /></div>
+                          <div style={{ flex: "1 1 120px" }}><label style={labelStyle}>Kategori</label><input type="text" value={editingProduct.category} placeholder="Kaffe" onChange={(e) => setEditingProduct({ ...editingProduct, category: e.target.value })} style={inputStyle} /></div>
                         </div>
                         <div><label style={labelStyle}>Beskrivning</label><textarea value={editingProduct.description} placeholder="Beskriv produkten..." onChange={(e) => setEditingProduct({ ...editingProduct, description: e.target.value })} rows={3} style={{ ...inputStyle, resize: "none" }} /></div>
                         <button onClick={saveProduct} disabled={savingProduct} style={{ padding: "14px", background: "linear-gradient(135deg, rgba(180,140,60,0.8), rgba(232,192,106,0.8))", color: "#000", border: "none", borderRadius: "8px", fontWeight: "700", fontSize: "12px", letterSpacing: "3px", textTransform: "uppercase", cursor: "pointer" }}>{savingProduct ? "Sparar..." : editingProduct.id === -1 ? "Skapa produkt" : "Spara ändringar"}</button>
@@ -249,9 +249,9 @@ export default function AdminPage() {
                               <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.3)", letterSpacing: "1px" }}>{product.category} · {product.badge} · {product.price} kr</p>
                             </div>
                           </div>
-                          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                            <button onClick={() => setEditingProduct(product)} style={{ padding: "7px 14px", background: "rgba(180,140,60,0.1)", border: "1px solid rgba(180,140,60,0.3)", borderRadius: "6px", color: "rgba(180,140,60,0.8)", fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase", cursor: "pointer" }}>Redigera</button>
-                            <button onClick={() => deleteProduct(product.id)} style={{ padding: "7px 14px", background: "rgba(255,80,80,0.08)", border: "1px solid rgba(255,80,80,0.2)", borderRadius: "6px", color: "rgba(255,80,80,0.6)", fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase", cursor: "pointer" }}>Ta bort</button>
+                          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                            <button onClick={() => setEditingProduct(product)} style={{ padding: "7px 14px", background: "rgba(180,140,60,0.1)", border: "1px solid rgba(180,140,60,0.3)", borderRadius: "6px", color: "rgba(180,140,60,0.8)", fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase", cursor: "pointer", whiteSpace: "nowrap" }}>Redigera</button>
+                            <button onClick={() => deleteProduct(product.id)} style={{ padding: "7px 14px", background: "rgba(255,80,80,0.08)", border: "1px solid rgba(255,80,80,0.2)", borderRadius: "6px", color: "rgba(255,80,80,0.6)", fontSize: "11px", letterSpacing: "2px", textTransform: "uppercase", cursor: "pointer", whiteSpace: "nowrap" }}>Ta bort</button>
                           </div>
                         </motion.div>
                       ))}
@@ -263,11 +263,11 @@ export default function AdminPage() {
               {activeTab === "messages" && (
                 <motion.div key="messages" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
                   <p style={{ fontSize: "10px", letterSpacing: "4px", color: "rgba(180,140,60,0.5)", textTransform: "uppercase", marginBottom: "16px" }}>Historik</p>
-                  <h2 style={{ fontSize: "24px", fontWeight: "700", color: "rgba(255,255,255,0.85)", marginBottom: "28px" }}>Meddelanden</h2>
+                  <h2 style={{ fontSize: "clamp(20px, 4vw, 24px)", fontWeight: "700", color: "rgba(255,255,255,0.85)", marginBottom: "28px" }}>Meddelanden</h2>
                   <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                     {messages.length > 0 ? messages.map((msg, i) => (
                       <motion.div key={msg.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }} style={{ padding: "16px 20px", background: msg.read ? "rgba(255,255,255,0.02)" : "rgba(180,140,60,0.06)", border: `1px solid ${msg.read ? "rgba(255,255,255,0.05)" : "rgba(180,140,60,0.2)"}`, borderRadius: "8px" }}>
-                        <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", marginBottom: "6px" }}>{msg.text}</p>
+                        <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", marginBottom: "6px", wordBreak: "break-word" }}>{msg.text}</p>
                         <p style={{ fontSize: "11px", color: "rgba(255,255,255,0.2)" }}>{new Date(msg.created_at).toLocaleString("sv-SE")}</p>
                       </motion.div>
                     )) : <p style={{ color: "rgba(255,255,255,0.25)", letterSpacing: "2px", fontSize: "13px" }}>Inga meddelanden.</p>}
@@ -278,7 +278,7 @@ export default function AdminPage() {
               {activeTab === "tools" && (
                 <motion.div key="tools" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
                   <p style={{ fontSize: "10px", letterSpacing: "4px", color: "rgba(180,140,60,0.5)", textTransform: "uppercase", marginBottom: "16px" }}>Research & Intelligence</p>
-                  <h2 style={{ fontSize: "24px", fontWeight: "700", color: "rgba(255,255,255,0.85)", marginBottom: "12px" }}>Web Crawler</h2>
+                  <h2 style={{ fontSize: "clamp(20px, 4vw, 24px)", fontWeight: "700", color: "rgba(255,255,255,0.85)", marginBottom: "12px" }}>Web Crawler</h2>
                   <p style={{ fontSize: "13px", color: "rgba(255,255,255,0.4)", marginBottom: "28px", letterSpacing: "0.5px" }}>
                     Klicka på 🔥 ikonen nere till höger för att öppna verktyget.
                   </p>

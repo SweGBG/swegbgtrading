@@ -40,6 +40,7 @@ export default function PriceTrackingPanel() {
   const [graphProduct, setGraphProduct] = useState<Product | null>(null);
   const [history, setHistory] = useState<HistoryPoint[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   const loadProducts = async () => {
     setLoading(true);
@@ -104,6 +105,42 @@ export default function PriceTrackingPanel() {
     await loadProducts();
   };
 
+  const deleteSelected = async () => {
+    if (selectedIds.size === 0) return;
+    if (
+      !confirm(
+        `Ta bort ${selectedIds.size} produkt${selectedIds.size > 1 ? 'er' : ''} och all prishistorik?`
+      )
+    )
+      return;
+
+    await Promise.all(
+      Array.from(selectedIds).map((id) =>
+        fetch(`/api/tracking/delete/${id}`, { method: 'DELETE' })
+      )
+    );
+    setSelectedIds(new Set());
+    await loadProducts();
+  };
+
+  const toggleSelect = (id: string) => {
+    const newSet = new Set(selectedIds);
+    if (newSet.has(id)) {
+      newSet.delete(id);
+    } else {
+      newSet.add(id);
+    }
+    setSelectedIds(newSet);
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === products.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(products.map((p) => p.id)));
+    }
+  };
+
   const updateYourPrice = async (id: string, price: number) => {
     await fetch(`/api/tracking/update-price/${id}`, {
       method: 'PATCH',
@@ -148,32 +185,53 @@ export default function PriceTrackingPanel() {
           gap: '16px',
         }}
       >
-        <div>
-          <h2 style={{ fontSize: '22px', color: '#ffd700', margin: 0 }}>
+        <div style={{ flex: '1 1 200px', minWidth: '0' }}>
+          <h2 style={{ fontSize: 'clamp(18px, 4vw, 22px)', color: '#ffd700', margin: 0 }}>
             📊 Prisbevakning
           </h2>
-          <p style={{ fontSize: '13px', color: '#888', margin: '4px 0 0 0' }}>
+          <p style={{ fontSize: '13px', color: '#888', margin: '4px 0 0 0', wordBreak: 'break-word' }}>
             Bevaka konkurrenters priser och justera dina egna i realtid
           </p>
         </div>
-        <button
-          onClick={refreshAll}
-          disabled={refreshing || products.length === 0}
-          style={{
-            background: refreshing
-              ? '#333'
-              : 'linear-gradient(135deg, #ffd700, #ffaa00)',
-            color: refreshing ? '#888' : '#000',
-            border: 'none',
-            padding: '10px 20px',
-            borderRadius: '8px',
-            fontWeight: 600,
-            cursor: refreshing ? 'not-allowed' : 'pointer',
-            fontSize: '14px',
-          }}
-        >
-          {refreshing ? 'Uppdaterar…' : '🔄 Uppdatera alla priser'}
-        </button>
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+          {selectedIds.size > 0 && (
+            <button
+              onClick={deleteSelected}
+              style={{
+                background: 'rgba(255, 80, 80, 0.15)',
+                border: '1px solid rgba(255, 80, 80, 0.4)',
+                color: '#ff8080',
+                padding: '10px 20px',
+                borderRadius: '8px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                fontSize: '14px',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              🗑️ Ta bort ({selectedIds.size})
+            </button>
+          )}
+          <button
+            onClick={refreshAll}
+            disabled={refreshing || products.length === 0}
+            style={{
+              background: refreshing
+                ? '#333'
+                : 'linear-gradient(135deg, #ffd700, #ffaa00)',
+              color: refreshing ? '#888' : '#000',
+              border: 'none',
+              padding: '10px 20px',
+              borderRadius: '8px',
+              fontWeight: 600,
+              cursor: refreshing ? 'not-allowed' : 'pointer',
+              fontSize: '14px',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {refreshing ? 'Uppdaterar…' : '🔄 Uppdatera alla priser'}
+          </button>
+        </div>
       </div>
 
       {/* Lägg till-formulär */}
@@ -226,6 +284,7 @@ export default function PriceTrackingPanel() {
             borderRadius: '8px',
             fontWeight: 600,
             cursor: adding ? 'not-allowed' : 'pointer',
+            whiteSpace: 'nowrap',
           }}
         >
           {adding ? 'Scrapar…' : '+ Lägg till'}
@@ -258,16 +317,37 @@ export default function PriceTrackingPanel() {
           Inga produkter bevakas än. Klistra in en URL ovan för att börja.
         </p>
       ) : (
-        <div style={{ overflowX: 'auto' }}>
+        <div style={{
+          overflowX: 'auto',
+          overflowY: 'visible',
+          WebkitOverflowScrolling: 'touch',
+          maxWidth: '100%'
+        }}>
           <table
             style={{
               width: '100%',
+              minWidth: '800px',
               borderCollapse: 'collapse',
               fontSize: '14px',
             }}
           >
             <thead>
               <tr style={{ color: '#888', textAlign: 'left', fontSize: '12px' }}>
+                <th style={{ padding: '12px 8px', width: '40px' }}>
+                  <input
+                    type="checkbox"
+                    checked={
+                      products.length > 0 && selectedIds.size === products.length
+                    }
+                    onChange={toggleSelectAll}
+                    style={{
+                      width: '18px',
+                      height: '18px',
+                      cursor: 'pointer',
+                      accentColor: '#ffd700',
+                    }}
+                  />
+                </th>
                 <th style={{ padding: '12px 8px' }}>Produkt</th>
                 <th style={{ padding: '12px 8px' }}>Butik</th>
                 <th style={{ padding: '12px 8px', textAlign: 'right' }}>
@@ -289,8 +369,26 @@ export default function PriceTrackingPanel() {
                 return (
                   <tr
                     key={p.id}
-                    style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
+                    style={{
+                      borderTop: '1px solid rgba(255,255,255,0.06)',
+                      background: selectedIds.has(p.id)
+                        ? 'rgba(255, 215, 0, 0.05)'
+                        : 'transparent',
+                    }}
                   >
+                    <td style={{ padding: '14px 8px' }}>
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.has(p.id)}
+                        onChange={() => toggleSelect(p.id)}
+                        style={{
+                          width: '18px',
+                          height: '18px',
+                          cursor: 'pointer',
+                          accentColor: '#ffd700',
+                        }}
+                      />
+                    </td>
                     <td style={{ padding: '14px 8px' }}>
                       <div
                         style={{
@@ -508,7 +606,7 @@ export default function PriceTrackingPanel() {
                         border: '1px solid #333',
                         borderRadius: '6px',
                       }}
-                      formatter={(v) => `${v} kr`}
+                      formatter={(v: any) => `${v} kr`}
                     />
                     <Line
                       type="monotone"

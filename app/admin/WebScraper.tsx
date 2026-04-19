@@ -32,8 +32,13 @@ const ACTIONS = [
   { id: "search", label: "Sök webben", icon: "🌐" },
 ];
 
-export default function WebScraper() {
-  const [open, setOpen] = useState(false);
+type Props = {
+  open: boolean;
+  setOpen: (v: boolean) => void;
+  activeTab: string;
+};
+
+export default function WebScraper({ open, setOpen, activeTab }: Props) {
   const [input, setInput] = useState("");
   const [mode, setMode] = useState("general");
   const [action, setAction] = useState("scrape");
@@ -61,11 +66,8 @@ export default function WebScraper() {
         }),
       });
       const data = await res.json();
-      if (data.error) {
-        setError(data.error);
-      } else {
-        setResult(data);
-      }
+      if (data.error) setError(data.error);
+      else setResult(data);
     } catch {
       setError("Kunde inte nå servern");
     }
@@ -74,7 +76,7 @@ export default function WebScraper() {
 
   return (
     <>
-      <button
+      {activeTab === 'tools' && <button
         onClick={() => setOpen(!open)}
         style={{
           position: "fixed",
@@ -97,7 +99,7 @@ export default function WebScraper() {
         }}
       >
         {open ? "✕" : "🔥"}
-      </button>
+      </button>}
 
       {open && (
         <div
@@ -119,22 +121,14 @@ export default function WebScraper() {
           }}
         >
           {/* Header */}
-          <div
-            style={{
-              padding: "16px 18px",
-              borderBottom: "1px solid rgba(180,140,60,0.2)",
-              background: "rgba(180,140,60,0.05)",
-            }}
-          >
-            <span style={{ color: "#e8c06a", fontSize: 14, fontWeight: 700, letterSpacing: 2 }}>
-              🔥 WEB SCRAPER
-            </span>
+          <div style={{ padding: "16px 18px", borderBottom: "1px solid rgba(180,140,60,0.2)", background: "rgba(180,140,60,0.05)" }}>
+            <span style={{ color: "#e8c06a", fontSize: 14, fontWeight: 700, letterSpacing: 2 }}>🔥 WEB SCRAPER</span>
             <p style={{ margin: "4px 0 0", fontSize: 11, color: "rgba(255,255,255,0.3)" }}>
               Scrapa priser, SEO-data & innehåll från vilken sida som helst
             </p>
           </div>
 
-          {/* Action-väljare: Scrapa / Sök */}
+          {/* Action-väljare */}
           <div style={{ display: "flex", borderBottom: "1px solid rgba(180,140,60,0.1)" }}>
             {ACTIONS.map((a) => (
               <button
@@ -159,7 +153,7 @@ export default function WebScraper() {
             ))}
           </div>
 
-          {/* Input + Läges-väljare */}
+          {/* Input */}
           <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(180,140,60,0.1)" }}>
             <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
               <input
@@ -197,7 +191,6 @@ export default function WebScraper() {
               </button>
             </div>
 
-            {/* Lägesväljare */}
             <div style={{ display: "flex", gap: 6 }}>
               {MODES.map((m) => (
                 <button
@@ -235,43 +228,20 @@ export default function WebScraper() {
               </div>
             )}
 
-            {/* SEARCH-resultat */}
             {result && result.action === "search" && !loading && (
               <>
                 <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 12 }}>
                   🌐 {result.resultCount} resultat för "{result.query}" — {new Date(result.searchedAt!).toLocaleString("sv-SE")}
                 </div>
-
                 {result.results?.map((r, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      marginBottom: 8,
-                      background: "rgba(255,255,255,0.03)",
-                      border: "1px solid rgba(255,255,255,0.06)",
-                      borderRadius: 10,
-                      overflow: "hidden",
-                    }}
-                  >
-                    {/* Klickbar header */}
+                  <div key={i} style={{ marginBottom: 8, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, overflow: "hidden" }}>
                     <div
                       onClick={() => setExpandedResult(expandedResult === i ? null : i)}
-                      style={{
-                        padding: "12px 14px",
-                        cursor: "pointer",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "flex-start",
-                        gap: 8,
-                      }}
+                      style={{ padding: "12px 14px", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}
                     >
                       <div style={{ flex: 1 }}>
-                        <p style={{ fontSize: 13, fontWeight: 600, color: "#e8c06a", marginBottom: 4 }}>
-                          {r.title}
-                        </p>
-                        <p style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", wordBreak: "break-all" }}>
-                          {r.url}
-                        </p>
+                        <p style={{ fontSize: 13, fontWeight: 600, color: "#e8c06a", marginBottom: 4 }}>{r.title}</p>
+                        <p style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", wordBreak: "break-all" }}>{r.url}</p>
                         {r.description && (
                           <p style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", marginTop: 4, lineHeight: 1.4 }}>
                             {r.description.substring(0, 120)}{r.description.length > 120 ? "..." : ""}
@@ -282,8 +252,6 @@ export default function WebScraper() {
                         {expandedResult === i ? "▼" : "►"}
                       </span>
                     </div>
-
-                    {/* Expanderad data */}
                     {expandedResult === i && r.extract && (
                       <div style={{ padding: "0 14px 14px", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
                         <RenderExtract data={r.extract} mode={mode} />
@@ -291,81 +259,45 @@ export default function WebScraper() {
                     )}
                   </div>
                 ))}
-
                 {result.results?.length === 0 && (
                   <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 13, textAlign: "center", marginTop: 20 }}>
-                    Inga resultat hittades. Testa en annan sökfråga.
+                    Inga resultat hittades.
                   </p>
                 )}
               </>
             )}
 
-            {/* SCRAPE-resultat (befintligt) */}
             {result && result.action === "scrape" && !loading && (
               <>
                 <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 12 }}>
                   ✓ {result.url} — {new Date(result.scrapedAt!).toLocaleString("sv-SE")}
                 </div>
-
                 {result.extract && (
                   <div style={{ marginBottom: 16 }}>
-                    <div
-                      style={{
-                        fontSize: 11,
-                        letterSpacing: 2,
-                        color: "#e8c06a",
-                        marginBottom: 8,
-                        textTransform: "uppercase",
-                      }}
-                    >
+                    <div style={{ fontSize: 11, letterSpacing: 2, color: "#e8c06a", marginBottom: 8, textTransform: "uppercase" }}>
                       Extraherad data
                     </div>
                     <RenderExtract data={result.extract} mode={mode} />
                   </div>
                 )}
-
                 <button
                   onClick={() => setShowRaw(!showRaw)}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    color: "rgba(255,255,255,0.3)",
-                    fontSize: 11,
-                    cursor: "pointer",
-                    padding: "4px 0",
-                  }}
+                  style={{ background: "none", border: "none", color: "rgba(255,255,255,0.3)", fontSize: 11, cursor: "pointer", padding: "4px 0" }}
                 >
                   {showRaw ? "▼ Dölj rå-data" : "► Visa rå-data"}
                 </button>
-
                 {showRaw && (
-                  <pre
-                    style={{
-                      marginTop: 8,
-                      padding: 12,
-                      background: "rgba(255,255,255,0.03)",
-                      borderRadius: 8,
-                      fontSize: 11,
-                      color: "rgba(255,255,255,0.5)",
-                      whiteSpace: "pre-wrap",
-                      wordBreak: "break-word",
-                      maxHeight: 300,
-                      overflowY: "auto",
-                    }}
-                  >
+                  <pre style={{ marginTop: 8, padding: 12, background: "rgba(255,255,255,0.03)", borderRadius: 8, fontSize: 11, color: "rgba(255,255,255,0.5)", whiteSpace: "pre-wrap", wordBreak: "break-word", maxHeight: 300, overflowY: "auto" }}>
                     {JSON.stringify(result.extract, null, 2)}
                   </pre>
                 )}
               </>
             )}
 
-            {/* Tom state */}
             {!result && !loading && !error && (
               <div style={{ textAlign: "center", marginTop: 40 }}>
                 <p style={{ color: "rgba(255,255,255,0.15)", fontSize: 13 }}>
-                  {action === "search"
-                    ? "Skriv en sökfråga och välj läge"
-                    : "Klistra in en URL och välj läge"}
+                  {action === "search" ? "Skriv en sökfråga och välj läge" : "Klistra in en URL och välj läge"}
                 </p>
                 <div style={{ marginTop: 16, fontSize: 12, color: "rgba(255,255,255,0.1)", lineHeight: 2 }}>
                   🌐 Sök webben efter produkter & priser<br />
@@ -389,22 +321,9 @@ function RenderExtract({ data, mode }: { data: any; mode: string }) {
     return (
       <div>
         {data.map((item: any, i: number) => (
-          <div
-            key={i}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: "8px 12px",
-              background: "rgba(255,255,255,0.03)",
-              borderRadius: 8,
-              marginBottom: 4,
-              fontSize: 13,
-            }}
-          >
+          <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "8px 12px", background: "rgba(255,255,255,0.03)", borderRadius: 8, marginBottom: 4, fontSize: 13 }}>
             <span style={{ color: "rgba(255,255,255,0.7)" }}>{item.name}</span>
-            <span style={{ color: "#e8c06a", fontWeight: 700 }}>
-              {item.price} {item.currency || "kr"}
-            </span>
+            <span style={{ color: "#e8c06a", fontWeight: 700 }}>{item.price} {item.currency || "kr"}</span>
           </div>
         ))}
       </div>
@@ -414,45 +333,18 @@ function RenderExtract({ data, mode }: { data: any; mode: string }) {
   if (mode === "seo" && typeof data === "object" && !Array.isArray(data)) {
     return (
       <div style={{ fontSize: 13 }}>
-        {data.title && (
-          <div style={{ marginBottom: 8 }}>
-            <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>TITLE:</span>
-            <p style={{ color: "#fff", margin: "2px 0" }}>{data.title}</p>
-          </div>
-        )}
-        {data.description && (
-          <div style={{ marginBottom: 8 }}>
-            <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>META DESC:</span>
-            <p style={{ color: "rgba(255,255,255,0.7)", margin: "2px 0" }}>{data.description}</p>
-          </div>
-        )}
-        {data.h1s?.length > 0 && (
-          <div style={{ marginBottom: 8 }}>
-            <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>H1:</span>
-            {data.h1s.map((h: string, i: number) => (
-              <p key={i} style={{ color: "rgba(255,255,255,0.7)", margin: "2px 0" }}>{h}</p>
-            ))}
-          </div>
-        )}
-        {data.h2s?.length > 0 && (
-          <div>
-            <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>H2:</span>
-            {data.h2s.map((h: string, i: number) => (
-              <p key={i} style={{ color: "rgba(255,255,255,0.6)", margin: "2px 0", fontSize: 12 }}>{h}</p>
-            ))}
-          </div>
-        )}
+        {data.title && <div style={{ marginBottom: 8 }}><span style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>TITLE:</span><p style={{ color: "#fff", margin: "2px 0" }}>{data.title}</p></div>}
+        {data.description && <div style={{ marginBottom: 8 }}><span style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>META DESC:</span><p style={{ color: "rgba(255,255,255,0.7)", margin: "2px 0" }}>{data.description}</p></div>}
+        {data.h1s?.length > 0 && <div style={{ marginBottom: 8 }}><span style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>H1:</span>{data.h1s.map((h: string, i: number) => <p key={i} style={{ color: "rgba(255,255,255,0.7)", margin: "2px 0" }}>{h}</p>)}</div>}
+        {data.h2s?.length > 0 && <div><span style={{ color: "rgba(255,255,255,0.4)", fontSize: 11 }}>H2:</span>{data.h2s.map((h: string, i: number) => <p key={i} style={{ color: "rgba(255,255,255,0.6)", margin: "2px 0", fontSize: 12 }}>{h}</p>)}</div>}
       </div>
     );
   }
 
-  // Generellt läge
   if (typeof data === "object" && !Array.isArray(data)) {
     return (
       <div style={{ fontSize: 13 }}>
-        {data.summary && (
-          <p style={{ color: "rgba(255,255,255,0.7)", marginBottom: 12, lineHeight: 1.5 }}>{data.summary}</p>
-        )}
+        {data.summary && <p style={{ color: "rgba(255,255,255,0.7)", marginBottom: 12, lineHeight: 1.5 }}>{data.summary}</p>}
         {data.products?.length > 0 && (
           <div style={{ marginBottom: 12 }}>
             <span style={{ color: "#e8c06a", fontSize: 11 }}>PRODUKTER:</span>
@@ -467,18 +359,12 @@ function RenderExtract({ data, mode }: { data: any; mode: string }) {
         {data.keyFacts?.length > 0 && (
           <div>
             <span style={{ color: "#e8c06a", fontSize: 11 }}>FAKTA:</span>
-            {data.keyFacts.map((f: string, i: number) => (
-              <p key={i} style={{ color: "rgba(255,255,255,0.5)", fontSize: 12, margin: "4px 0" }}>• {f}</p>
-            ))}
+            {data.keyFacts.map((f: string, i: number) => <p key={i} style={{ color: "rgba(255,255,255,0.5)", fontSize: 12, margin: "4px 0" }}>• {f}</p>)}
           </div>
         )}
       </div>
     );
   }
 
-  return (
-    <pre style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", whiteSpace: "pre-wrap" }}>
-      {JSON.stringify(data, null, 2)}
-    </pre>
-  );
+  return <pre style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", whiteSpace: "pre-wrap" }}>{JSON.stringify(data, null, 2)}</pre>;
 }

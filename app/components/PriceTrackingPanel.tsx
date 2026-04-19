@@ -30,7 +30,13 @@ type HistoryPoint = {
   in_stock: boolean | null;
 };
 
-export default function PriceTrackingPanel() {
+type Props = {
+  open: boolean;
+  setOpen: (v: boolean) => void;
+  activeTab: string;
+};
+
+export default function PriceTrackingPanel({ open, setOpen, activeTab }: Props) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [newUrl, setNewUrl] = useState('');
@@ -107,13 +113,7 @@ export default function PriceTrackingPanel() {
 
   const deleteSelected = async () => {
     if (selectedIds.size === 0) return;
-    if (
-      !confirm(
-        `Ta bort ${selectedIds.size} produkt${selectedIds.size > 1 ? 'er' : ''} och all prishistorik?`
-      )
-    )
-      return;
-
+    if (!confirm(`Ta bort ${selectedIds.size} produkt${selectedIds.size > 1 ? 'er' : ''} och all prishistorik?`)) return;
     await Promise.all(
       Array.from(selectedIds).map((id) =>
         fetch(`/api/tracking/delete/${id}`, { method: 'DELETE' })
@@ -125,20 +125,14 @@ export default function PriceTrackingPanel() {
 
   const toggleSelect = (id: string) => {
     const newSet = new Set(selectedIds);
-    if (newSet.has(id)) {
-      newSet.delete(id);
-    } else {
-      newSet.add(id);
-    }
+    if (newSet.has(id)) newSet.delete(id);
+    else newSet.add(id);
     setSelectedIds(newSet);
   };
 
   const toggleSelectAll = () => {
-    if (selectedIds.size === products.length) {
-      setSelectedIds(new Set());
-    } else {
-      setSelectedIds(new Set(products.map((p) => p.id)));
-    }
+    if (selectedIds.size === products.length) setSelectedIds(new Set());
+    else setSelectedIds(new Set(products.map((p) => p.id)));
   };
 
   const updateYourPrice = async (id: string, price: number) => {
@@ -147,9 +141,7 @@ export default function PriceTrackingPanel() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ your_price: price }),
     });
-    setProducts((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, your_price: price } : p))
-    );
+    setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, your_price: price } : p)));
   };
 
   const openGraph = async (product: Product) => {
@@ -161,368 +153,317 @@ export default function PriceTrackingPanel() {
 
   const calcDiff = (latest: number | null, yours: number | null) => {
     if (latest === null || yours === null) return null;
-    const diff = ((yours - latest) / latest) * 100;
-    return diff;
+    return ((yours - latest) / latest) * 100;
   };
 
   return (
-    <section
-      style={{
-        background: 'rgba(20, 20, 25, 0.6)',
-        border: '1px solid rgba(255, 215, 0, 0.15)',
-        borderRadius: '16px',
-        padding: '28px',
-        marginTop: '32px',
-      }}
-    >
-      <div
+    <>
+      {/* Floating toggle-knapp – visas bara på Pris Bevakning-tabben */}
+      {activeTab === 'pricetracking' && <button
+        onClick={() => setOpen((v) => !v)}
+        title="Prisbevakning"
         style={{
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          bottom: '24px',
+          zIndex: 1001,
+          width: '52px',
+          height: '52px',
+          borderRadius: '50%',
+          background: open
+            ? 'rgba(255, 215, 0, 0.2)'
+            : 'linear-gradient(135deg, rgba(255,215,0,0.9), rgba(255,170,0,0.9))',
+          border: open
+            ? '2px solid rgba(255,215,0,0.6)'
+            : '2px solid transparent',
+          cursor: 'pointer',
           display: 'flex',
-          justifyContent: 'space-between',
           alignItems: 'center',
-          marginBottom: '24px',
-          flexWrap: 'wrap',
-          gap: '16px',
+          justifyContent: 'center',
+          fontSize: '22px',
+          boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       >
-        <div style={{ flex: '1 1 200px', minWidth: '0' }}>
-          <h2 style={{ fontSize: 'clamp(18px, 4vw, 22px)', color: '#ffd700', margin: 0 }}>
-            📊 Prisbevakning
-          </h2>
-          <p style={{ fontSize: '13px', color: '#888', margin: '4px 0 0 0', wordBreak: 'break-word' }}>
-            Bevaka konkurrenters priser och justera dina egna i realtid
-          </p>
-        </div>
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-          {selectedIds.size > 0 && (
+        📊
+      </button>}
+
+      {/* Panel */}
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 1000,
+          width: '820px',
+          maxWidth: '95vw',
+          overflowY: 'auto',
+          background: 'rgba(10, 10, 14, 0.98)',
+          borderLeft: '1px solid rgba(255, 215, 0, 0.15)',
+          boxShadow: '-8px 0 40px rgba(0,0,0,0.7)',
+          padding: '32px 28px',
+          transform: open ? 'translateX(0)' : 'translateX(100%)',
+          opacity: open ? 1 : 0,
+          pointerEvents: open ? 'auto' : 'none',
+          transition: 'all 0.35s cubic-bezier(0.4, 0, 0.2, 1)',
+        }}
+      >
+        {/* Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
+          <div>
+            <h2 style={{ fontSize: '18px', color: '#ffd700', margin: 0 }}>📊 Prisbevakning</h2>
+            <p style={{ fontSize: '12px', color: '#666', margin: '4px 0 0 0' }}>
+              Bevaka konkurrenters priser i realtid
+            </p>
+          </div>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            {selectedIds.size > 0 && (
+              <button
+                onClick={deleteSelected}
+                style={{
+                  background: 'rgba(255,80,80,0.15)',
+                  border: '1px solid rgba(255,80,80,0.4)',
+                  color: '#ff8080',
+                  padding: '7px 14px',
+                  borderRadius: '8px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                🗑️ Ta bort ({selectedIds.size})
+              </button>
+            )}
             <button
-              onClick={deleteSelected}
+              onClick={refreshAll}
+              disabled={refreshing || products.length === 0}
               style={{
-                background: 'rgba(255, 80, 80, 0.15)',
-                border: '1px solid rgba(255, 80, 80, 0.4)',
-                color: '#ff8080',
-                padding: '10px 20px',
+                background: refreshing ? '#222' : 'linear-gradient(135deg, #ffd700, #ffaa00)',
+                color: refreshing ? '#555' : '#000',
+                border: 'none',
+                padding: '7px 14px',
                 borderRadius: '8px',
                 fontWeight: 600,
-                cursor: 'pointer',
-                fontSize: '14px',
+                cursor: refreshing ? 'not-allowed' : 'pointer',
+                fontSize: '12px',
                 whiteSpace: 'nowrap',
               }}
             >
-              🗑️ Ta bort ({selectedIds.size})
+              {refreshing ? 'Uppdaterar…' : '🔄 Uppdatera alla'}
             </button>
-          )}
-          <button
-            onClick={refreshAll}
-            disabled={refreshing || products.length === 0}
+          </div>
+        </div>
+
+        {/* Lägg till-formulär */}
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
+          <input
+            type="url"
+            placeholder="Klistra in produkt-URL (t.ex. ahlens.se/mugg-xyz)"
+            value={newUrl}
+            onChange={(e) => setNewUrl(e.target.value)}
             style={{
-              background: refreshing
-                ? '#333'
-                : 'linear-gradient(135deg, #ffd700, #ffaa00)',
-              color: refreshing ? '#888' : '#000',
-              border: 'none',
-              padding: '10px 20px',
+              flex: '1 1 200px',
+              background: 'rgba(0,0,0,0.5)',
+              border: '1px solid rgba(255,255,255,0.08)',
               borderRadius: '8px',
-              fontWeight: 600,
-              cursor: refreshing ? 'not-allowed' : 'pointer',
-              fontSize: '14px',
+              padding: '9px 12px',
+              color: '#fff',
+              fontSize: '13px',
+              outline: 'none',
+            }}
+          />
+          <input
+            type="number"
+            placeholder="Ditt pris (kr)"
+            value={newPrice}
+            onChange={(e) => setNewPrice(e.target.value)}
+            style={{
+              width: '110px',
+              background: 'rgba(0,0,0,0.5)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: '8px',
+              padding: '9px 12px',
+              color: '#fff',
+              fontSize: '13px',
+              outline: 'none',
+            }}
+          />
+          <button
+            onClick={addProduct}
+            disabled={adding || !newUrl.trim()}
+            style={{
+              background: adding ? '#222' : '#ffd700',
+              color: adding ? '#555' : '#000',
+              border: 'none',
+              padding: '9px 16px',
+              borderRadius: '8px',
+              fontWeight: 700,
+              cursor: adding ? 'not-allowed' : 'pointer',
               whiteSpace: 'nowrap',
+              fontSize: '13px',
             }}
           >
-            {refreshing ? 'Uppdaterar…' : '🔄 Uppdatera alla priser'}
+            {adding ? 'Scrapar…' : '+ Lägg till'}
           </button>
         </div>
-      </div>
 
-      {/* Lägg till-formulär */}
-      <div
-        style={{
-          display: 'flex',
-          gap: '12px',
-          marginBottom: '24px',
-          flexWrap: 'wrap',
-        }}
-      >
-        <input
-          type="url"
-          placeholder="Klistra in produkt-URL (t.ex. ahlens.se/mugg-xyz)"
-          value={newUrl}
-          onChange={(e) => setNewUrl(e.target.value)}
-          style={{
-            flex: '1 1 300px',
-            background: 'rgba(0,0,0,0.4)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            borderRadius: '8px',
-            padding: '10px 14px',
-            color: '#fff',
-            fontSize: '14px',
-          }}
-        />
-        <input
-          type="number"
-          placeholder="Ditt pris (kr)"
-          value={newPrice}
-          onChange={(e) => setNewPrice(e.target.value)}
-          style={{
-            width: '140px',
-            background: 'rgba(0,0,0,0.4)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            borderRadius: '8px',
-            padding: '10px 14px',
-            color: '#fff',
-            fontSize: '14px',
-          }}
-        />
-        <button
-          onClick={addProduct}
-          disabled={adding || !newUrl.trim()}
-          style={{
-            background: adding ? '#333' : '#ffd700',
-            color: adding ? '#888' : '#000',
-            border: 'none',
-            padding: '10px 20px',
-            borderRadius: '8px',
-            fontWeight: 600,
-            cursor: adding ? 'not-allowed' : 'pointer',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {adding ? 'Scrapar…' : '+ Lägg till'}
-        </button>
-      </div>
-
-      {error && (
-        <div
-          style={{
-            background: 'rgba(255, 80, 80, 0.1)',
-            border: '1px solid rgba(255, 80, 80, 0.3)',
+        {error && (
+          <div style={{
+            background: 'rgba(255,80,80,0.1)',
+            border: '1px solid rgba(255,80,80,0.3)',
             color: '#ff8080',
-            padding: '12px 16px',
+            padding: '10px 14px',
             borderRadius: '8px',
-            marginBottom: '16px',
-            fontSize: '13px',
-          }}
-        >
-          ⚠️ {error}
-        </div>
-      )}
+            marginBottom: '12px',
+            fontSize: '12px',
+          }}>
+            ⚠️ {error}
+          </div>
+        )}
 
-      {/* Tabell */}
-      {loading ? (
-        <p style={{ color: '#888', textAlign: 'center', padding: '40px' }}>
-          Laddar…
-        </p>
-      ) : products.length === 0 ? (
-        <p style={{ color: '#888', textAlign: 'center', padding: '40px' }}>
-          Inga produkter bevakas än. Klistra in en URL ovan för att börja.
-        </p>
-      ) : (
-        <div style={{
-          overflowX: 'auto',
-          overflowY: 'visible',
-          WebkitOverflowScrolling: 'touch',
-          maxWidth: '100%'
-        }}>
-          <table
-            style={{
-              width: '100%',
-              minWidth: '800px',
-              borderCollapse: 'collapse',
-              fontSize: '14px',
-            }}
-          >
-            <thead>
-              <tr style={{ color: '#888', textAlign: 'left', fontSize: '12px' }}>
-                <th style={{ padding: '12px 8px', width: '40px' }}>
-                  <input
-                    type="checkbox"
-                    checked={
-                      products.length > 0 && selectedIds.size === products.length
-                    }
-                    onChange={toggleSelectAll}
-                    style={{
-                      width: '18px',
-                      height: '18px',
-                      cursor: 'pointer',
-                      accentColor: '#ffd700',
-                    }}
-                  />
-                </th>
-                <th style={{ padding: '12px 8px' }}>Produkt</th>
-                <th style={{ padding: '12px 8px' }}>Butik</th>
-                <th style={{ padding: '12px 8px', textAlign: 'right' }}>
-                  Marknadspris
-                </th>
-                <th style={{ padding: '12px 8px', textAlign: 'right' }}>
-                  Ditt pris
-                </th>
-                <th style={{ padding: '12px 8px', textAlign: 'right' }}>Diff</th>
-                <th style={{ padding: '12px 8px' }}>Uppdaterad</th>
-                <th style={{ padding: '12px 8px', textAlign: 'right' }}>
-                  Åtgärder
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((p) => {
-                const diff = calcDiff(p.latest_price, p.your_price);
-                return (
-                  <tr
-                    key={p.id}
-                    style={{
-                      borderTop: '1px solid rgba(255,255,255,0.06)',
-                      background: selectedIds.has(p.id)
-                        ? 'rgba(255, 215, 0, 0.05)'
-                        : 'transparent',
-                    }}
-                  >
-                    <td style={{ padding: '14px 8px' }}>
-                      <input
-                        type="checkbox"
-                        checked={selectedIds.has(p.id)}
-                        onChange={() => toggleSelect(p.id)}
-                        style={{
-                          width: '18px',
-                          height: '18px',
-                          cursor: 'pointer',
-                          accentColor: '#ffd700',
-                        }}
-                      />
-                    </td>
-                    <td style={{ padding: '14px 8px' }}>
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '12px',
-                        }}
-                      >
-                        {p.image_url && (
-                          <img
-                            src={p.image_url}
-                            alt={p.name}
-                            style={{
-                              width: '42px',
-                              height: '42px',
-                              borderRadius: '6px',
-                              objectFit: 'cover',
-                              background: '#111',
-                            }}
-                          />
-                        )}
-                        <a
-                          href={p.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{ color: '#fff', textDecoration: 'none' }}
-                        >
-                          {p.name}
-                        </a>
-                      </div>
-                    </td>
-                    <td style={{ padding: '14px 8px', color: '#aaa' }}>
-                      {p.store || '—'}
-                    </td>
-                    <td
+        {/* Tabell */}
+        {loading ? (
+          <p style={{ color: '#555', textAlign: 'center', padding: '32px', fontSize: '13px' }}>Laddar…</p>
+        ) : products.length === 0 ? (
+          <p style={{ color: '#555', textAlign: 'center', padding: '32px', fontSize: '13px' }}>
+            Inga produkter bevakas än.
+          </p>
+        ) : (
+          <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+              <thead>
+                <tr style={{ color: '#555', textAlign: 'left', fontSize: '11px', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                  <th style={{ padding: '10px 6px', width: '32px' }}>
+                    <input
+                      type="checkbox"
+                      checked={products.length > 0 && selectedIds.size === products.length}
+                      onChange={toggleSelectAll}
+                      style={{ width: '15px', height: '15px', cursor: 'pointer', accentColor: '#ffd700' }}
+                    />
+                  </th>
+                  <th style={{ padding: '10px 6px' }}>Produkt</th>
+                  <th style={{ padding: '10px 6px' }}>Butik</th>
+                  <th style={{ padding: '10px 6px', textAlign: 'right' }}>Marknad</th>
+                  <th style={{ padding: '10px 6px', textAlign: 'right' }}>Ditt pris</th>
+                  <th style={{ padding: '10px 6px', textAlign: 'right' }}>Diff</th>
+                  <th style={{ padding: '10px 6px', textAlign: 'right' }}>Åtgärder</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map((p) => {
+                  const diff = calcDiff(p.latest_price, p.your_price);
+                  return (
+                    <tr
+                      key={p.id}
                       style={{
-                        padding: '14px 8px',
-                        textAlign: 'right',
-                        fontWeight: 600,
+                        borderTop: '1px solid rgba(255,255,255,0.05)',
+                        background: selectedIds.has(p.id) ? 'rgba(255,215,0,0.04)' : 'transparent',
                       }}
                     >
-                      {p.latest_price !== null ? `${p.latest_price} kr` : '—'}
-                    </td>
-                    <td style={{ padding: '14px 8px', textAlign: 'right' }}>
-                      <input
-                        type="number"
-                        defaultValue={p.your_price ?? ''}
-                        onBlur={(e) => {
-                          const val = parseFloat(e.target.value);
-                          if (!isNaN(val) && val !== p.your_price) {
-                            updateYourPrice(p.id, val);
-                          }
-                        }}
-                        style={{
-                          width: '90px',
-                          background: 'rgba(0,0,0,0.4)',
-                          border: '1px solid rgba(255,215,0,0.2)',
-                          borderRadius: '6px',
-                          padding: '6px 8px',
-                          color: '#ffd700',
-                          textAlign: 'right',
-                          fontWeight: 600,
-                        }}
-                      />
-                    </td>
-                    <td
-                      style={{
-                        padding: '14px 8px',
+                      <td style={{ padding: '12px 6px' }}>
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.has(p.id)}
+                          onChange={() => toggleSelect(p.id)}
+                          style={{ width: '15px', height: '15px', cursor: 'pointer', accentColor: '#ffd700' }}
+                        />
+                      </td>
+                      <td style={{ padding: '12px 6px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          {p.image_url && (
+                            <img
+                              src={p.image_url}
+                              alt={p.name}
+                              style={{ width: '32px', height: '32px', borderRadius: '4px', objectFit: 'cover', background: '#111' }}
+                            />
+                          )}
+                          <a
+                            href={p.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ color: '#ccc', textDecoration: 'none', fontSize: '12px', maxWidth: '120px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}
+                          >
+                            {p.name}
+                          </a>
+                        </div>
+                      </td>
+                      <td style={{ padding: '12px 6px', color: '#666', fontSize: '12px' }}>{p.store || '—'}</td>
+                      <td style={{ padding: '12px 6px', textAlign: 'right', fontWeight: 600, color: '#fff' }}>
+                        {p.latest_price !== null ? `${p.latest_price} kr` : '—'}
+                      </td>
+                      <td style={{ padding: '12px 6px', textAlign: 'right' }}>
+                        <input
+                          type="number"
+                          defaultValue={p.your_price ?? ''}
+                          onBlur={(e) => {
+                            const val = parseFloat(e.target.value);
+                            if (!isNaN(val) && val !== p.your_price) updateYourPrice(p.id, val);
+                          }}
+                          style={{
+                            width: '72px',
+                            background: 'rgba(0,0,0,0.4)',
+                            border: '1px solid rgba(255,215,0,0.2)',
+                            borderRadius: '5px',
+                            padding: '4px 6px',
+                            color: '#ffd700',
+                            textAlign: 'right',
+                            fontWeight: 600,
+                            fontSize: '12px',
+                            outline: 'none',
+                          }}
+                        />
+                      </td>
+                      <td style={{
+                        padding: '12px 6px',
                         textAlign: 'right',
-                        color:
-                          diff === null
-                            ? '#666'
-                            : diff > 0
-                              ? '#ff8080'
-                              : '#80ff80',
-                        fontWeight: 600,
-                      }}
-                    >
-                      {diff === null
-                        ? '—'
-                        : `${diff > 0 ? '+' : ''}${diff.toFixed(1)}%`}
-                    </td>
-                    <td
-                      style={{
-                        padding: '14px 8px',
-                        color: '#888',
+                        color: diff === null ? '#444' : diff > 0 ? '#ff8080' : '#80ff80',
+                        fontWeight: 700,
                         fontSize: '12px',
-                      }}
-                    >
-                      {p.last_scraped
-                        ? new Date(p.last_scraped).toLocaleString('sv-SE', {
-                          dateStyle: 'short',
-                          timeStyle: 'short',
-                        })
-                        : '—'}
-                    </td>
-                    <td style={{ padding: '14px 8px', textAlign: 'right' }}>
-                      <button
-                        onClick={() => openGraph(p)}
-                        style={{
-                          background: 'transparent',
-                          border: '1px solid rgba(255,215,0,0.3)',
-                          color: '#ffd700',
-                          padding: '6px 12px',
-                          borderRadius: '6px',
-                          cursor: 'pointer',
-                          marginRight: '6px',
-                          fontSize: '12px',
-                        }}
-                      >
-                        📈 Graf
-                      </button>
-                      <button
-                        onClick={() => deleteProduct(p.id)}
-                        style={{
-                          background: 'transparent',
-                          border: '1px solid rgba(255,80,80,0.3)',
-                          color: '#ff8080',
-                          padding: '6px 10px',
-                          borderRadius: '6px',
-                          cursor: 'pointer',
-                          fontSize: '12px',
-                        }}
-                      >
-                        ✕
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
+                      }}>
+                        {diff === null ? '—' : `${diff > 0 ? '+' : ''}${diff.toFixed(1)}%`}
+                      </td>
+                      <td style={{ padding: '12px 6px', textAlign: 'right' }}>
+                        <button
+                          onClick={() => openGraph(p)}
+                          style={{
+                            background: 'transparent',
+                            border: '1px solid rgba(255,215,0,0.25)',
+                            color: '#ffd700',
+                            padding: '4px 9px',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            marginRight: '4px',
+                            fontSize: '11px',
+                          }}
+                        >
+                          📈
+                        </button>
+                        <button
+                          onClick={() => deleteProduct(p.id)}
+                          style={{
+                            background: 'transparent',
+                            border: '1px solid rgba(255,80,80,0.25)',
+                            color: '#ff8080',
+                            padding: '4px 8px',
+                            borderRadius: '5px',
+                            cursor: 'pointer',
+                            fontSize: '11px',
+                          }}
+                        >
+                          ✕
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
 
       {/* Graf-modal */}
       {graphProduct && (
@@ -531,100 +472,63 @@ export default function PriceTrackingPanel() {
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(0,0,0,0.8)',
+            background: 'rgba(0,0,0,0.85)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 1000,
+            zIndex: 1100,
             padding: '20px',
           }}
         >
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              background: '#111',
-              border: '1px solid rgba(255,215,0,0.3)',
-              borderRadius: '12px',
+              background: '#0d0d0d',
+              border: '1px solid rgba(255,215,0,0.25)',
+              borderRadius: '14px',
               padding: '28px',
               width: '100%',
-              maxWidth: '800px',
+              maxWidth: '780px',
             }}
           >
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '20px',
-              }}
-            >
-              <h3 style={{ color: '#ffd700', margin: 0 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h3 style={{ color: '#ffd700', margin: 0, fontSize: '16px' }}>
                 Prishistorik — {graphProduct.name}
               </h3>
               <button
                 onClick={() => setGraphProduct(null)}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: '#888',
-                  fontSize: '24px',
-                  cursor: 'pointer',
-                }}
+                style={{ background: 'transparent', border: 'none', color: '#555', fontSize: '22px', cursor: 'pointer' }}
               >
                 ×
               </button>
             </div>
             {history.length < 2 ? (
-              <p
-                style={{
-                  color: '#888',
-                  textAlign: 'center',
-                  padding: '40px',
-                }}
-              >
-                Behöver minst 2 datapunkter. Klicka "Uppdatera alla priser"
-                igen senare för att bygga historik.
+              <p style={{ color: '#555', textAlign: 'center', padding: '40px', fontSize: '13px' }}>
+                Behöver minst 2 datapunkter. Klicka "Uppdatera alla" igen senare för att bygga historik.
               </p>
             ) : (
-              <div style={{ width: '100%', height: '360px' }}>
+              <div style={{ width: '100%', height: '340px' }}>
                 <ResponsiveContainer>
                   <LineChart
                     data={history.map((h) => ({
                       ...h,
-                      date: new Date(h.scraped_at).toLocaleDateString('sv-SE', {
-                        month: 'short',
-                        day: 'numeric',
-                      }),
+                      date: new Date(h.scraped_at).toLocaleDateString('sv-SE', { month: 'short', day: 'numeric' }),
                     }))}
                   >
-                    <CartesianGrid stroke="rgba(255,255,255,0.05)" />
-                    <XAxis dataKey="date" stroke="#666" />
-                    <YAxis stroke="#666" />
+                    <CartesianGrid stroke="rgba(255,255,255,0.04)" />
+                    <XAxis dataKey="date" stroke="#444" />
+                    <YAxis stroke="#444" />
                     <Tooltip
-                      contentStyle={{
-                        background: '#000',
-                        border: '1px solid #333',
-                        borderRadius: '6px',
-                      }}
+                      contentStyle={{ background: '#0a0a0a', border: '1px solid #222', borderRadius: '6px' }}
                       formatter={(v: any) => `${v} kr`}
                     />
-                    <Line
-                      type="monotone"
-                      dataKey="price"
-                      stroke="#ffd700"
-                      strokeWidth={2}
-                      dot={{ fill: '#ffd700', r: 4 }}
-                    />
+                    <Line type="monotone" dataKey="price" stroke="#ffd700" strokeWidth={2} dot={{ fill: '#ffd700', r: 4 }} />
                     {graphProduct.your_price && (
                       <ReferenceLine
                         y={graphProduct.your_price}
                         stroke="#80ff80"
                         strokeDasharray="5 5"
-                        label={{
-                          value: `Ditt pris: ${graphProduct.your_price} kr`,
-                          fill: '#80ff80',
-                          fontSize: 12,
-                        }}
+                        label={{ value: `Ditt pris: ${graphProduct.your_price} kr`, fill: '#80ff80', fontSize: 11 }}
                       />
                     )}
                   </LineChart>
@@ -634,6 +538,6 @@ export default function PriceTrackingPanel() {
           </div>
         </div>
       )}
-    </section>
+    </>
   );
 }

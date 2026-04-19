@@ -31,13 +31,14 @@ export async function POST(req: Request) {
           shipping_rate_data: {
             type: 'fixed_amount',
             fixed_amount: { amount: 0, currency: 'sek' },
-            display_name: 'Gratis frakt',
+            display_name: 'Gratis frakt över 500 kr (DHL Servicepoint- 3-5 arbetsdagar)',
             delivery_estimate: {
               minimum: { unit: 'business_day', value: 3 },
               maximum: { unit: 'business_day', value: 5 },
             },
           },
         },
+
         {
           shipping_rate_data: {
             type: 'fixed_amount',

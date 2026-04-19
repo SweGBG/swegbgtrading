@@ -160,7 +160,7 @@ export default function PriceTrackingPanel({ open, setOpen, activeTab }: Props) 
     <>
       {/* Floating toggle-knapp – visas bara på Pris Bevakning-tabben */}
       {activeTab === 'pricetracking' && <button
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => setOpen(!open)}
         title="Prisbevakning"
         style={{
           position: 'fixed',

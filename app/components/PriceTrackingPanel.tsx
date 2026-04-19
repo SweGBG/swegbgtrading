@@ -166,7 +166,6 @@ export default function PriceTrackingPanel({ open, setOpen, activeTab }: Props) 
           position: 'fixed',
           bottom: '24px',
           right: '24px',
-          bottom: '24px',
           zIndex: 1001,
           width: '52px',
           height: '52px',

@@ -54,7 +54,6 @@ export default function WebScraper({ open, setOpen, activeTab }: Props) {
     setError("");
     setResult(null);
     setExpandedResult(null);
-
     try {
       const res = await fetch("/api/scrape", {
         method: "POST",
@@ -74,239 +73,230 @@ export default function WebScraper({ open, setOpen, activeTab }: Props) {
     setLoading(false);
   }
 
+  // ── Inline-innehåll (delas av båda lägena) ────────────────────────────────
+  const scraperContent = (
+    <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+      {/* Action-tabs */}
+      <div style={{ display: "flex", borderBottom: "1px solid rgba(180,140,60,0.12)" }}>
+        {ACTIONS.map((a) => (
+          <button
+            key={a.id}
+            onClick={() => { setAction(a.id); setResult(null); setError(""); setInput(""); }}
+            style={{
+              flex: 1, padding: "11px 0", border: "none",
+              borderBottom: action === a.id ? "2px solid rgba(180,140,60,0.6)" : "2px solid transparent",
+              background: action === a.id ? "rgba(180,140,60,0.06)" : "transparent",
+              color: action === a.id ? "#e8c06a" : "rgba(255,255,255,0.35)",
+              fontSize: 13, fontWeight: action === a.id ? 700 : 400,
+              cursor: "pointer", letterSpacing: 1, transition: "all 0.15s",
+            }}
+          >
+            {a.icon} {a.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Input */}
+      <div style={{ padding: "14px 0 12px", borderBottom: "1px solid rgba(180,140,60,0.1)" }}>
+        <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && run()}
+            placeholder={action === "search" ? "Sök t.ex. 'espresso muggar pris'" : "https://example.com"}
+            style={{
+              flex: 1, background: "rgba(255,255,255,0.05)",
+              border: "1px solid rgba(180,140,60,0.2)", borderRadius: 10,
+              padding: "10px 14px", color: "#fff", fontSize: 13, outline: "none",
+            }}
+          />
+          <button
+            onClick={run}
+            disabled={loading || !input.trim()}
+            style={{
+              background: loading ? "rgba(180,140,60,0.1)" : "rgba(180,140,60,0.2)",
+              border: "1px solid rgba(180,140,60,0.3)", borderRadius: 10,
+              padding: "10px 16px", color: "#e8c06a", fontSize: 13, fontWeight: 700,
+              cursor: loading ? "wait" : "pointer", whiteSpace: "nowrap",
+            }}
+          >
+            {loading ? "⏳" : action === "search" ? "Sök" : "Scrapa"}
+          </button>
+        </div>
+
+        {/* Mode-knappar */}
+        <div style={{ display: "flex", gap: 6 }}>
+          {MODES.map((m) => (
+            <button
+              key={m.id}
+              onClick={() => setMode(m.id)}
+              style={{
+                flex: 1, padding: "8px 0", borderRadius: 8,
+                border: mode === m.id ? "1px solid rgba(180,140,60,0.5)" : "1px solid rgba(255,255,255,0.08)",
+                background: mode === m.id ? "rgba(180,140,60,0.1)" : "transparent",
+                color: mode === m.id ? "#e8c06a" : "rgba(255,255,255,0.4)",
+                fontSize: 12, cursor: "pointer", transition: "all 0.15s",
+              }}
+            >
+              {m.icon} {m.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Resultat */}
+      <div style={{ paddingTop: 16 }}>
+        {loading && (
+          <div style={{ textAlign: "center", color: "rgba(180,140,60,0.6)", fontSize: 14, marginTop: 20 }}>
+            ⏳ {action === "search" ? `Söker: "${input}"` : `Scrapar ${input}`}...
+          </div>
+        )}
+
+        {error && (
+          <div style={{ color: "#e74c3c", fontSize: 13, padding: 12, background: "rgba(231,76,60,0.1)", borderRadius: 10 }}>
+            {error}
+          </div>
+        )}
+
+        {result && result.action === "search" && !loading && (
+          <>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 12 }}>
+              🌐 {result.resultCount} resultat för &quot;{result.query}&quot; — {new Date(result.searchedAt!).toLocaleString("sv-SE")}
+            </div>
+            {result.results?.map((r, i) => (
+              <div key={i} style={{ marginBottom: 8, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, overflow: "hidden" }}>
+                <div onClick={() => setExpandedResult(expandedResult === i ? null : i)}
+                  style={{ padding: "12px 14px", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}
+                >
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: "#e8c06a", marginBottom: 4 }}>{r.title}</p>
+                    <p style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", wordBreak: "break-all" }}>{r.url}</p>
+                    {r.description && (
+                      <p style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", marginTop: 4, lineHeight: 1.4 }}>
+                        {r.description.substring(0, 120)}{r.description.length > 120 ? "..." : ""}
+                      </p>
+                    )}
+                  </div>
+                  <span style={{ color: "rgba(180,140,60,0.4)", fontSize: 14, flexShrink: 0 }}>
+                    {expandedResult === i ? "▼" : "►"}
+                  </span>
+                </div>
+                {expandedResult === i && r.extract && (
+                  <div style={{ padding: "0 14px 14px", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+                    <RenderExtract data={r.extract} mode={mode} />
+                  </div>
+                )}
+              </div>
+            ))}
+            {result.results?.length === 0 && (
+              <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 13, textAlign: "center", marginTop: 20 }}>Inga resultat hittades.</p>
+            )}
+          </>
+        )}
+
+        {result && result.action === "scrape" && !loading && (
+          <>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 12 }}>
+              ✓ {result.url} — {new Date(result.scrapedAt!).toLocaleString("sv-SE")}
+            </div>
+            {result.extract && (
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ fontSize: 11, letterSpacing: 2, color: "#e8c06a", marginBottom: 8, textTransform: "uppercase" }}>Extraherad data</div>
+                <RenderExtract data={result.extract} mode={mode} />
+              </div>
+            )}
+            <button onClick={() => setShowRaw(!showRaw)}
+              style={{ background: "none", border: "none", color: "rgba(255,255,255,0.3)", fontSize: 11, cursor: "pointer", padding: "4px 0" }}
+            >
+              {showRaw ? "▼ Dölj rå-data" : "► Visa rå-data"}
+            </button>
+            {showRaw && (
+              <pre style={{ marginTop: 8, padding: 12, background: "rgba(255,255,255,0.03)", borderRadius: 8, fontSize: 11, color: "rgba(255,255,255,0.5)", whiteSpace: "pre-wrap", wordBreak: "break-word", maxHeight: 300, overflowY: "auto" }}>
+                {JSON.stringify(result.extract, null, 2)}
+              </pre>
+            )}
+          </>
+        )}
+
+        {!result && !loading && !error && (
+          <div style={{ textAlign: "center", marginTop: 32 }}>
+            <p style={{ color: "rgba(255,255,255,0.15)", fontSize: 13 }}>
+              {action === "search" ? "Skriv en sökfråga och välj läge" : "Klistra in en URL och välj läge"}
+            </p>
+            <div style={{ marginTop: 16, fontSize: 12, color: "rgba(255,255,255,0.1)", lineHeight: 2 }}>
+              🌐 Sök webben efter produkter & priser<br />
+              💰 Scrapa konkurrenters priser<br />
+              📊 Analysera SEO på valfri sida<br />
+              🔍 Hämta innehåll och data
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
+  // ── Mobil: inline direkt i tabben ─────────────────────────────────────────
+  // ── Desktop: floating panel + toggle-knapp ────────────────────────────────
   return (
     <>
-      {activeTab === 'tools' && <button
-        onClick={() => setOpen(!open)}
-        style={{
-          position: "fixed",
-          bottom: 24,
-          right: 24,
-          zIndex: 9999,
-          width: 56,
-          height: 56,
-          borderRadius: "50%",
-          border: "2px solid rgba(180,140,60,0.5)",
-          background: open ? "#1a1510" : "linear-gradient(135deg, #1a1510, #2a1f10)",
-          color: "#e8c06a",
-          fontSize: 22,
-          cursor: "pointer",
-          boxShadow: "0 4px 24px rgba(180,140,60,0.3)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          transition: "all 0.2s",
-        }}
-      >
-        {open ? "✕" : "🔥"}
-      </button>}
+      <style>{`
+        .scraper-inline  { display: block; }
+        .scraper-fab     { display: none !important; }
+        .scraper-panel   { display: none !important; }
 
-      {open && (
-        <div
+        @media (min-width: 768px) {
+          .scraper-inline { display: none !important; }
+          .scraper-fab    { display: flex !important; }
+          .scraper-panel  { display: flex !important; }
+        }
+      `}</style>
+
+      {/* ── MOBIL: inline ── */}
+      {activeTab === "tools" && (
+        <div className="scraper-inline">
+          {scraperContent}
+        </div>
+      )}
+
+      {/* ── DESKTOP: FAB-knapp ── */}
+      {activeTab === "tools" && (
+        <button
+          className="scraper-fab"
+          onClick={() => setOpen(!open)}
           style={{
-            position: "fixed",
-            bottom: 90,
-            right: 24,
-            zIndex: 9998,
-            width: 440,
-            maxHeight: "80vh",
-            display: "flex",
-            flexDirection: "column",
-            background: "#0f0d08",
-            border: "1px solid rgba(180,140,60,0.3)",
-            borderRadius: 16,
-            overflow: "hidden",
-            boxShadow: "0 8px 40px rgba(0,0,0,0.6)",
-            fontFamily: "system-ui, sans-serif",
+            position: "fixed", bottom: 24, right: 24, zIndex: 9999,
+            width: 56, height: 56, borderRadius: "50%",
+            border: "2px solid rgba(180,140,60,0.5)",
+            background: open ? "#1a1510" : "linear-gradient(135deg, #1a1510, #2a1f10)",
+            color: "#e8c06a", fontSize: 22, cursor: "pointer",
+            boxShadow: "0 4px 24px rgba(180,140,60,0.3)",
+            alignItems: "center", justifyContent: "center", transition: "all 0.2s",
           }}
         >
-          {/* Header */}
+          {open ? "✕" : "🔥"}
+        </button>
+      )}
+
+      {/* ── DESKTOP: floating panel ── */}
+      {open && activeTab === "tools" && (
+        <div
+          className="scraper-panel"
+          style={{
+            position: "fixed", bottom: 90, right: 24, zIndex: 9998,
+            width: 440, maxHeight: "80vh", flexDirection: "column",
+            background: "#0f0d08", border: "1px solid rgba(180,140,60,0.3)",
+            borderRadius: 16, overflow: "hidden",
+            boxShadow: "0 8px 40px rgba(0,0,0,0.6)", fontFamily: "system-ui, sans-serif",
+          }}
+        >
           <div style={{ padding: "16px 18px", borderBottom: "1px solid rgba(180,140,60,0.2)", background: "rgba(180,140,60,0.05)" }}>
             <span style={{ color: "#e8c06a", fontSize: 14, fontWeight: 700, letterSpacing: 2 }}>🔥 WEB SCRAPER</span>
             <p style={{ margin: "4px 0 0", fontSize: 11, color: "rgba(255,255,255,0.3)" }}>
               Scrapa priser, SEO-data & innehåll från vilken sida som helst
             </p>
           </div>
-
-          {/* Action-väljare */}
-          <div style={{ display: "flex", borderBottom: "1px solid rgba(180,140,60,0.1)" }}>
-            {ACTIONS.map((a) => (
-              <button
-                key={a.id}
-                onClick={() => { setAction(a.id); setResult(null); setError(""); setInput(""); }}
-                style={{
-                  flex: 1,
-                  padding: "10px 0",
-                  border: "none",
-                  borderBottom: action === a.id ? "2px solid rgba(180,140,60,0.6)" : "2px solid transparent",
-                  background: action === a.id ? "rgba(180,140,60,0.06)" : "transparent",
-                  color: action === a.id ? "#e8c06a" : "rgba(255,255,255,0.35)",
-                  fontSize: 13,
-                  fontWeight: action === a.id ? 700 : 400,
-                  cursor: "pointer",
-                  letterSpacing: 1,
-                  transition: "all 0.15s",
-                }}
-              >
-                {a.icon} {a.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Input */}
-          <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(180,140,60,0.1)" }}>
-            <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && run()}
-                placeholder={action === "search" ? "Sök t.ex. 'espresso muggar pris sverige'" : "https://example.com"}
-                style={{
-                  flex: 1,
-                  background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(180,140,60,0.2)",
-                  borderRadius: 10,
-                  padding: "10px 14px",
-                  color: "#fff",
-                  fontSize: 13,
-                  outline: "none",
-                }}
-              />
-              <button
-                onClick={run}
-                disabled={loading || !input.trim()}
-                style={{
-                  background: loading ? "rgba(180,140,60,0.1)" : "rgba(180,140,60,0.2)",
-                  border: "1px solid rgba(180,140,60,0.3)",
-                  borderRadius: 10,
-                  padding: "10px 16px",
-                  color: "#e8c06a",
-                  fontSize: 13,
-                  fontWeight: 700,
-                  cursor: loading ? "wait" : "pointer",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {loading ? "⏳" : action === "search" ? "Sök" : "Scrapa"}
-              </button>
-            </div>
-
-            <div style={{ display: "flex", gap: 6 }}>
-              {MODES.map((m) => (
-                <button
-                  key={m.id}
-                  onClick={() => setMode(m.id)}
-                  style={{
-                    flex: 1,
-                    padding: "8px 0",
-                    borderRadius: 8,
-                    border: mode === m.id ? "1px solid rgba(180,140,60,0.5)" : "1px solid rgba(255,255,255,0.08)",
-                    background: mode === m.id ? "rgba(180,140,60,0.1)" : "transparent",
-                    color: mode === m.id ? "#e8c06a" : "rgba(255,255,255,0.4)",
-                    fontSize: 12,
-                    cursor: "pointer",
-                    transition: "all 0.15s",
-                  }}
-                >
-                  {m.icon} {m.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Resultat */}
           <div style={{ flex: 1, overflowY: "auto", padding: 18 }}>
-            {loading && (
-              <div style={{ textAlign: "center", color: "rgba(180,140,60,0.6)", fontSize: 14, marginTop: 30 }}>
-                ⏳ {action === "search" ? `Söker: "${input}"` : `Scrapar ${input}`}...
-              </div>
-            )}
-
-            {error && (
-              <div style={{ color: "#e74c3c", fontSize: 13, padding: 12, background: "rgba(231,76,60,0.1)", borderRadius: 10 }}>
-                {error}
-              </div>
-            )}
-
-            {result && result.action === "search" && !loading && (
-              <>
-                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 12 }}>
-                  🌐 {result.resultCount} resultat för "{result.query}" — {new Date(result.searchedAt!).toLocaleString("sv-SE")}
-                </div>
-                {result.results?.map((r, i) => (
-                  <div key={i} style={{ marginBottom: 8, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 10, overflow: "hidden" }}>
-                    <div
-                      onClick={() => setExpandedResult(expandedResult === i ? null : i)}
-                      style={{ padding: "12px 14px", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}
-                    >
-                      <div style={{ flex: 1 }}>
-                        <p style={{ fontSize: 13, fontWeight: 600, color: "#e8c06a", marginBottom: 4 }}>{r.title}</p>
-                        <p style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", wordBreak: "break-all" }}>{r.url}</p>
-                        {r.description && (
-                          <p style={{ fontSize: 12, color: "rgba(255,255,255,0.45)", marginTop: 4, lineHeight: 1.4 }}>
-                            {r.description.substring(0, 120)}{r.description.length > 120 ? "..." : ""}
-                          </p>
-                        )}
-                      </div>
-                      <span style={{ color: "rgba(180,140,60,0.4)", fontSize: 14, flexShrink: 0 }}>
-                        {expandedResult === i ? "▼" : "►"}
-                      </span>
-                    </div>
-                    {expandedResult === i && r.extract && (
-                      <div style={{ padding: "0 14px 14px", borderTop: "1px solid rgba(255,255,255,0.04)" }}>
-                        <RenderExtract data={r.extract} mode={mode} />
-                      </div>
-                    )}
-                  </div>
-                ))}
-                {result.results?.length === 0 && (
-                  <p style={{ color: "rgba(255,255,255,0.3)", fontSize: 13, textAlign: "center", marginTop: 20 }}>
-                    Inga resultat hittades.
-                  </p>
-                )}
-              </>
-            )}
-
-            {result && result.action === "scrape" && !loading && (
-              <>
-                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 12 }}>
-                  ✓ {result.url} — {new Date(result.scrapedAt!).toLocaleString("sv-SE")}
-                </div>
-                {result.extract && (
-                  <div style={{ marginBottom: 16 }}>
-                    <div style={{ fontSize: 11, letterSpacing: 2, color: "#e8c06a", marginBottom: 8, textTransform: "uppercase" }}>
-                      Extraherad data
-                    </div>
-                    <RenderExtract data={result.extract} mode={mode} />
-                  </div>
-                )}
-                <button
-                  onClick={() => setShowRaw(!showRaw)}
-                  style={{ background: "none", border: "none", color: "rgba(255,255,255,0.3)", fontSize: 11, cursor: "pointer", padding: "4px 0" }}
-                >
-                  {showRaw ? "▼ Dölj rå-data" : "► Visa rå-data"}
-                </button>
-                {showRaw && (
-                  <pre style={{ marginTop: 8, padding: 12, background: "rgba(255,255,255,0.03)", borderRadius: 8, fontSize: 11, color: "rgba(255,255,255,0.5)", whiteSpace: "pre-wrap", wordBreak: "break-word", maxHeight: 300, overflowY: "auto" }}>
-                    {JSON.stringify(result.extract, null, 2)}
-                  </pre>
-                )}
-              </>
-            )}
-
-            {!result && !loading && !error && (
-              <div style={{ textAlign: "center", marginTop: 40 }}>
-                <p style={{ color: "rgba(255,255,255,0.15)", fontSize: 13 }}>
-                  {action === "search" ? "Skriv en sökfråga och välj läge" : "Klistra in en URL och välj läge"}
-                </p>
-                <div style={{ marginTop: 16, fontSize: 12, color: "rgba(255,255,255,0.1)", lineHeight: 2 }}>
-                  🌐 Sök webben efter produkter & priser<br />
-                  💰 Scrapa konkurrenters priser<br />
-                  📊 Analysera SEO på valfri sida<br />
-                  🔍 Hämta innehåll och data
-                </div>
-              </div>
-            )}
+            {scraperContent}
           </div>
         </div>
       )}
@@ -314,6 +304,7 @@ export default function WebScraper({ open, setOpen, activeTab }: Props) {
   );
 }
 
+// ── RenderExtract ──────────────────────────────────────────────────────────
 function RenderExtract({ data, mode }: { data: any; mode: string }) {
   if (!data) return null;
 

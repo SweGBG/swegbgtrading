@@ -224,7 +224,7 @@ export default function Home() {
               }}
             />
 
-            {/* ===== TOPPLINJE MED PRICKAR (ANIMERAT) ===== */}
+            {/* ===== TOPPLINJE MED ROTERANDE LED-EFFEKT ===== */}
             {/* Vänster prick */}
             <motion.div
               initial={{ opacity: 0, scale: 0 }}
@@ -243,11 +243,13 @@ export default function Home() {
               }}
             />
 
-            {/* Topplinje - animerar från mitten ut */}
+            {/* Topplinje - roterande LED-ljus vänster → höger */}
             <motion.div
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ duration: 1.2, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              transition={{
+                scaleX: { duration: 1.2, delay: 0.4, ease: [0.22, 1, 0.36, 1] }
+              }}
               style={{
                 position: "absolute",
                 left: "35px",
@@ -255,11 +257,34 @@ export default function Home() {
                 width: "650px",
                 height: "3px",
                 background: "linear-gradient(90deg, rgba(180,140,60,0.2), rgba(230,190,110,0.9) 20%, rgba(230,190,110,0.9) 80%, rgba(180,140,60,0.2))",
-                boxShadow: "0 0 8px rgba(180,140,60,0.5), inset 0 1px 0 rgba(255,220,140,0.6)",
                 transformOrigin: "center",
                 zIndex: 1,
+                overflow: "hidden",
               }}
-            />
+            >
+              {/* Roterande LED-ljus med blå ton - vänster → höger */}
+              <motion.div
+                animate={{
+                  x: ["-200px", "850px"],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "linear",
+                  delay: 1.6,
+                }}
+                style={{
+                  position: "absolute",
+                  top: "-10px",
+                  left: 0,
+                  width: "200px",
+                  height: "20px",
+                  background: "radial-gradient(ellipse, rgba(220,240,255,0.95) 0%, rgba(180,220,255,0.6) 30%, rgba(255,255,255,0.4) 50%, transparent 75%)",
+                  filter: "blur(8px)",
+                  boxShadow: "0 0 15px rgba(180,220,255,0.5)",
+                }}
+              />
+            </motion.div>
 
             {/* Höger prick */}
             <motion.div
@@ -279,7 +304,7 @@ export default function Home() {
               }}
             />
 
-            {/* ===== BOTTENLINJE MED PRICKAR (ANIMERAT) ===== */}
+            {/* ===== BOTTENLINJE MED ROTERANDE LED-EFFEKT ===== */}
             {/* Vänster prick */}
             <motion.div
               initial={{ opacity: 0, scale: 0 }}
@@ -298,11 +323,13 @@ export default function Home() {
               }}
             />
 
-            {/* Bottenlinje - animerar från mitten ut */}
+            {/* Bottenlinje - roterande LED-ljus höger → vänster */}
             <motion.div
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
-              transition={{ duration: 1.2, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              transition={{
+                scaleX: { duration: 1.2, delay: 0.6, ease: [0.22, 1, 0.36, 1] }
+              }}
               style={{
                 position: "absolute",
                 left: "35px",
@@ -310,11 +337,34 @@ export default function Home() {
                 width: "650px",
                 height: "3px",
                 background: "linear-gradient(90deg, rgba(180,140,60,0.2), rgba(230,190,110,0.9) 20%, rgba(230,190,110,0.9) 80%, rgba(180,140,60,0.2))",
-                boxShadow: "0 0 8px rgba(180,140,60,0.5), inset 0 -1px 0 rgba(100,70,30,0.6)",
                 transformOrigin: "center",
                 zIndex: 1,
+                overflow: "hidden",
               }}
-            />
+            >
+              {/* Roterande LED-ljus med blå ton - höger → vänster (offset 2.5s) */}
+              <motion.div
+                animate={{
+                  x: ["850px", "-200px"],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: "linear",
+                  delay: 4.1,
+                }}
+                style={{
+                  position: "absolute",
+                  top: "-10px",
+                  left: 0,
+                  width: "200px",
+                  height: "20px",
+                  background: "radial-gradient(ellipse, rgba(220,240,255,0.95) 0%, rgba(180,220,255,0.6) 30%, rgba(255,255,255,0.4) 50%, transparent 75%)",
+                  filter: "blur(8px)",
+                  boxShadow: "0 0 15px rgba(180,220,255,0.5)",
+                }}
+              />
+            </motion.div>
 
             {/* Höger prick */}
             <motion.div

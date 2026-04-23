@@ -167,67 +167,329 @@ export default function Home() {
         />
       ))}
 
-      {/* Demo banner */}
-
       <motion.section
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
         style={{ position: "relative", zIndex: 1, paddingTop: "40px" }}
       >
-        {/* LOGO */}
+
+        {/* ====== LOGO MED ANIMERAD PRICK/LINJE-INRAMNING ====== */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.1 }}
-          style={{ display: "flex", justifyContent: "center", paddingTop: "20px", position: "relative" }}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: "20px",
+            position: "relative",
+          }}
         >
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            style={{
-              position: "absolute", width: "360px", height: "360px",
-              top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-              borderRadius: "50%",
-              border: "1px solid rgba(180,140,60,0.15)",
-              borderTop: "1px solid rgba(180,140,60,0.5)",
-              borderRight: "1px solid rgba(180,140,60,0.3)",
-            }}
-          />
-          <motion.div
-            animate={{ rotate: -360 }}
-            transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
-            style={{
-              position: "absolute", width: "300px", height: "300px",
-              top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-              borderRadius: "50%",
-              border: "1px dashed rgba(180,140,60,0.1)",
-              borderBottom: "1px solid rgba(180,140,60,0.3)",
-            }}
-          />
-          {[0, 90, 180, 270].map((deg) => (
+          {/* Fast storlek wrapper */}
+          <div style={{
+            position: "relative",
+            width: "720px",
+            height: "280px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}>
+
+            {/* Roterande cirklar bakom (bevarade) */}
             <motion.div
-              key={deg}
-              animate={{ opacity: [0.3, 0.8, 0.3] }}
-              transition={{ duration: 2.5, repeat: Infinity, delay: deg / 360 * 2.5 }}
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
               style={{
-                position: "absolute", width: "6px", height: "6px",
-                borderRadius: "50%", background: "rgba(180,140,60,0.6)",
-                top: "50%", left: "50%",
-                transform: `translate(-50%, -50%) rotate(${deg}deg) translateY(-175px)`,
+                position: "absolute", width: "360px", height: "360px",
+                top: "50%", left: "50%", transform: "translate(-50%, -50%)",
+                borderRadius: "50%",
+                border: "1px solid rgba(180,140,60,0.15)",
+                borderTop: "1px solid rgba(180,140,60,0.5)",
+                borderRight: "1px solid rgba(180,140,60,0.3)",
+                zIndex: 0,
               }}
             />
-          ))}
-          <Image
-            src="/images/hlogo2.png"
-            alt="SweGBG Trading"
-            width={693} height={260} priority
-            style={{
-              height: "auto", width: "100%", maxWidth: "480px", objectFit: "contain",
-              filter: "drop-shadow(0 0 40px rgba(180,140,60,0.4)) drop-shadow(0 0 80px rgba(180,140,60,0.15))",
-              position: "relative", zIndex: 1,
-            }}
-          />
+            <motion.div
+              animate={{ rotate: -360 }}
+              transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
+              style={{
+                position: "absolute", width: "300px", height: "300px",
+                top: "50%", left: "50%", transform: "translate(-50%, -50%)",
+                borderRadius: "50%",
+                border: "1px dashed rgba(180,140,60,0.1)",
+                borderBottom: "1px solid rgba(180,140,60,0.3)",
+                zIndex: 0,
+              }}
+            />
+
+            {/* ===== TOPPLINJE MED PRICKAR (ANIMERAT) ===== */}
+            {/* Vänster prick */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              style={{
+                position: "absolute",
+                left: "20px",
+                top: "100px",
+                width: "8px",
+                height: "8px",
+                borderRadius: "50%",
+                background: "radial-gradient(circle, rgba(230,190,110,1) 0%, rgba(180,140,60,0.9) 100%)",
+                boxShadow: "0 0 12px rgba(180,140,60,0.8)",
+                zIndex: 1,
+              }}
+            />
+
+            {/* Topplinje - animerar från mitten ut */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 1.2, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                position: "absolute",
+                left: "35px",
+                top: "99px",
+                width: "650px",
+                height: "3px",
+                background: "linear-gradient(90deg, rgba(180,140,60,0.2), rgba(230,190,110,0.9) 20%, rgba(230,190,110,0.9) 80%, rgba(180,140,60,0.2))",
+                boxShadow: "0 0 8px rgba(180,140,60,0.5), inset 0 1px 0 rgba(255,220,140,0.6)",
+                transformOrigin: "center",
+                zIndex: 1,
+              }}
+            />
+
+            {/* Höger prick */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 1.2 }}
+              style={{
+                position: "absolute",
+                right: "20px",
+                top: "100px",
+                width: "8px",
+                height: "8px",
+                borderRadius: "50%",
+                background: "radial-gradient(circle, rgba(230,190,110,1) 0%, rgba(180,140,60,0.9) 100%)",
+                boxShadow: "0 0 12px rgba(180,140,60,0.8)",
+                zIndex: 1,
+              }}
+            />
+
+            {/* ===== BOTTENLINJE MED PRICKAR (ANIMERAT) ===== */}
+            {/* Vänster prick */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 1.0 }}
+              style={{
+                position: "absolute",
+                left: "20px",
+                bottom: "85px",
+                width: "8px",
+                height: "8px",
+                borderRadius: "50%",
+                background: "radial-gradient(circle, rgba(230,190,110,1) 0%, rgba(180,140,60,0.9) 100%)",
+                boxShadow: "0 0 12px rgba(180,140,60,0.8)",
+                zIndex: 1,
+              }}
+            />
+
+            {/* Bottenlinje - animerar från mitten ut */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 1.2, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                position: "absolute",
+                left: "35px",
+                bottom: "85px",
+                width: "650px",
+                height: "3px",
+                background: "linear-gradient(90deg, rgba(180,140,60,0.2), rgba(230,190,110,0.9) 20%, rgba(230,190,110,0.9) 80%, rgba(180,140,60,0.2))",
+                boxShadow: "0 0 8px rgba(180,140,60,0.5), inset 0 -1px 0 rgba(100,70,30,0.6)",
+                transformOrigin: "center",
+                zIndex: 1,
+              }}
+            />
+
+            {/* Höger prick */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 1.4 }}
+              style={{
+                position: "absolute",
+                right: "20px",
+                bottom: "85px",
+                width: "8px",
+                height: "8px",
+                borderRadius: "50%",
+                background: "radial-gradient(circle, rgba(230,190,110,1) 0%, rgba(180,140,60,0.9) 100%)",
+                boxShadow: "0 0 12px rgba(180,140,60,0.8)",
+                zIndex: 1,
+              }}
+            />
+
+            {/* ===== FYRA PRICKAR I HÖRNEN (ANIMERADE, PULSANDE) ===== */}
+            {/* Top-left */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+              }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              style={{
+                position: "absolute",
+                left: "20px",
+                top: "75px",
+                width: "6px",
+                height: "6px",
+                borderRadius: "50%",
+                background: "rgba(180,140,60,0.8)",
+                boxShadow: "0 0 8px rgba(180,140,60,0.6)",
+                zIndex: 1,
+              }}
+            >
+              <motion.div
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "50%",
+                  background: "rgba(230,190,110,0.8)",
+                }}
+              />
+            </motion.div>
+
+            {/* Top-right */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+              }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              style={{
+                position: "absolute",
+                right: "20px",
+                top: "75px",
+                width: "6px",
+                height: "6px",
+                borderRadius: "50%",
+                background: "rgba(180,140,60,0.8)",
+                boxShadow: "0 0 8px rgba(180,140,60,0.6)",
+                zIndex: 1,
+              }}
+            >
+              <motion.div
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "50%",
+                  background: "rgba(230,190,110,0.8)",
+                }}
+              />
+            </motion.div>
+
+            {/* Bottom-left */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+              }}
+              transition={{ duration: 0.5, delay: 0.7 }}
+              style={{
+                position: "absolute",
+                left: "20px",
+                bottom: "60px",
+                width: "6px",
+                height: "6px",
+                borderRadius: "50%",
+                background: "rgba(180,140,60,0.8)",
+                boxShadow: "0 0 8px rgba(180,140,60,0.6)",
+                zIndex: 1,
+              }}
+            >
+              <motion.div
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "50%",
+                  background: "rgba(230,190,110,0.8)",
+                }}
+              />
+            </motion.div>
+
+            {/* Bottom-right */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+              }}
+              transition={{ duration: 0.5, delay: 0.9 }}
+              style={{
+                position: "absolute",
+                right: "20px",
+                bottom: "60px",
+                width: "6px",
+                height: "6px",
+                borderRadius: "50%",
+                background: "rgba(180,140,60,0.8)",
+                boxShadow: "0 0 8px rgba(180,140,60,0.6)",
+                zIndex: 1,
+              }}
+            >
+              <motion.div
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 1.6 }}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  borderRadius: "50%",
+                  background: "rgba(230,190,110,0.8)",
+                }}
+              />
+            </motion.div>
+
+            {/* Subtil varm glow inuti ramen bakom logon */}
+            <div style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "400px",
+              height: "160px",
+              background: "radial-gradient(ellipse, rgba(180,140,60,0.12) 0%, transparent 70%)",
+              pointerEvents: "none",
+              zIndex: 0,
+              filter: "blur(25px)",
+            }} />
+
+            {/* ===== LOGON (ligger ovanpå) ===== */}
+            <Image
+              src="/images/hlogo2.png"
+              alt="SweGBG Trading"
+              width={693} height={260} priority
+              style={{
+                height: "auto", width: "100%", maxWidth: "480px", objectFit: "contain",
+                filter: "drop-shadow(0 0 40px rgba(180,140,60,0.4)) drop-shadow(0 0 80px rgba(180,140,60,0.15))",
+                position: "relative",
+                zIndex: 2,
+              }}
+            />
+          </div>
         </motion.div>
 
         {/* LINJE */}
@@ -235,7 +497,7 @@ export default function Home() {
           initial={{ scaleX: 0, opacity: 0 }}
           animate={{ scaleX: 1, opacity: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
-          style={{ maxWidth: "400px", margin: "16px auto 24px", height: "1px", background: "linear-gradient(90deg, transparent, rgba(180,140,60,0.4), transparent)" }}
+          style={{ maxWidth: "400px", margin: "32px auto 24px", height: "1px", background: "linear-gradient(90deg, transparent, rgba(180,140,60,0.4), transparent)" }}
         />
 
         {/* MYNTEN */}

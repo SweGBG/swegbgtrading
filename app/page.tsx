@@ -187,11 +187,11 @@ export default function Home() {
             position: "relative",
           }}
         >
-          {/* Fast storlek wrapper */}
+          {/* Responsive wrapper - scales down on mobile */}
           <div style={{
             position: "relative",
-            width: "720px",
-            height: "280px",
+            width: "min(720px, 90vw)",
+            height: "clamp(180px, 38vw, 280px)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -202,7 +202,9 @@ export default function Home() {
               animate={{ rotate: 360 }}
               transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
               style={{
-                position: "absolute", width: "360px", height: "360px",
+                position: "absolute",
+                width: "min(360px, 50vw)",
+                height: "min(360px, 50vw)",
                 top: "50%", left: "50%", transform: "translate(-50%, -50%)",
                 borderRadius: "50%",
                 border: "1px solid rgba(180,140,60,0.15)",
@@ -215,7 +217,9 @@ export default function Home() {
               animate={{ rotate: -360 }}
               transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
               style={{
-                position: "absolute", width: "300px", height: "300px",
+                position: "absolute",
+                width: "min(300px, 42vw)",
+                height: "min(300px, 42vw)",
                 top: "50%", left: "50%", transform: "translate(-50%, -50%)",
                 borderRadius: "50%",
                 border: "1px dashed rgba(180,140,60,0.1)",
@@ -232,10 +236,10 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.8 }}
               style={{
                 position: "absolute",
-                left: "20px",
-                top: "100px",
-                width: "8px",
-                height: "8px",
+                left: "clamp(10px, 3vw, 20px)",
+                top: "clamp(50px, 36%, 100px)",
+                width: "clamp(4px, 1.1vw, 8px)",
+                height: "clamp(4px, 1.1vw, 8px)",
                 borderRadius: "50%",
                 background: "radial-gradient(circle, rgba(230,190,110,1) 0%, rgba(180,140,60,0.9) 100%)",
                 boxShadow: "0 0 12px rgba(180,140,60,0.8)",
@@ -252,10 +256,10 @@ export default function Home() {
               }}
               style={{
                 position: "absolute",
-                left: "35px",
-                top: "99px",
-                width: "650px",
-                height: "3px",
+                left: "clamp(20px, 5vw, 35px)",
+                top: "clamp(49px, 35.5%, 99px)",
+                width: "calc(100% - clamp(40px, 10vw, 70px))",
+                height: "clamp(2px, 0.4vw, 3px)",
                 background: "linear-gradient(90deg, rgba(180,140,60,0.2), rgba(230,190,110,0.9) 20%, rgba(230,190,110,0.9) 80%, rgba(180,140,60,0.2))",
                 transformOrigin: "center",
                 zIndex: 1,
@@ -265,7 +269,7 @@ export default function Home() {
               {/* Roterande LED-ljus med blå ton - vänster → höger */}
               <motion.div
                 animate={{
-                  x: ["-200px", "850px"],
+                  x: ["-200px", "calc(100% + 200px)"],
                 }}
                 transition={{
                   duration: 5,
@@ -277,7 +281,7 @@ export default function Home() {
                   position: "absolute",
                   top: "-10px",
                   left: 0,
-                  width: "200px",
+                  width: "clamp(100px, 30vw, 200px)",
                   height: "20px",
                   background: "radial-gradient(ellipse, rgba(220,240,255,0.95) 0%, rgba(180,220,255,0.6) 30%, rgba(255,255,255,0.4) 50%, transparent 75%)",
                   filter: "blur(8px)",
@@ -293,10 +297,10 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 1.2 }}
               style={{
                 position: "absolute",
-                right: "20px",
-                top: "100px",
-                width: "8px",
-                height: "8px",
+                right: "clamp(10px, 3vw, 20px)",
+                top: "clamp(50px, 36%, 100px)",
+                width: "clamp(4px, 1.1vw, 8px)",
+                height: "clamp(4px, 1.1vw, 8px)",
                 borderRadius: "50%",
                 background: "radial-gradient(circle, rgba(230,190,110,1) 0%, rgba(180,140,60,0.9) 100%)",
                 boxShadow: "0 0 12px rgba(180,140,60,0.8)",
@@ -312,10 +316,10 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 1.0 }}
               style={{
                 position: "absolute",
-                left: "20px",
-                bottom: "85px",
-                width: "8px",
-                height: "8px",
+                left: "clamp(10px, 3vw, 20px)",
+                bottom: "clamp(40px, 30%, 85px)",
+                width: "clamp(4px, 1.1vw, 8px)",
+                height: "clamp(4px, 1.1vw, 8px)",
                 borderRadius: "50%",
                 background: "radial-gradient(circle, rgba(230,190,110,1) 0%, rgba(180,140,60,0.9) 100%)",
                 boxShadow: "0 0 12px rgba(180,140,60,0.8)",
@@ -332,10 +336,10 @@ export default function Home() {
               }}
               style={{
                 position: "absolute",
-                left: "35px",
-                bottom: "85px",
-                width: "650px",
-                height: "3px",
+                left: "clamp(20px, 5vw, 35px)",
+                bottom: "clamp(40px, 30%, 85px)",
+                width: "calc(100% - clamp(40px, 10vw, 70px))",
+                height: "clamp(2px, 0.4vw, 3px)",
                 background: "linear-gradient(90deg, rgba(180,140,60,0.2), rgba(230,190,110,0.9) 20%, rgba(230,190,110,0.9) 80%, rgba(180,140,60,0.2))",
                 transformOrigin: "center",
                 zIndex: 1,
@@ -345,7 +349,7 @@ export default function Home() {
               {/* Roterande LED-ljus med blå ton - höger → vänster (offset 2.5s) */}
               <motion.div
                 animate={{
-                  x: ["850px", "-200px"],
+                  x: ["calc(100% + 200px)", "-200px"],
                 }}
                 transition={{
                   duration: 5,
@@ -357,7 +361,7 @@ export default function Home() {
                   position: "absolute",
                   top: "-10px",
                   left: 0,
-                  width: "200px",
+                  width: "clamp(100px, 30vw, 200px)",
                   height: "20px",
                   background: "radial-gradient(ellipse, rgba(220,240,255,0.95) 0%, rgba(180,220,255,0.6) 30%, rgba(255,255,255,0.4) 50%, transparent 75%)",
                   filter: "blur(8px)",
@@ -373,10 +377,10 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 1.4 }}
               style={{
                 position: "absolute",
-                right: "20px",
-                bottom: "85px",
-                width: "8px",
-                height: "8px",
+                right: "clamp(10px, 3vw, 20px)",
+                bottom: "clamp(40px, 30%, 85px)",
+                width: "clamp(4px, 1.1vw, 8px)",
+                height: "clamp(4px, 1.1vw, 8px)",
                 borderRadius: "50%",
                 background: "radial-gradient(circle, rgba(230,190,110,1) 0%, rgba(180,140,60,0.9) 100%)",
                 boxShadow: "0 0 12px rgba(180,140,60,0.8)",
@@ -395,10 +399,10 @@ export default function Home() {
               transition={{ duration: 0.5, delay: 0.3 }}
               style={{
                 position: "absolute",
-                left: "20px",
-                top: "75px",
-                width: "6px",
-                height: "6px",
+                left: "clamp(10px, 3vw, 20px)",
+                top: "clamp(35px, 27%, 75px)",
+                width: "clamp(3px, 0.8vw, 6px)",
+                height: "clamp(3px, 0.8vw, 6px)",
                 borderRadius: "50%",
                 background: "rgba(180,140,60,0.8)",
                 boxShadow: "0 0 8px rgba(180,140,60,0.6)",
@@ -427,10 +431,10 @@ export default function Home() {
               transition={{ duration: 0.5, delay: 0.5 }}
               style={{
                 position: "absolute",
-                right: "20px",
-                top: "75px",
-                width: "6px",
-                height: "6px",
+                right: "clamp(10px, 3vw, 20px)",
+                top: "clamp(35px, 27%, 75px)",
+                width: "clamp(3px, 0.8vw, 6px)",
+                height: "clamp(3px, 0.8vw, 6px)",
                 borderRadius: "50%",
                 background: "rgba(180,140,60,0.8)",
                 boxShadow: "0 0 8px rgba(180,140,60,0.6)",
@@ -459,10 +463,10 @@ export default function Home() {
               transition={{ duration: 0.5, delay: 0.7 }}
               style={{
                 position: "absolute",
-                left: "20px",
-                bottom: "60px",
-                width: "6px",
-                height: "6px",
+                left: "clamp(10px, 3vw, 20px)",
+                bottom: "clamp(25px, 21%, 60px)",
+                width: "clamp(3px, 0.8vw, 6px)",
+                height: "clamp(3px, 0.8vw, 6px)",
                 borderRadius: "50%",
                 background: "rgba(180,140,60,0.8)",
                 boxShadow: "0 0 8px rgba(180,140,60,0.6)",
@@ -491,10 +495,10 @@ export default function Home() {
               transition={{ duration: 0.5, delay: 0.9 }}
               style={{
                 position: "absolute",
-                right: "20px",
-                bottom: "60px",
-                width: "6px",
-                height: "6px",
+                right: "clamp(10px, 3vw, 20px)",
+                bottom: "clamp(25px, 21%, 60px)",
+                width: "clamp(3px, 0.8vw, 6px)",
+                height: "clamp(3px, 0.8vw, 6px)",
                 borderRadius: "50%",
                 background: "rgba(180,140,60,0.8)",
                 boxShadow: "0 0 8px rgba(180,140,60,0.6)",
@@ -519,8 +523,8 @@ export default function Home() {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: "400px",
-              height: "160px",
+              width: "min(400px, 55vw)",
+              height: "clamp(100px, 22vw, 160px)",
               background: "radial-gradient(ellipse, rgba(180,140,60,0.12) 0%, transparent 70%)",
               pointerEvents: "none",
               zIndex: 0,
@@ -533,7 +537,10 @@ export default function Home() {
               alt="SweGBG Trading"
               width={693} height={260} priority
               style={{
-                height: "auto", width: "100%", maxWidth: "480px", objectFit: "contain",
+                height: "auto",
+                width: "100%",
+                maxWidth: "min(480px, 66vw)",
+                objectFit: "contain",
                 filter: "drop-shadow(0 0 40px rgba(180,140,60,0.4)) drop-shadow(0 0 80px rgba(180,140,60,0.15))",
                 position: "relative",
                 zIndex: 2,
